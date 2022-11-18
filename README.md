@@ -310,49 +310,7 @@ git clone https://github.com/morrownr/8821cu-20210916.git
 cd ~/src/8821cu-20210916
 ```
 
-#### Step 8: Run a script to reconfigure for ARM or ARM64 based systems
-
-Warning: This driver defaults to supporting x86 and amd64 based systems
-and this step should be `skipped` if your system is powered by an x86, 
-amd64 or compatible CPU.
-
-Note: If your system is powered by an ARM or ARM64 based Raspberry Pi,
-then one of the following scripts should be executed:
-
-- Option for the following listed operating systems to be installed to
-Raspberry Pi hardware
-
-```
-       * Raspberry Pi OS (32 bit)
-```
-
-```
-./ARM_RPI.sh
-```
-
-- Option for the following listed operating systems to be installed to
-Raspberry Pi hardware
-
-```
-       * Raspberry Pi OS (64 bit)
-       * Kali Linux RPI ARM64
-       * Ubuntu for Raspberry Pi
-```
-
-```
-./ARM64_RPI.sh
-```
-
-Note: ARM or ARM64 based systems not listed above will likely require
-modifications similar to those provided in the above scripts but the
-number and variety of different ARM and ARM64 based systems makes
-supporting each system unpractical so you will need to research the
-needs of your system and make the appropriate modifications. If you
-discover the settings and make a new script that works with your ARM or
-ARM64 based system, you are welcome to submit the script and information
-to be included here.
-
-#### Step 9: Run the installation script ( install-driver.sh )
+#### Step 8: Run the installation script ( install-driver.sh )
 
 Note: For automated builds (non-interactive), use _NoPrompt_ as an option.
 
