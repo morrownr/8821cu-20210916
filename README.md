@@ -4,6 +4,9 @@
 
 - v5.12.0.4 (Realtek) (20210916) plus updates from the Linux community
 
+Note: Please read "supported-device-IDs" for information about how to
+confirm that this is the correct driver for your adapter.
+
 ### Features
 
 - IEEE 802.11 b/g/n/ac WiFi compliant
@@ -27,7 +30,6 @@
   * AP (see FAQ)
   * P2P-client
   * P2P-GO
-  * Concurrent (see `Concurrent_Mode.md` in the `docs` folder.)
 - Log level control
 - LED control
 - Power saving control
@@ -38,9 +40,10 @@
 
 ### Compatible CPUs
 
-- x86, amd64
-- ARM, ARM64
-- MIPS
+- x86
+- x86-64 (amd64)
+- arm
+- arm64 (aarch64)
 
 ### Compatible Kernels
 
@@ -137,8 +140,8 @@ install the newest available before installing the new kernel. Use the
 following commands in the driver directory:
 
 ```
-$ sudo ./remove-driver.sh
 $ git pull
+$ sudo ./remove-driver.sh
 $ sudo ./install-driver.sh
 ```
 

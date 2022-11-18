@@ -80,7 +80,7 @@ if ! command -v dkms >/dev/null 2>&1
 then
 	echo "The non-dkms installation routines are in use."
 
-	make clean
+	make clean >/dev/null 2>&1
 
 	make
 	RESULT=$?
@@ -91,7 +91,7 @@ then
 		echo "Please report this error."
 		echo "Please copy all screen output and paste it into the report."
 		echo "You will need to run the following before reattempting installation."
-		echo "$ sudo ./remove-driver-no-dkms.sh"
+		echo "$ sudo ./remove-driver.sh"
 		exit $RESULT
 	fi
 
@@ -110,7 +110,7 @@ then
 		echo "Please report this error."
 		echo "Please copy all screen output and paste it into the report."
 		echo "You will need to run the following before reattempting installation."
-		echo "$ sudo ./remove-driver-no-dkms.sh"
+		echo "$ sudo ./remove-driver.sh"
 		exit $RESULT
 	fi
 else
