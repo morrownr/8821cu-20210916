@@ -42,8 +42,8 @@ confirm that this is the correct driver for your adapter.
 
 - x86
 - x86-64 (amd64)
-- arm
-- arm64 (aarch64)
+- arm    (armv7l)
+- arm64  (aarch64)
 
 ### Compatible Kernels
 
@@ -57,7 +57,7 @@ is easy to install and works reliably on many distros. Meeting this goal
 depends on you to report your recommendations and updated information. 
 If you see information that needs to be updated, please report the
 updated information and if you do not see adequate support for
-items such as Installation Steps 2, 3 and 9, and you know what updates 
+items such as Installation Steps 2 and 3, and you know what updates 
 need to added or you can get that information, please provide it so that
 the Installation Steps can be improved.
 
@@ -106,8 +106,8 @@ lack of mac80211 technology drivers that are supported in-kernel as
 called for by Linux Wireless Standards. This repo is supported for the
 benefit of Linux users who already have adapters based on the supported
 chipsets. If you are looking for information about what adapter to buy,
-click [here](https://github.com/morrownr/USB-WiFi) for information about
-and links to recommended adapters.
+click [here](https://github.com/morrownr/USB-WiFi) and look for Main Menu
+item 2 which will show information about and links to recommended adapters.
 
 * Cudy WU700
 * EDUP EP-AC1651
@@ -115,8 +115,6 @@ and links to recommended adapters.
 * TOTOLINK A650UA v3
 * Mercusys MU6H (multi-state)
 * Numerous additional products that are based on the supported chipsets
-
-Note: Please read "supported-device-IDs" for information about how to confirm the correct driver for your adapter.
 
 ### Installation Information
 
@@ -254,7 +252,7 @@ sudo apt install -y build-essential dkms git
 - Option for Fedora
 
 ```
-sudo dnf -y install git dkms kernel-devel kernel-debug-devel
+sudo dnf -y install git dkms kernel-devel openssl
 ```
 
 - Option for openSUSE

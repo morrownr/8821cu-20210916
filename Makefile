@@ -14,6 +14,7 @@ EXTRA_CFLAGS += -Wno-unused-variable
 #EXTRA_CFLAGS += -Wno-unused-function
 #EXTRA_CFLAGS += -Wno-unused
 #EXTRA_CFLAGS += -Wno-uninitialized
+#EXTRA_CFLAGS += -Wno-vla
 EXTRA_CFLAGS += -Wno-misleading-indentation
 EXTRA_CFLAGS += -Wno-implicit-fallthrough
 #EXTRA_CFLAGS += -DCONFIG_CONCURRENT_MODE
@@ -1338,12 +1339,20 @@ EXTRA_CFLAGS += -DCONFIG_RTW_MBO -DCONFIG_RTW_80211K -DCONFIG_RTW_WNM -DCONFIG_R
 EXTRA_CFLAGS += -DCONFIG_RTW_80211R
 endif
 
+# *** GENERIC ***
 ifeq ($(CONFIG_PLATFORM_GENERIC), y)
 EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
 EXTRA_CFLAGS += -DCONFIG_IOCTL_CFG80211 -DRTW_USE_CFG80211_STA_EVENT
 
 SUBARCH := $(shell uname -m)
+ifeq ($(SUBARCH), aarch64)
+SUBARCH := arm64
+endif
+ifeq ($(SUBARCH), armv7l)
+SUBARCH := arm
+endif
 ARCH ?= $(SUBARCH)
+
 CROSS_COMPILE ?=
 KVER ?= $(shell uname -r)
 KSRC := /lib/modules/$(KVER)/build
@@ -1356,7 +1365,7 @@ STAGINGMODDIR := /lib/modules/$(KVER)/kernel/drivers/staging
 #EXTRA_CFLAGS += -DCONFIG_PLATFORM_ROCKCHIPS
 # End of Platform Specific Flags
 endif
-
+# *** End GENERIC ***
 
 ifeq ($(CONFIG_PLATFORM_I386_PC), y)
 EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
