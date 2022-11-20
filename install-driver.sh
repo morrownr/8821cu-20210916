@@ -176,7 +176,12 @@ else
 fi
 
 # unblock wifi
-rfkill unblock wlan
+if command -v rfkill >/dev/null 2>&1
+then
+	rfkill unblock wlan
+else
+	echo "Unable to run $ rfkill unblock wlan"	
+fi
 
 # if NoPrompt is not used, ask user some questions to complete installation
 if [ $NO_PROMPT -ne 1 ]
