@@ -62,9 +62,9 @@ fi
 
 # information that helps with bug reports
 # kernel
-echo "Kernel=${KVER}"
+echo "Linux Kernel=${KVER}"
 # architecture - for ARM: aarch64 = 64 bit, armv7l = 32 bit
-echo "Architecture=${KARCH}"
+echo "CPU Architecture=${KARCH}"
 #getconf LONG_BIT (may be handy in the future)
 
 # blacklist the in-kernel module (driver) so that there is no conflict
