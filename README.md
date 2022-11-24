@@ -175,7 +175,7 @@ It is recommended that you do not delete the driver directory after
 installation as the directory contains information and scripts that you
 may need in the future.
 
-Secure Boot: The primary installation script, `install-driver.sh`, will
+Secure Boot: The installation script, `install-driver.sh`, will
 automatically support secure boot... if your distro supports the method
 dkms uses. I regularly test the installation script on systems with
 secure boot on. It works seemlessly on modern Ubuntu based distros as
@@ -186,11 +186,11 @@ secure boot making it unnecessary to attempt to support it. There are
 distros that may require additional steps to sign the driver for secure
 boot operation. Fedora is an example. In installation Step 3, note that
 `openssl` must be installed as Fedora does not install it by default.
-There will also be another step for Fedora after the main
-`install-driver.sh` script is completed. This will be explained in the
-instructions at the appropriate time. Overall, secure boot requires that
+There will also be another step for Fedora after `install-driver.sh`
+script is completed. This will be explained in the instructions at the
+appropriate time. Overall, secure boot requires that
 `openssl` and `mokutil` be installed and that additional steps be
-performed if necessary. To test is secure boot is the problem:  If you
+performed if necessary. To test if secure boot is the problem:  If you
 install this driver and, after a reboot, the driver is not working, you
 can go into the BIOS and temporarily turn secure boot off to see if
 secure boot is the problem.
@@ -287,12 +287,18 @@ sudo zypper install -t pattern devel_kernel dkms
 sudo xbps-install linux-headers dkms git make
 ```
 
-- Options for Arch and Manjaro
+- Options for Arch and Manjaro (if using Manjaro for RasPi4B, see note)
 
 If using pacman
 
 ```
 sudo pacman -S --noconfirm linux-headers dkms git bc
+```
+
+Note: The following is needed if using Manjaro for RasPi4B.
+
+```
+sudo pacman -S --noconfirm linux-rpi4-headers dkms git bc
 ```
 
 Note: If you are asked to choose a provider, make sure to choose the one
