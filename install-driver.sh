@@ -5,7 +5,7 @@
 # Supports dkms and non-dkms installations.
 
 SCRIPT_NAME="install-driver.sh"
-SCRIPT_VERSION="20221101"
+SCRIPT_VERSION="20221125"
 MODULE_NAME="8821cu"
 DRV_VERSION="5.12.0.4"
 OPTIONS_FILE="${MODULE_NAME}.conf"

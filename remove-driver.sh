@@ -5,7 +5,7 @@
 # Supports dkms and non-dkms removals.
 
 SCRIPT_NAME="remove-driver.sh"
-SCRIPT_VERSION="20221101"
+SCRIPT_VERSION="20221125"
 MODULE_NAME="8821cu"
 DRV_VERSION="5.12.0.4"
 OPTIONS_FILE="${MODULE_NAME}.conf"
@@ -62,9 +62,9 @@ fi
 
 # information that helps with bug reports
 # kernel
-echo "Kernel=${KVER}"
+echo "Linux Kernel=${KVER}"
 # architecture - for ARM: aarch64 = 64 bit, armv7l = 32 bit
-echo "Architecture=${KARCH}"
+echo "CPU Architecture=${KARCH}"
 #getconf LONG_BIT (may be handy in the future)
 
 #  2>/dev/null suppresses the output of dkms
