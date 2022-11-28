@@ -50,6 +50,10 @@ confirm that this is the correct driver for your adapter.
 - Kernels: 4.19 - 5.11 (Realtek)
 - Kernels: 5.12 - 6.1  (community support)
 
+### Tested Compilers
+
+- gcc 9, 11 and 12
+
 ### Tested Linux Distributions
 
 Note: One of the goals of this project is to provide driver support that
@@ -82,10 +86,15 @@ the installation steps can be improved.
 - Void Linux (kernel 5.18)
 
 Note: Red Hat Enterprise Linux (RHEL) and distros based on RHEL are not
-supported due to the way kernel patches are handled.
+supported due to the way kernel patches are handled. I will support
+knowledgable RHEL developers if they want to merge the required
+support and keep it current.  
 
 Note: Android is not supported due to the tremendous amount of changes
-that Google has made to the mainline Linux kernel.
+that Google has made to the mainline Linux kernel. I will support
+knowledgable Android developers if they want to merge the required
+support and keep it current. 
+
 
 ### Download Locations for Tested Linux Distributions
 
@@ -346,7 +355,7 @@ Note: If you elect to skip the reboot at the end of the installation
 script, the driver may not load immediately and the driver options will
 not be applied. Rebooting is strongly recommended.
 
-Fedora users that have secure boot turned on should run the following to
+Note: Fedora users that have secure boot turned on should run the following to
 enroll the key:
 
 $ sudo mokutil --import /var/lib/dkms/mok.pub
