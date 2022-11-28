@@ -17,7 +17,14 @@ EXTRA_CFLAGS += -Wno-unused-variable
 #EXTRA_CFLAGS += -Wno-vla
 EXTRA_CFLAGS += -Wno-misleading-indentation
 EXTRA_CFLAGS += -Wno-implicit-fallthrough
+
+# Activates Concurrent Mode if uncommented
 #EXTRA_CFLAGS += -DCONFIG_CONCURRENT_MODE
+
+# LED Control
+EXTRA_CFLAGS += -DCONFIG_LED_CONTROL
+EXTRA_CFLAGS += -DCONFIG_SW_LED -DCONFIG_RTW_SW_LED
+EXTRA_CFLAGS += -DCONFIG_LED_ENABLE
 
 # gcc-12
 EXTRA_CFLAGS += -Wno-address
