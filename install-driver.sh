@@ -104,6 +104,7 @@ then
 
 	if [[ "$RESULT" = "0" ]]
 	then
+        make clean >/dev/null 2>&1
 		echo "The driver was installed successfully."
 	else
 		echo "An error occurred. Error = ${RESULT}"

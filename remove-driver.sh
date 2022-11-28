@@ -67,37 +67,39 @@ echo "Linux Kernel=${KVER}"
 echo "CPU Architecture=${KARCH}"
 #getconf LONG_BIT (may be handy in the future)
 
-#  2>/dev/null suppresses the output of dkms
-dkms remove -m ${DRV_NAME} -v ${DRV_VERSION} --all 2>/dev/null
-RESULT=$?
-#echo "Result=${RESULT}"
-
-# RESULT will be 3 if there are no instances of module to remove
-# however we still need to remove various files or the install script
-# may complain.
-if [[ ("$RESULT" = "0")||("$RESULT" = "3") ]]
+# determine if dkms is installed and run the appropriate routines
+if command -v dkms >/dev/null 2>&1
 then
-	if [[ ("$RESULT" = "0") ]]
+	#  2>/dev/null suppresses the output of dkms
+	dkms remove -m ${DRV_NAME} -v ${DRV_VERSION} --all 2>/dev/null
+	RESULT=$?
+	#echo "Result=${RESULT}"
+
+	# RESULT will be 3 if there are no instances of module to remove
+	# however we still need to remove various files or the install script
+	# may complain.
+	if [[ ("$RESULT" = "0")||("$RESULT" = "3") ]]
 	then
-		echo "${DRV_NAME}/${DRV_VERSION} has been removed"
-		echo "If older versions of ${DRV_NAME} are installed, run:"
-		echo "$ sudo dkms remove ${DRV_NAME}/<version> --all"
-		echo "dkms shows the following drivers are still installed:"
-		dkms status
+		if [[ ("$RESULT" = "0") ]]
+		then
+			echo "${DRV_NAME}/${DRV_VERSION} has been removed"
+		fi
+	else
+		echo "An error occurred. dkms remove error = ${RESULT}"
+		echo "Please report this error."
+		exit $RESULT
 	fi
-	echo "Removing ${BLACKLIST_FILE} from /etc/modprobe.d"
-	rm -f /etc/modprobe.d/${BLACKLIST_FILE}
-	echo "Removing ${OPTIONS_FILE} from /etc/modprobe.d"
-	rm -f /etc/modprobe.d/${OPTIONS_FILE}
-	echo "Removing source files from /usr/src/${DRV_NAME}-${DRV_VERSION}"
-	rm -rf /usr/src/${DRV_NAME}-${DRV_VERSION}
-	echo "The driver was removed successfully."
-	echo "You may now delete the driver directory if desired."
-else
-	echo "An error occurred. dkms remove error = ${RESULT}"
-	echo "Please report this error."
-	exit $RESULT
 fi
+
+echo "Removing ${BLACKLIST_FILE} from /etc/modprobe.d"
+rm -f /etc/modprobe.d/${BLACKLIST_FILE}
+echo "Removing ${OPTIONS_FILE} from /etc/modprobe.d"
+rm -f /etc/modprobe.d/${OPTIONS_FILE}
+echo "Removing source files from /usr/src/${DRV_NAME}-${DRV_VERSION}"
+rm -rf /usr/src/${DRV_NAME}-${DRV_VERSION}
+make clean >/dev/null 2>&1
+echo "The driver was removed successfully."
+echo "You may now delete the driver directory if desired."
 
 # if NoPrompt is not used, ask user some questions to complete removal
 if [ $NO_PROMPT -ne 1 ]
