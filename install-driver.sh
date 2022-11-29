@@ -30,6 +30,33 @@ then
 	exit 1
 fi
 
+# check to ensure nano is installed
+if ! command -v nano >/dev/null 2>&1
+then
+	echo "A required package appears to not be installed."
+	echo "Please install the following package: nano"
+	echo "Once the package is installed, please run \"sudo ./${SCRIPT_NAME}\""
+	exit 1
+fi
+
+# check to ensure rfkill is installed
+if ! command -v rfkill >/dev/null 2>&1
+then
+	echo "A required package appears to not be installed."
+	echo "Please install the following package: rfkill"
+	echo "Once the package is installed, please run \"sudo ./${SCRIPT_NAME}\""
+	exit 1
+fi
+
+# check to ensure iw is installed
+if ! command -v iw >/dev/null 2>&1
+then
+	echo "A required package appears to not be installed."
+	echo "Please install the following package: iw"
+	echo "Once the package is installed, please run \"sudo ./${SCRIPT_NAME}\""
+	exit 1
+fi
+
 # support for the NoPrompt option allows non-interactive use of this script
 NO_PROMPT=0
 
@@ -65,6 +92,8 @@ fi
 echo "Linux Kernel=${KVER}"
 # architecture - for ARM: aarch64 = 64 bit, armv7l = 32 bit
 echo "CPU Architecture=${KARCH}"
+# gcc version
+echo "gcc --version | grep -i gcc"
 #getconf LONG_BIT (may be handy in the future)
 
 # blacklist the in-kernel module (driver) so that there is no conflict
