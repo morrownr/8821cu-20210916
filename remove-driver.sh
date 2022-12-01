@@ -70,6 +70,7 @@ echo "CPU Architecture=${KARCH}"
 # determine if dkms is installed and run the appropriate routines
 if command -v dkms >/dev/null 2>&1
 then
+	echo "Removing a dkms installation."
 	#  2>/dev/null suppresses the output of dkms
 	dkms remove -m ${DRV_NAME} -v ${DRV_VERSION} --all 2>/dev/null
 	RESULT=$?
