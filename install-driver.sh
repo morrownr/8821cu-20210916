@@ -5,7 +5,7 @@
 # Supports dkms and non-dkms installations.
 
 SCRIPT_NAME="install-driver.sh"
-SCRIPT_VERSION="20221204"
+SCRIPT_VERSION="20221205"
 MODULE_NAME="8821cu"
 DRV_VERSION="5.12.0.4"
 OPTIONS_FILE="${MODULE_NAME}.conf"
@@ -107,6 +107,11 @@ echo "CPU Architecture=${KARCH}"
 # gcc version
 gcc_ver=$(gcc --version | grep -i gcc)
 echo "gcc --version="${gcc_ver}
+
+# check ISO 3166-1 alpha-2 Country Code
+# https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+a2_country_code=$(iw reg get | grep -i country)
+echo "Country Code=="${a2_country_code}
 
 # check for secure mode
 #
