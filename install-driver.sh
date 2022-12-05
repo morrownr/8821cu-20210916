@@ -5,7 +5,7 @@
 # Supports dkms and non-dkms installations.
 
 SCRIPT_NAME="install-driver.sh"
-SCRIPT_VERSION="20221125"
+SCRIPT_VERSION="20221204"
 MODULE_NAME="8821cu"
 DRV_VERSION="5.12.0.4"
 OPTIONS_FILE="${MODULE_NAME}.conf"
@@ -27,6 +27,15 @@ if [[ $EUID -ne 0 ]]
 then
 	echo "You must run this script with superuser (root) privileges."
 	echo "Try: \"sudo ./${SCRIPT_NAME}\""
+	exit 1
+fi
+
+# check to ensure mokutil is installed
+if ! command -v mokutil >/dev/null 2>&1
+then
+	echo "A required package appears to not be installed."
+	echo "Please install the following package: mokutil"
+	echo "Once the package is installed, please run \"sudo ./${SCRIPT_NAME}\""
 	exit 1
 fi
 
@@ -88,13 +97,19 @@ then
 fi
 
 # information that helps with bug reports
+
 # kernel
 echo "Linux Kernel=${KVER}"
+
 # architecture - for ARM: aarch64 = 64 bit, armv7l = 32 bit
 echo "CPU Architecture=${KARCH}"
+
 # gcc version
-echo "gcc --version | grep -i gcc"
-#getconf LONG_BIT (may be handy in the future)
+gcc_ver=$(gcc --version | grep -i gcc)
+echo "gcc --version="${gcc_ver}
+
+# check for secure mode
+#
 
 # blacklist the in-kernel module (driver) so that there is no conflict
 echo "Installing ${BLACKLIST_FILE} to: /etc/modprobe.d"
@@ -217,14 +232,12 @@ fi
 if [ $NO_PROMPT -ne 1 ]
 then
 	read -p "Do you want to edit the driver options file now? [y/N] " -n 1 -r
-	echo
 	if [[ $REPLY =~ ^[Yy]$ ]]
 	then
 		nano /etc/modprobe.d/${OPTIONS_FILE}
 	fi
 
 	read -p "Do you want to reboot now? (recommended) [y/N] " -n 1 -r
-	echo
 	if [[ $REPLY =~ ^[Yy]$ ]]
 	then
 		reboot
