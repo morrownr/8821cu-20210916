@@ -204,6 +204,24 @@ install this driver and, after a reboot, the driver is not working, you
 can go into the BIOS and temporarily turn secure boot off to see if
 secure boot is the problem.
 
+Please ensure the ISO 3166-1 alpha-2 Country Code is set in your Linux distro.
+If it is not set, you will likely have problems accessing some channels, especially
+5 Ghz and 6 GHz channels. To set your Country Code:
+
+```
+iw reg set US
+```
+
+If you are not in the US, please use the country code for your country. See:
+
+ISO 3166-1 alpha-2 codes: https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+
+To check if your country code is properly set:
+
+```
+iw reg get
+```
+
 ### Installation Steps
 
 Note: The installation instructions are for the novice user. Experienced users are
@@ -257,6 +275,10 @@ sudo reboot
 ```
 
 #### Step 3: Install the required packages (select the option for the OS you are using)
+
+Note: If your Linux distro does not fall into one of options listed
+below, you will need to research how to properly setup up the development
+environment for your system.
 
 - Option for Raspberry Pi OS (ARM/ARM64)
 
