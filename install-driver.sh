@@ -30,6 +30,15 @@ then
 	exit 1
 fi
 
+# check to ensure iw is installed
+if ! command -v iw >/dev/null 2>&1
+then
+	echo "A required package appears to not be installed."
+	echo "Please install the following package: iw"
+	echo "Once the package is installed, please run \"sudo ./${SCRIPT_NAME}\""
+	exit 1
+fi
+
 # check to ensure mokutil is installed
 if ! command -v mokutil >/dev/null 2>&1
 then
@@ -53,15 +62,6 @@ if ! command -v rfkill >/dev/null 2>&1
 then
 	echo "A required package appears to not be installed."
 	echo "Please install the following package: rfkill"
-	echo "Once the package is installed, please run \"sudo ./${SCRIPT_NAME}\""
-	exit 1
-fi
-
-# check to ensure iw is installed
-if ! command -v iw >/dev/null 2>&1
-then
-	echo "A required package appears to not be installed."
-	echo "Please install the following package: iw"
 	echo "Once the package is installed, please run \"sudo ./${SCRIPT_NAME}\""
 	exit 1
 fi
@@ -98,17 +98,17 @@ fi
 
 # information that helps with bug reports
 
-# kernel
+# display kernel
 echo "Linux Kernel=${KVER}"
 
-# architecture - for ARM: aarch64 = 64 bit, armv7l = 32 bit
+# display architecture - for ARM: aarch64 = 64 bit, armv7l = 32 bit
 echo "CPU Architecture=${KARCH}"
 
-# gcc version
+# display gcc version
 gcc_ver=$(gcc --version | grep -i gcc)
 echo "gcc --version="${gcc_ver}
 
-# check ISO 3166-1 alpha-2 Country Code
+# display ISO 3166-1 alpha-2 Country Code
 # https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 a2_country_code=$(iw reg get | grep -i country)
 echo "Country Code=="${a2_country_code}
@@ -237,12 +237,14 @@ fi
 if [ $NO_PROMPT -ne 1 ]
 then
 	read -p "Do you want to edit the driver options file now? [y/N] " -n 1 -r
+	echo
 	if [[ $REPLY =~ ^[Yy]$ ]]
 	then
 		nano /etc/modprobe.d/${OPTIONS_FILE}
 	fi
 
 	read -p "Do you want to reboot now? (recommended) [y/N] " -n 1 -r
+	echo
 	if [[ $REPLY =~ ^[Yy]$ ]]
 	then
 		reboot

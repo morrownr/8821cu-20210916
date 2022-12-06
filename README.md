@@ -312,6 +312,12 @@ sudo dnf -y install git dkms kernel-devel openssl
 sudo zypper install -t pattern devel_kernel dkms
 ```
 
+- Option for Alpine
+
+```
+sudo apk add linux-lts-dev make gcc
+```
+
 - Option for Void Linux
 
 ```
