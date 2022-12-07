@@ -176,9 +176,9 @@ can be executed as the `root` user. (If the command `sudo echo Yes` returns
 "Yes", with or without having to enter your password, you do have sufficient
 access rights.)
 
-DKMS is used for the installation. DKMS is a system utility which will
-automatically recompile and reinstall this driver when a new kernel is
-installed. DKMS is provided by and maintained by Dell.
+DKMS is used for the installation if available. DKMS is a system utility
+which will automatically recompile and reinstall this driver when a new
+kernel is installed. DKMS is provided by and maintained by Dell.
 
 It is recommended that you do not delete the driver directory after
 installation as the directory contains information and scripts that you
@@ -225,8 +225,8 @@ iw reg get
 ### Installation Steps
 
 Note: The installation instructions are for the novice user. Experienced users are
-welcome to alter the installation to meet their needs. Support will be provided based
-on the steps below.
+welcome to alter the installation to meet their needs. Support will be provided,
+on a best effort basis, based on the steps below.
 
 #### Step 1: Open a terminal (e.g. Ctrl+Alt+T)
 
