@@ -19,7 +19,8 @@ DRV_NAME="rtl${MODULE_NAME}"
 DRV_DIR="$(pwd)"
 
 # Some distros have a non-mainlined, patched-in kernel driver
-# that has to be deactivated.
+# that has to be deactivated. The filename may need to change
+# when the new in-kernel driver is mainlined.
 BLACKLIST_FILE="rtw88_8821cu.conf"
 
 # check to ensure sudo was used
@@ -98,10 +99,10 @@ fi
 
 # information that helps with bug reports
 
-# display kernel
+# display kernel version
 echo "Linux Kernel=${KVER}"
 
-# display architecture - for ARM: aarch64 = 64 bit, armv7l = 32 bit
+# display architecture
 echo "CPU Architecture=${KARCH}"
 
 # display gcc version
@@ -191,7 +192,7 @@ else
 			exit $RESULT
 		fi
 	else
-		echo "The driver was added successfully."
+		echo "The driver was added to dkms successfully."
 	fi
 
 	dkms build -m ${DRV_NAME} -v ${DRV_VERSION}
@@ -206,7 +207,7 @@ else
 		echo "$ sudo ./remove-driver.sh"
 		exit $RESULT
 	else
-		echo "The driver was built successfully."
+		echo "The driver was built by dkms successfully."
 	fi
 
 	dkms install -m ${DRV_NAME} -v ${DRV_VERSION}
@@ -221,7 +222,7 @@ else
 		echo "$ sudo ./remove-driver.sh"
 		exit $RESULT
 	else
-		echo "The driver was installed successfully."
+		echo "The driver was installed by dkms successfully."
 	fi
 fi
 
