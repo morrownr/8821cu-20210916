@@ -5,7 +5,7 @@
 # Supports dkms and non-dkms installations.
 
 SCRIPT_NAME="install-driver.sh"
-SCRIPT_VERSION="20221205"
+SCRIPT_VERSION="20221207"
 MODULE_NAME="8821cu"
 DRV_VERSION="5.12.0.4"
 OPTIONS_FILE="${MODULE_NAME}.conf"
@@ -31,6 +31,15 @@ then
 	exit 1
 fi
 
+# check to ensure gcc is installed
+if ! command -v gcc >/dev/null 2>&1
+then
+	echo "A required package appears to not be installed."
+	echo "Please install the following package: gcc"
+	echo "Once the package is installed, please run \"sudo ./${SCRIPT_NAME}\""
+	exit 1
+fi
+
 # check to ensure iw is installed
 if ! command -v iw >/dev/null 2>&1
 then
@@ -40,11 +49,11 @@ then
 	exit 1
 fi
 
-# check to ensure nano is installed
-if ! command -v nano >/dev/null 2>&1
+# check to ensure make is installed
+if ! command -v make >/dev/null 2>&1
 then
 	echo "A required package appears to not be installed."
-	echo "Please install the following package: nano"
+	echo "Please install the following package: make"
 	echo "Once the package is installed, please run \"sudo ./${SCRIPT_NAME}\""
 	exit 1
 fi
@@ -54,6 +63,15 @@ if ! command -v rfkill >/dev/null 2>&1
 then
 	echo "A required package appears to not be installed."
 	echo "Please install the following package: rfkill"
+	echo "Once the package is installed, please run \"sudo ./${SCRIPT_NAME}\""
+	exit 1
+fi
+
+# check to ensure nano is installed
+if ! command -v nano >/dev/null 2>&1
+then
+	echo "A required package appears to not be installed."
+	echo "Please install the following package: nano"
 	echo "Once the package is installed, please run \"sudo ./${SCRIPT_NAME}\""
 	exit 1
 fi
@@ -111,6 +129,9 @@ if command -v mokutil >/dev/null 2>&1
 then
 	mokutil --sb-state
 fi
+
+# header files are normally stored in /lib/modules/${kernel_version}/build
+#
 
 # blacklist the in-kernel module (driver) so that there is no conflict
 echo "Installing ${BLACKLIST_FILE} to: /etc/modprobe.d"
