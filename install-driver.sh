@@ -40,15 +40,6 @@ then
 	exit 1
 fi
 
-# check to ensure mokutil is installed
-if ! command -v mokutil >/dev/null 2>&1
-then
-	echo "A required package appears to not be installed."
-	echo "Please install the following package: mokutil"
-	echo "Once the package is installed, please run \"sudo ./${SCRIPT_NAME}\""
-	exit 1
-fi
-
 # check to ensure nano is installed
 if ! command -v nano >/dev/null 2>&1
 then
@@ -112,10 +103,14 @@ echo "gcc --version="${gcc_ver}
 # display ISO 3166-1 alpha-2 Country Code
 # https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 a2_country_code=$(iw reg get | grep -i country)
-echo "Country Code=="${a2_country_code}
+echo "Country Code="${a2_country_code}
 
-# check for secure mode
-#
+# check secure mode status
+# run if mokutil is installed
+if command -v mokutil >/dev/null 2>&1
+then
+	mokutil --sb-state
+fi
 
 # blacklist the in-kernel module (driver) so that there is no conflict
 echo "Installing ${BLACKLIST_FILE} to: /etc/modprobe.d"
