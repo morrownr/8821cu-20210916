@@ -130,8 +130,9 @@ then
 	mokutil --sb-state
 fi
 
-# header files are normally stored in /lib/modules/${kernel_version}/build
-#
+# header files are normally stored in ?
+# how can we determine:
+# if the correct header files are installed?
 
 # blacklist the in-kernel module (driver) so that there is no conflict
 echo "Installing ${BLACKLIST_FILE} to: /etc/modprobe.d"
