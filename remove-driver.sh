@@ -4,11 +4,25 @@
 #
 # Supports dkms and non-dkms removals.
 
+# Copyright(c) 2022 Nick Morrow
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of version 2 of the GNU General Public License as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+
 SCRIPT_NAME="remove-driver.sh"
-SCRIPT_VERSION="20221204"
+SCRIPT_VERSION="20221207"
 MODULE_NAME="8821cu"
 DRV_VERSION="5.12.0.4"
-OPTIONS_FILE="${MODULE_NAME}.conf"
+# Some distros have a not yet mainlined, patched-in kernel driver that
+# must be deactivated so as not to conflict with this driver. The
+# filename may need to change when the new in-kernel driver is mainlined.
+BLACKLIST_FILE="rtw88_8821cu.conf"
 
 KVER="$(uname -r)"
 KARCH="$(uname -m)"
@@ -17,10 +31,7 @@ MODDESTDIR="/lib/modules/${KVER}/kernel/drivers/net/wireless/"
 
 DRV_NAME="rtl${MODULE_NAME}"
 DRV_DIR="$(pwd)"
-
-# Some distros have a non-mainlined, patched-in kernel driver
-# that has to be deactivated.
-BLACKLIST_FILE="rtw88_8821cu.conf"
+OPTIONS_FILE="${MODULE_NAME}.conf"
 
 # check to ensure sudo was used
 if [[ $EUID -ne 0 ]]
@@ -62,10 +73,10 @@ fi
 
 # information that helps with bug reports
 
-# kernel
+# display kernel version
 echo "Linux Kernel=${KVER}"
 
-# architecture - for ARM: aarch64 = 64 bit, armv7l = 32 bit
+# display architecture
 echo "CPU Architecture=${KARCH}"
 
 # determine if dkms is installed and run the appropriate routines
