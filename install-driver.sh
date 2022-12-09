@@ -128,15 +128,15 @@ echo "CPU Architecture=${KARCH}"
 gcc_ver=$(gcc --version | grep -i gcc)
 echo "gcc --version="${gcc_ver}
 
-# display and check ISO 3166-1 alpha-2 Country Code
+# display ISO 3166-1 alpha-2 Country Code
 a2_country_code=$(iw reg get | grep -i country)
 echo "Country Code="${a2_country_code}
-if [[ $a2_country_code == *"00"* ]];
-then
-    echo "The Country Code is not properly set."
-    echo "File alpha-2_Country_Codes is located in the driver directory."
-    echo "Please read and follow the directions in the file."
-fi
+#if [[ $a2_country_code == *"00"* ]];
+#then
+#    echo "The Country Code is not properly set."
+#    echo "File alpha-2_Country_Codes is located in the driver directory."
+#    echo "Please read and follow the directions in the file."
+#fi
 
 # display secure mode status
 # run if mokutil is installed
