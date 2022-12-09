@@ -6,7 +6,7 @@ some channels, especially 5 Ghz and 6 GHz channels. To set your Country
 Code from the command line interface:
 
 ```
-iw reg set US
+sudo iw reg set US
 ```
 
 If you are not in the US, please use the country code for your country.
@@ -22,155 +22,152 @@ iw reg get
 
 ISO 3166-1 alpha-2 Country Codes
 
-Name            Code
+Name                Code
 
-Afghanistan		AF
+Afghanistan		    AF
 
-Åland Islands	AX
+Åland Islands       AX
 
-Albania			AL
+Albania			    AL
 
-Algeria			DZ
+Algeria			    DZ
 
 American
-Samoa			AS
+Samoa			    AS
 
-Andorra			AD
+Andorra			    AD
 
-Angola			AO
+Angola			    AO
 
-Anguilla		AI
+Anguilla		    AI
 
-Antarctica		AQ
+Antarctica		    AQ
 
 Antigua and
-Barbuda			AG
+Barbuda			    AG
 
-Argentina		AR
+Argentina		    AR
 
-Armenia			AM
+Armenia			    AM
 
-Aruba			AW
+Aruba			    AW
 
-Australia		AU
+Australia		    AU
 
-Austria			AT
+Austria			    AT
 
-Azerbaijan		AZ
+Azerbaijan		    AZ
 
-Bahamas			BS
+Bahamas			    BS
 
-Bahrain			BH
+Bahrain			    BH
 
-Bangladesh		BD
+Bangladesh		    BD
 
-Barbados		BB
+Barbados		    BB
 
-Belarus			BY
+Belarus			    BY
 
-Belgium			BE
+Belgium			    BE
 
-Belize			BZ
+Belize			    BZ
 
-Benin			BJ
+Benin			    BJ
 
-Bermuda			BM
+Bermuda			    BM
 
-Bhutan			BT
+Bhutan			    BT
 
-Bolivia			BO
+Bolivia			    BO
 
 Bonaire, Sint
 Eustatius and
-Saba			BQ
+Saba			    BQ
 
 Bosnia and
-Herzegovina		BA
+Herzegovina		    BA
 
-Botswana		BW
+Botswana		    BW
 
-Bouvet Island	BV
+Bouvet Island       BV
 
-Brazil			BR
+Brazil			    BR
 
 British Indian
-Ocean Territory	IO
+Ocean Territory     IO
 
 Brunei
-Darussalam		BN
+Darussalam		    BN
 
-Bulgaria		BG
+Bulgaria		    BG
 
-Burkina Faso	BF
+Burkina Faso	    BF
 
-Burundi			BI
+Burundi			    BI
 
-Cambodia		KH
+Cambodia		    KH
 
-Cameroon		CM
+Cameroon		    CM
 
-Canada			CA
+Canada			    CA
 
-Cape Verde		CV
-
-><
+Cape Verde		    CV
 
 Cayman
-Islands        KY
+Islands             KY
 
 Central
 African
-Republic       CF
+Republic            CF
 
-Chad           TD
+Chad                TD
 
-Chile          CL
+Chile               CL
 
-China          CN
+China               CN
 
 Christmas
-Island         CX
+Island              CX
 
 Cocos
 (Keeling)
-Islands        CC
+Islands             CC
 
-Colombia       CO
+Colombia            CO
 
-Comoros        KM
+Comoros             KM
 
-Congo          CG
+Congo               CG
 
-Congo, the
-Democratic
-Republic of
-the            CD
+Congo               CD
 
-Cook Islands CK
+Cook Islands        CK
 
-Costa Rica CR
+Costa Rica          CR
 
-Côte d'Ivoire CI
+Côte d'Ivoire       CI
 
-Croatia       HR
+Croatia             HR
 
-Cuba          CU
+Cuba                CU
 
-Curaçao       CW
+Curaçao             CW
 
-Cyprus        CY
+Cyprus              CY
 
 Czech
-Republic      CZ
+Republic            CZ
 
-Denmark       DK
+Denmark             DK
 
-Djibouti      DJ
+Djibouti            DJ
 
-Dominica      DM
+Dominica            DM
 
 Dominican
-Republic      DO
+Republic            DO
+
+><
 
 Ecuador       EC
 

@@ -16,7 +16,7 @@
 # GNU General Public License for more details.
 
 SCRIPT_NAME="install-driver.sh"
-SCRIPT_VERSION="20221207"
+SCRIPT_VERSION="20221208"
 MODULE_NAME="8821cu"
 DRV_VERSION="5.12.0.4"
 # Some distros have a not yet mainlined, patched-in kernel driver that
@@ -128,12 +128,17 @@ echo "CPU Architecture=${KARCH}"
 gcc_ver=$(gcc --version | grep -i gcc)
 echo "gcc --version="${gcc_ver}
 
-# display ISO 3166-1 alpha-2 Country Code
-# https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+# display and check ISO 3166-1 alpha-2 Country Code
 a2_country_code=$(iw reg get | grep -i country)
 echo "Country Code="${a2_country_code}
+if [[ $a2_country_code == *"00"* ]];
+then
+    echo "The Country Code is not properly set."
+    echo "File alpha-2_Country_Codes is located in the driver directory."
+    echo "Please read and follow the directions in the file."
+fi
 
-# check secure mode status
+# display secure mode status
 # run if mokutil is installed
 if command -v mokutil >/dev/null 2>&1
 then
