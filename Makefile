@@ -1351,13 +1351,26 @@ ifeq ($(CONFIG_PLATFORM_GENERIC), y)
 EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
 EXTRA_CFLAGS += -DCONFIG_IOCTL_CFG80211 -DRTW_USE_CFG80211_STA_EVENT
 
+# This could be a better way to set SUBARCH but it needs work
+# SUBARCH := $(shell uname -m | sed -e s/i.86/x86/ -e s/x86_64/x86/ \
+# 					-e s/arm.*/arm/ \
+# 					-e s/mips.*/mips/ \
+# 					-e s/aarch64.*/arm64/ )
+
 SUBARCH := $(shell uname -m)
+
 ifeq ($(SUBARCH), aarch64)
 SUBARCH := arm64
 endif
+
 ifeq ($(SUBARCH), armv7l)
 SUBARCH := arm
 endif
+
+ifeq ($(SUBARCH), armv6l)
+SUBARCH := arm
+endif
+
 ARCH ?= $(SUBARCH)
 
 CROSS_COMPILE ?=
