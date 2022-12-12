@@ -22,7 +22,7 @@ DRV_VERSION="5.12.0.4"
 # Some distros have a not yet mainlined, patched-in kernel driver that
 # must be deactivated so as not to conflict with this driver. The
 # filename may need to change when the new in-kernel driver is mainlined.
-BLACKLIST_FILE="rtw88_8821cu.conf"
+#BLACKLIST_FILE="rtw88_8821cu.conf"
 
 KVER="$(uname -r)"
 KARCH="$(uname -m)"
@@ -59,13 +59,13 @@ then
 	exit 1
 fi
 
-# check to see if header files are installed
-if [ ! -d "/lib/modules/$(uname -r)/build" ]; then
-	echo "Your kernel headers aren't properly installed."
-	echo "Please consult your distro documentation."
-	echo "Once the header files are installed, please run \"sudo ./${SCRIPT_NAME}\""
-	exit 1
-fi
+# check to see if header files are installed (not sure if this can be done.)
+#if [ ! -d "/usr/src/linux-headers-/$(uname -r)/" ]; then
+#	echo "Your kernel headers aren't properly installed."
+#	echo "Please consult your distro documentation."
+#	echo "Once the header files are installed, please run \"sudo ./${SCRIPT_NAME}\""
+#	exit 1
+#fi
 
 # check to ensure iw is installed
 if ! command -v iw >/dev/null 2>&1
@@ -154,10 +154,10 @@ then
 fi
 
 # blacklist the in-kernel module (driver) so that there is no conflict
-echo "Installing ${BLACKLIST_FILE} to: /etc/modprobe.d"
-cp -f ${BLACKLIST_FILE} /etc/modprobe.d
+#echo "Installing ${BLACKLIST_FILE} to: /etc/modprobe.d"
+#cp -f ${BLACKLIST_FILE} /etc/modprobe.d
 
-# sets module parameters (driver options)
+# sets module parameters (driver options) and blacklisted modules
 echo "Installing ${OPTIONS_FILE} to: /etc/modprobe.d"
 cp -f ${OPTIONS_FILE} /etc/modprobe.d
 
