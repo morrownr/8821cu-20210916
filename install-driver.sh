@@ -59,13 +59,13 @@ then
 	exit 1
 fi
 
-# check to see if header files are installed (not sure if this can be done.)
-#if [ ! -d "/usr/src/linux-headers-/$(uname -r)/" ]; then
-#	echo "Your kernel headers aren't properly installed."
-#	echo "Please consult your distro documentation."
-#	echo "Once the header files are installed, please run \"sudo ./${SCRIPT_NAME}\""
-#	exit 1
-#fi
+# check to see if header files are installed
+if [ ! -d "/lib/modules/$(uname -r)/build" ]; then
+	echo "Your kernel headers aren't properly installed."
+	echo "Please consult your distro documentation."
+	echo "Once the header files are installed, please run \"sudo ./${SCRIPT_NAME}\""
+	exit 1
+fi
 
 # check to ensure iw is installed
 if ! command -v iw >/dev/null 2>&1

@@ -1,16 +1,18 @@
 2022-12-07
 
-Instructions for setting the ISO 3166-1 alpha-2 Country Code in your
-Linux distro. If it is not set, you will likely have problems accessing
-some channels, especially 5 Ghz and 6 GHz channels. To set your Country
-Code from the command line interface:
+Instructions for setting the ISO 3166-1 alpha-2 Country Code in your Linux
+distro. If it is not set, you may have problems using some channels, especially
+5 Ghz and 6 GHz channels. To set your Country Code from the command line
+interface:
+
+Note: Package "iw" must be installed.
 
 ```
-sudo iw reg set US
+sudo iw reg set XX
 ```
 
-If you are not in the US, please use the country code for your country.
-See the list of country codes below.
+Where XX is the country code for your country. See the list of country codes
+below.
 
 To check if your country code is properly set:
 
@@ -26,7 +28,7 @@ Name				Code
 
 Afghanistan			AF
 
-Åland Islands		AX
+Aland Islands		AX
 
 Albania				AL
 
@@ -64,125 +66,125 @@ Bahrain				BH
 
 Bangladesh			BD
 
-Barbados		    BB
+Barbados			BB
 
-Belarus			    BY
+Belarus				BY
 
-Belgium			    BE
+Belgium				BE
 
-Belize			    BZ
+Belize				BZ
 
-Benin			    BJ
+Benin				BJ
 
-Bermuda			    BM
+Bermuda				BM
 
-Bhutan			    BT
+Bhutan				BT
 
-Bolivia			    BO
+Bolivia				BO
 
 Bonaire, Sint
 Eustatius and
-Saba			    BQ
+Saba				BQ
 
 Bosnia and
-Herzegovina		    BA
+Herzegovina			BA
 
-Botswana		    BW
+Botswana			BW
 
-Bouvet Island       BV
+Bouvet Island		BV
 
-Brazil			    BR
+Brazil				BR
 
 British Indian
-Ocean Territory     IO
+Ocean Territory		IO
 
 Brunei
-Darussalam		    BN
+Darussalam			BN
 
-Bulgaria		    BG
+Bulgaria			BG
 
-Burkina Faso	    BF
+Burkina Faso		BF
 
-Burundi			    BI
+Burundi				BI
 
-Cambodia		    KH
+Cambodia			KH
 
-Cameroon		    CM
+Cameroon			CM
 
-Canada			    CA
+Canada				CA
 
-Cape Verde		    CV
+Cape Verde			CV
 
 Cayman
-Islands             KY
+Islands				KY
 
 Central
 African
-Republic            CF
+Republic			CF
 
-Chad                TD
+Chad				TD
 
-Chile               CL
+Chile				CL
 
-China               CN
+China				CN
 
 Christmas
-Island              CX
+Island				CX
 
 Cocos
 (Keeling)
-Islands             CC
+Islands				CC
 
-Colombia            CO
+Colombia			CO
 
-Comoros             KM
+Comoros				KM
 
-Congo               CG
+Congo				CG
 
-Congo               CD
+Congo				CD
 
-Cook Islands        CK
+Cook Islands		CK
 
-Costa Rica          CR
+Costa Rica			CR
 
-Côte d'Ivoire       CI
+Côte d'Ivoire		CI
 
-Croatia             HR
+Croatia				HR
 
-Cuba                CU
+Cuba				CU
 
-Curaçao             CW
+Curaçao				CW
 
-Cyprus              CY
+Cyprus				CY
 
 Czech
-Republic            CZ
+Republic			CZ
 
-Denmark             DK
+Denmark				DK
 
-Djibouti            DJ
+Djibouti			DJ
 
-Dominica            DM
+Dominica			DM
 
 Dominican
 Republic			DO
 
-><
+Ecuador				EC
 
-Ecuador       EC
+Egypt				EG
 
-Egypt         EG
-
-El Salvador SV
+El Salvador			SV
 
 Equatorial
-Guinea        GQ
+Guinea				GQ
 
-Eritrea       ER
+Eritrea				ER
 
-Estonia       EE
+Estonia				EE
 
-Ethiopia      ET
+Ethiopia			ET
+
+><
 
 Falkland
 Islands
