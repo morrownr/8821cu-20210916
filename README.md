@@ -42,7 +42,7 @@ confirm that this is the correct driver for your adapter.
 
 - x86, i686
 - x86-64, amd64
-- armv7l (arm)
+- armv7l, armv6l (arm)
 - aarch64 (arm64)
 
 ### Compatible Kernels
@@ -52,7 +52,7 @@ confirm that this is the correct driver for your adapter.
 
 ### Tested Compilers
 
-- gcc 9, 11 and 12
+- gcc 9, 10, 11 and 12
 
 ### Tested Linux Distributions
 
@@ -88,7 +88,7 @@ the installation steps can be improved.
 Note: Red Hat Enterprise Linux (RHEL) and distros based on RHEL are not
 supported due to the way kernel patches are handled. I will support
 knowledgable RHEL developers if they want to merge the required
-support and keep it current.  
+support and keep it current.
 
 Note: Android is not supported due to the tremendous amount of changes
 that Google has made to the mainline Linux kernel. I will support

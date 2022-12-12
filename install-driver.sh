@@ -50,20 +50,28 @@ then
 	exit 1
 fi
 
-# check to ensure iw is installed
-if ! command -v iw >/dev/null 2>&1
-then
-	echo "A required package appears to not be installed."
-	echo "Please install the following package: iw"
-	echo "Once the package is installed, please run \"sudo ./${SCRIPT_NAME}\""
-	exit 1
-fi
-
 # check to ensure make is installed
 if ! command -v make >/dev/null 2>&1
 then
 	echo "A required package appears to not be installed."
 	echo "Please install the following package: make"
+	echo "Once the package is installed, please run \"sudo ./${SCRIPT_NAME}\""
+	exit 1
+fi
+
+# check to see if header files are installed
+if [ ! -d "/lib/modules/$(uname -r)/build" ]; then
+	echo "Your kernel headers aren't properly installed."
+	echo "Please consult your distro documentation."
+	echo "Once the header files are installed, please run \"sudo ./${SCRIPT_NAME}\""
+	exit 1
+fi
+
+# check to ensure iw is installed
+if ! command -v iw >/dev/null 2>&1
+then
+	echo "A required package appears to not be installed."
+	echo "Please install the following package: iw"
 	echo "Once the package is installed, please run \"sudo ./${SCRIPT_NAME}\""
 	exit 1
 fi
@@ -144,10 +152,6 @@ if command -v mokutil >/dev/null 2>&1
 then
 	mokutil --sb-state
 fi
-
-# header files are normally stored in ?
-# how can we determine:
-# if the correct header files are installed?
 
 # blacklist the in-kernel module (driver) so that there is no conflict
 echo "Installing ${BLACKLIST_FILE} to: /etc/modprobe.d"
