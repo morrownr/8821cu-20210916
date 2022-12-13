@@ -295,7 +295,7 @@ sudo apt install -y linux-headers-$(uname -r) build-essential bc dkms git libelf
 - Option for Ubuntu (all official flavors) and the numerous Ubuntu based distros
 
 ```
-sudo apt install -y build-essential dkms git 
+sudo apt install -y build-essential dkms git iw
 ```
 
 - Option for Fedora
