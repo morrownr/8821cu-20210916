@@ -19,10 +19,6 @@ SCRIPT_NAME="install-driver.sh"
 SCRIPT_VERSION="20221208"
 MODULE_NAME="8821cu"
 DRV_VERSION="5.12.0.4"
-# Some distros have a not yet mainlined, patched-in kernel driver that
-# must be deactivated so as not to conflict with this driver. The
-# filename may need to change when the new in-kernel driver is mainlined.
-#BLACKLIST_FILE="rtw88_8821cu.conf"
 
 KVER="$(uname -r)"
 KARCH="$(uname -m)"
@@ -139,12 +135,12 @@ echo "gcc --version="${gcc_ver}
 # display ISO 3166-1 alpha-2 Country Code
 a2_country_code=$(iw reg get | grep -i country)
 echo "Country Code="${a2_country_code}
-#if [[ $a2_country_code == *"00"* ]];
-#then
-#    echo "The Country Code is not properly set."
-#    echo "File alpha-2_Country_Codes is located in the driver directory."
-#    echo "Please read and follow the directions in the file."
-#fi
+if [[ $a2_country_code == *"00"* ]];
+then
+    echo "The Country Code may not be properly set."
+    echo "File alpha-2_Country_Codes is located in the driver directory."
+    echo "Please read and follow the directions in the file."
+fi
 
 # display secure mode status
 # run if mokutil is installed
@@ -152,10 +148,6 @@ if command -v mokutil >/dev/null 2>&1
 then
 	mokutil --sb-state
 fi
-
-# blacklist the in-kernel module (driver) so that there is no conflict
-#echo "Installing ${BLACKLIST_FILE} to: /etc/modprobe.d"
-#cp -f ${BLACKLIST_FILE} /etc/modprobe.d
 
 # sets module parameters (driver options) and blacklisted modules
 echo "Installing ${OPTIONS_FILE} to: /etc/modprobe.d"
@@ -216,6 +208,7 @@ else
 	then
 		if [[ "$RESULT" = "3" ]]
 		then
+			echo "This driver may already be installed."
 			echo "Run the following and then reattempt installation."
 			echo "$ sudo ./remove-driver.sh"
 			exit $RESULT 

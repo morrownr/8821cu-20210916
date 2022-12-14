@@ -19,10 +19,6 @@ SCRIPT_NAME="remove-driver.sh"
 SCRIPT_VERSION="20221207"
 MODULE_NAME="8821cu"
 DRV_VERSION="5.12.0.4"
-# Some distros have a not yet mainlined, patched-in kernel driver that
-# must be deactivated so as not to conflict with this driver. The
-# filename may need to change when the new in-kernel driver is mainlined.
-#BLACKLIST_FILE="rtw88_8821cu.conf"
 
 KVER="$(uname -r)"
 KARCH="$(uname -m)"
@@ -104,8 +100,6 @@ then
 	fi
 fi
 
-#echo "Removing ${BLACKLIST_FILE} from /etc/modprobe.d"
-#rm -f /etc/modprobe.d/${BLACKLIST_FILE}
 echo "Removing ${OPTIONS_FILE} from /etc/modprobe.d"
 rm -f /etc/modprobe.d/${OPTIONS_FILE}
 echo "Removing source files from /usr/src/${DRV_NAME}-${DRV_VERSION}"
