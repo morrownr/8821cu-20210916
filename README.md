@@ -65,6 +65,8 @@ items such as Installation Steps 2 and 3, and you know what updates
 need to added or you can get that information, please provide it so that
 the installation steps can be improved.
 
+- Armbian_22.11.1 (kernel 5.15) (Rock 4 SE (Rock 4b image with xfce))
+
 - Arch Linux (kernels 5.4 and 5.11)
 
 - Debian 11 (kernels 5.10 and 5.15)
@@ -99,6 +101,7 @@ support and keep it current.
 ### Download Locations for Tested Linux Distributions
 
 - [Arch Linux](https://www.archlinux.org)
+- [Armbian](https://www.armbian.com/)
 - [Debian](https://www.debian.org/)
 - [Fedora](https://getfedora.org)
 - [Kali Linux](https://www.kali.org/)
@@ -236,7 +239,7 @@ Note: If your Linux distro does not fall into one of options listed
 below, you will need to research how to update and upgrade your system
 packages.
 
-- Option for Debian based distributions such as Ubuntu, Kali and Raspberry Pi OS
+- Option for Debian based distributions such as Ubuntu, Kali, Armbian and Raspberry Pi OS
 
 ```
 sudo apt update && sudo apt upgrade
@@ -280,7 +283,13 @@ Note: If your Linux distro does not fall into one of options listed
 below, you will need to research how to properly setup up the development
 environment for your system.
 
-- Option for Raspberry Pi OS (ARM/ARM64)
+- Option for Armbian (arm64)
+
+```
+sudo apt install -y build-essential
+```
+
+- Option for Raspberry Pi OS (arm/arm64)
 
 ```
 sudo apt install -y raspberrypi-kernel-headers build-essential bc dkms git
