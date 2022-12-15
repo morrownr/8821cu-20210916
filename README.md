@@ -24,7 +24,6 @@ confirm that this is the correct driver for your adapter.
 - AP mode DFS channel support
 - Miracast
 - Supported interface modes
-  * IBSS
   * Managed
   * Monitor (see FAQ)
   * AP (see FAQ)
@@ -298,7 +297,7 @@ sudo apt install -y raspberrypi-kernel-headers build-essential bc dkms git
 - Option for Debian, Kali, and Raspberry Pi Desktop (x86)
 
 ```
-sudo apt install -y linux-headers-$(uname -r) build-essential bc dkms git libelf-dev rfkill
+sudo apt install -y linux-headers-$(uname -r) build-essential bc dkms git libelf-dev rfkill iw
 ```
 
 - Option for Ubuntu (all official flavors) and the numerous Ubuntu based distros

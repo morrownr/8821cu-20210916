@@ -21,14 +21,14 @@ iw reg get
 ```
 
 ```
-
 ISO 3166-1 alpha-2 Country Codes
 
 Name				Code
 
 Afghanistan			AF
 
-Aland Islands		AX
+Aland
+Islands				AX
 
 Albania				AL
 
@@ -602,8 +602,7 @@ Western Sahara  EH
 
 Yemen           YE
 
-Zambia          ZM
+Zambia					ZM
 
-Zimbabwe        ZW
-
+Zimbabwe				ZW
 ```
