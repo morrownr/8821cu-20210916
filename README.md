@@ -82,6 +82,8 @@ the installation steps can be improved.
 
 - Raspberry Pi Desktop (2022-07-01) (x86 32 bit) (kernel 5.10)
 
+- SkiffOS for Odroid XU4 (ARM 32 bit) (kernel 6.0.7)
+
 - Ubuntu 22.04 (kernel 5.15) and 22.10 (kernel 5.19)
 
 - Void Linux (kernel 5.18)
@@ -107,6 +109,7 @@ support and keep it current.
 - [Manjaro](https://manjaro.org)
 - [openSUSE](https://www.opensuse.org/)
 - [Raspberry Pi OS](https://www.raspberrypi.org)
+- [SkiffOS](https://github.com/skiffos/skiffos/)
 - [Ubuntu](https://www.ubuntu.com)
 - [Void Linux](https://voidlinux.org/)
 
