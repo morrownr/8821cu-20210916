@@ -37,6 +37,11 @@ then
 	exit 1
 fi
 
+# ensure /usr/sbin is in the PATH so iw can be found
+if ! echo "$PATH" | grep -qw sbin; then
+        export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+fi
+
 # check to ensure gcc is installed
 if ! command -v gcc >/dev/null 2>&1
 then
