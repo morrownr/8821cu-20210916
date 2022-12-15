@@ -21,8 +21,11 @@
 #define AUTOCONF_INCLUDED
 #define RTL871X_MODULE_NAME "8821CU"
 #define DRV_NAME "rtl8821cu"
-#define CONFIG_REGD_SRC_FROM_OS
 
+/* kills AP mode
+ * #define CONFIG_REGD_SRC_FROM_OS
+ ^/
+ * 
 /* Set CONFIG_RTL8821C from Makefile */
 #ifndef CONFIG_RTL8821C
 #define CONFIG_RTL8821C
