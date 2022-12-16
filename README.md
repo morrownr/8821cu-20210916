@@ -55,18 +55,12 @@ confirm that this is the correct driver for your adapter.
 
 ### Tested Linux Distributions
 
-Note: One of the goals of this project is to provide driver support that
-is easy to install and works reliably on many distros. Meeting this goal
-depends on you to report your recommendations and updated information. 
-If you see information that needs to be updated, please report the
-updated information and if you do not see adequate support for
-items such as Installation Steps 2 and 3, and you know what updates 
-need to added or you can get that information, please provide it so that
-the installation steps can be improved.
-
-- Armbian_22.11.1 (kernel 5.15) (Rock 4 SE (Rock 4b image with xfce))
+Note: The information in this section depends largely on user reports which can
+be provided via PR or message in Issues.
 
 - Arch Linux (kernels 5.4 and 5.11)
+
+- Armbian_22.11.1 (kernel 5.15) (Rock 4 SE (Rock 4b image with xfce))
 
 - Debian 11 (kernels 5.10 and 5.15)
 
@@ -93,10 +87,8 @@ supported due to the way kernel patches are handled. I will support
 knowledgable RHEL developers if they want to merge the required
 support and keep it current.
 
-Note: Android is not supported due to the tremendous amount of changes
-that Google has made to the mainline Linux kernel. I will support
-knowledgable Android developers if they want to merge the required
-support and keep it current. 
+Note: Android is not supported due but I will support Android developers if
+they want to merge the required support and keep it current. 
 
 
 ### Download Locations for Tested Linux Distributions
@@ -120,12 +112,7 @@ support and keep it current.
 
 ### Compatible Devices
 
-Warning: Adapters listed here are not recommended for purchase as I do
-not recommend Linux users buy Realtek based USB WiFi adapters due to the
-lack of mac80211 technology drivers that are supported in-kernel as
-called for by Linux Wireless Standards. This repo is supported for the
-benefit of Linux users who already have adapters based on the supported
-chipsets. If you are looking for information about what adapter to buy,
+Warning: If you are looking for information about what adapter to buy,
 click [here](https://github.com/morrownr/USB-WiFi) and look for Main Menu
 item 2 which will show information about and links to recommended adapters.
 
@@ -436,14 +423,46 @@ Note: Documentation for Driver Options is included in the file `8821cu.conf`.
 
 -----
 
+### Upgrading the Driver
+
+Note: Linux development is continuous therefore work on this driver is continuous.
+
+Note: Upgrading the driver is advised in the following situations:
+
+- if a new or updated version of the driver needs to be installed
+- if a distro version upgrade is going to be installed (i.e. going from kernel 5.10 to kernel 5.15)
+
+#### Step 1: Move to the driver directory
+
+```
+cd ~/src/8821cu-20210916
+```
+
+#### Step 2: Remove the currently installed driver
+
+```
+sudo ./remove-driver.sh
+```
+
+#### Step 3: Pull updated code from this repo
+
+```
+git pull
+```
+
+#### Step 4: Install the driver
+
+```
+sudo ./install-driver.sh
+```
+
+-----
 ### Removal of the Driver ( remove-driver.sh  )
 
 Note: Removing the driver is advised in the following situations:
 
 - if driver installation fails
 - if the driver is no longer needed
-- if a new or updated version of the driver needs to be installed
-- if a distro version upgrade is going to be installed (i.e. going from kernel 5.10 to kernel 5.15)
 
 Note: The following removes everything that has been installed, with the
 exception of the packages installed in Step 3 and the driver directory.
@@ -454,7 +473,7 @@ The driver directory can be deleted after running this script.
 #### Step 2: Move to the driver directory
 
 ```
-cd ~/src/8821cu-20210118
+cd ~/src/8821cu-20210916
 ```
 
 #### Step 3: Run the removal script
@@ -485,7 +504,7 @@ Note: These are general recommendations, some of which may not apply to your spe
 
 - Best location for the WiFi router/access point: Near center of apartment or house, at least a couple of feet away from walls, in an elevated location. You may have to test to see what the best location is in your environment.
 
-- Check congestion: There are apps available for smart phones that allow you to check the congestion levels on WiFi channels. The apps generally go by the name of ```WiFi Analyzer``` or something similar.
+- Check congestion: There are apps available for smart phones that allow you to get an idea of the congestion levels on WiFi channels. The apps generally go by the name of ```WiFi Analyzer``` or something similar.
 
 After making and saving changes, reboot the router.
 
