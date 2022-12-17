@@ -87,8 +87,9 @@ supported due to the way kernel patches are handled. I will support
 knowledgable RHEL developers if they want to merge the required
 support and keep it current.
 
-Note: Android is not supported due but I will support Android developers if
-they want to merge the required support and keep it current. 
+Note: Android is not supported but I will support Android developers if they
+want to merge and keep current the required support (most like just
+instructions about how to compile and maybe a modification or two to Makefile). 
 
 
 ### Download Locations for Tested Linux Distributions
