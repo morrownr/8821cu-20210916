@@ -88,7 +88,7 @@ knowledgable RHEL developers if they want to merge the required
 support and keep it current.
 
 Note: Android is not supported but I will support Android developers if they
-want to merge and keep current the required support (most like just
+want to merge and keep current the required support (most likely just
 instructions about how to compile and maybe a modification or two to Makefile). 
 
 
@@ -328,13 +328,13 @@ sudo xbps-install linux-headers dkms git make
 If using pacman
 
 ```
-sudo pacman -S --noconfirm linux-headers dkms git bc
+sudo pacman -S --noconfirm linux-headers dkms git
 ```
 
 Note: The following is needed if using Manjaro for RasPi4B.
 
 ```
-sudo pacman -S --noconfirm linux-rpi4-headers dkms git bc
+sudo pacman -S --noconfirm linux-rpi4-headers dkms git
 ```
 
 Note: If you are asked to choose a provider, make sure to choose the one

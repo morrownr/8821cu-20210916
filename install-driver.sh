@@ -16,7 +16,7 @@
 # GNU General Public License for more details.
 
 SCRIPT_NAME="install-driver.sh"
-SCRIPT_VERSION="20221208"
+SCRIPT_VERSION="20221217"
 MODULE_NAME="8821cu"
 DRV_VERSION="5.12.0.4"
 
@@ -123,6 +123,15 @@ then
 	echo "Removing a non-dkms installation."
 	rm -f ${MODDESTDIR}${MODULE_NAME}.ko
 	/sbin/depmod -a ${KVER}
+fi
+
+# check for installed dkms installations (work in progress)
+if command -v dkms >/dev/null 2>&1
+then
+	if dkms status | grep -qw ${DRV_NAME}; then
+		echo "opps..."
+		exit 1
+	fi
 fi
 
 # information that helps with bug reports
