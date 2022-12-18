@@ -16,7 +16,7 @@
 # GNU General Public License for more details.
 
 SCRIPT_NAME="install-driver.sh"
-SCRIPT_VERSION="20221217"
+SCRIPT_VERSION="20221218"
 MODULE_NAME="8821cu"
 DRV_VERSION="5.12.0.4"
 

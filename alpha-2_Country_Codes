@@ -1,4 +1,4 @@
-2022-12-07
+2022-12-18
 
 Instructions for setting the ISO 3166-1 alpha-2 Country Code in your Linux
 distro. If it is not set, you may have problems using some channels, especially
@@ -411,204 +411,200 @@ Norway				NO
 
 ><
 
-Oman        OM
+Oman				OM
 
-Pakistan      PK
+Pakistan			PK
 
-Palau         PW
+Palau				PW
 
-Palestine,
-State of      PS
+Palestine			PS
 
-Panama        PA
+Panama				PA
 
 Papua New
-Guinea        PG
+Guinea				PG
 
-Paraguay      PY
+Paraguay			PY
 
-Peru          PE
+Peru				PE
 
-Philippines PH
+Philippines			PH
 
-Pitcairn      PN
+Pitcairn			PN
 
-Poland        PL
+Poland				PL
 
-Portugal      PT
+Portugal			PT
 
-Puerto Rico PR
+Puerto Rico			PR
 
-Qatar         QA
+Qatar				QA
 
-Réunion       RE
+Réunion				RE
 
-Romania       RO
+Romania				RO
 
-Russian
-Federation RU
+Russia				RU
 
-Rwanda        RW
+Rwanda				RW
 
 Saint
-Barthélemy BL
+Barthélemy			BL
 
 Saint Helena,
 Ascension
 and Tristan
-da Cunha      SH
+da Cunha			SH
 
 Saint Kitts
-and Nevis     KN
+and Nevis			KN
 
-Saint Lucia LC
+Saint Lucia			LC
 
 Saint Martin
-(French part) MF
+(French part)		MF
 
 Saint Pierre
-and MiquelonPM
+and Miquelon		PM
 
 Saint Vincent
 and the
-Grenadines VC
+Grenadines			VC
 
-Samoa         WS
+Samoa				WS
 
-San Marino SM
+San Marino			SM
 
 Sao Tome
-and Principe ST
+and Principe		ST
 
-Saudi Arabia SA
+Saudi Arabia		SA
 
-Senegal       SN
+Senegal				SN
 
-Serbia        RS
+Serbia				RS
 
-Seychelles SC
+Seychelles			SC
 
-Sierra Leone SL
+Sierra Leone		SL
 
-Singapore     SG
+Singapore			SG
 
 Sint Maarten
-(Dutch part) SX
+(Dutch part)		SX
 
-Slovakia      SK
+Slovakia			SK
 
-Slovenia      SI
+Slovenia			SI
 
 Solomon
-Islands       SB
+Islands				SB
 
-Somalia       SO
+Somalia				SO
 
-South Africa ZA
+South Africa		ZA
 
 South
 Georgia and
 the South
 Sandwich
-Islands       GS
+Islands				GS
 
-South Sudan SS
+South Sudan			SS
 
-Spain         ES
+Spain				ES
 
-Sri Lanka     LK
+Sri Lanka			LK
 
-Sudan         SD
+Sudan				SD
 
-Suriname      SR
+Suriname			SR
 
 Svalbard and
-Jan Mayen SJ
+Jan Mayen			SJ
 
-Swaziland     SZ
+Swaziland			SZ
 
-Sweden        SE
+Sweden				SE
 
-Switzerland CH
+Switzerland			CH
 
 Syrian Arab
-Republic      SY
+Republic			SY
 
-Taiwan,
-Province of
-China         TW
+Taiwan				TW
 
-Tajikistan    TJ
+Tajikistan			TJ
 
 Tanzania,
 United
-Republic of TZ
+Republic of			TZ
 
-Thailand      TH
+Thailand			TH
 
-Timor-Leste TL
+Timor-Leste			TL
 
-Togo          TG
+Togo				TG
 
-Tokelau       TK
+Tokelau				TK
 
-Tonga         TO
+Tonga				TO
 
 Trinidad and
-Tobago        TT
+Tobago				TT
 
-Tunisia       TN
+Tunisia				TN
 
-Turkey        TR
+Turkey				TR
 
-Turkmenistan    TM
+Turkmenistan		TM
 
 Turks and
 Caicos
-Islands         TC
+Islands				TC
 
-Tuvalu          TV
+Tuvalu				TV
 
-Uganda          UG
+Uganda				UG
 
-Ukraine         UA
+Ukraine				UA
 
 United Arab
-Emirates        AE
+Emirates			AE
 
-United Kingdom  GB
+United Kingdom		GB
 
-United States   US
+United States		US
 
 United States
 Minor
 Outlying
-Islands         UM
+Islands				UM
 
-Uruguay         UY
+Uruguay				UY
 
-Uzbekistan      UZ
+Uzbekistan			UZ
 
-Vanuatu         VU
+Vanuatu				VU
 
-Venezuela       VE
+Venezuela			VE
 
-Viet Nam        VN
-
-Virgin Islands,
-British         VG
+Viet Nam			VN
 
 Virgin Islands,
-U.S.            VI
+British				VG
+
+Virgin Islands,
+U.S.				VI
 
 Wallis and
-Futuna          WF
+Futuna				WF
 
-Western Sahara  EH
+Western Sahara		EH
 
-Yemen           YE
+Yemen				YE
 
-Zambia					ZM
+Zambia				ZM
 
-Zimbabwe				ZW
+Zimbabwe			ZW
 ```
