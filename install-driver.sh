@@ -125,11 +125,14 @@ then
 	/sbin/depmod -a ${KVER}
 fi
 
-# check for installed dkms installations (work in progress)
+# check for existing dkms installations of any version of this driver
 if command -v dkms >/dev/null 2>&1
 then
-	if dkms status | grep -qw ${DRV_NAME}; then
-		echo "opps..."
+	if dkms status | grep -i  ${DRV_NAME}; then
+		echo "The above driver needs to be removed before the installation can be successfull."
+		echo "Example: $ sudo dkms remove ${DRV_NAME}/X.X.X.X --all"
+		echo "Please replace X.X.X.X by the driver version number shown above."
+		echo "Once the driver is removed, please run \"sudo ./${SCRIPT_NAME}\""
 		exit 1
 	fi
 fi
