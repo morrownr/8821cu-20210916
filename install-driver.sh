@@ -16,7 +16,7 @@
 # GNU General Public License for more details.
 
 SCRIPT_NAME="install-driver.sh"
-SCRIPT_VERSION="20221218"
+SCRIPT_VERSION="20221225"
 MODULE_NAME="8821cu"
 DRV_VERSION="5.12.0.4"
 
@@ -45,7 +45,7 @@ fi
 # check to ensure gcc is installed
 if ! command -v gcc >/dev/null 2>&1
 then
-	echo "A required package appears to not be installed."
+	echo "A required package is not installed."
 	echo "Please install the following package: gcc"
 	echo "Once the package is installed, please run \"sudo ./${SCRIPT_NAME}\""
 	exit 1
@@ -54,7 +54,7 @@ fi
 # check to ensure make is installed
 if ! command -v make >/dev/null 2>&1
 then
-	echo "A required package appears to not be installed."
+	echo "A required package is not installed."
 	echo "Please install the following package: make"
 	echo "Once the package is installed, please run \"sudo ./${SCRIPT_NAME}\""
 	exit 1
@@ -62,7 +62,7 @@ fi
 
 # check to see if header files are installed
 if [ ! -d "/lib/modules/$(uname -r)/build" ]; then
-	echo "Your kernel headers aren't properly installed."
+	echo "Your kernel header files aren't properly installed."
 	echo "Please consult your distro documentation."
 	echo "Once the header files are installed, please run \"sudo ./${SCRIPT_NAME}\""
 	exit 1
@@ -71,7 +71,7 @@ fi
 # check to ensure iw is installed
 if ! command -v iw >/dev/null 2>&1
 then
-	echo "A required package appears to not be installed."
+	echo "A required package is not installed."
 	echo "Please install the following package: iw"
 	echo "Once the package is installed, please run \"sudo ./${SCRIPT_NAME}\""
 	exit 1
@@ -80,7 +80,7 @@ fi
 # check to ensure rfkill is installed
 if ! command -v rfkill >/dev/null 2>&1
 then
-	echo "A required package appears to not be installed."
+	echo "A required package is not installed."
 	echo "Please install the following package: rfkill"
 	echo "Once the package is installed, please run \"sudo ./${SCRIPT_NAME}\""
 	exit 1
@@ -89,7 +89,7 @@ fi
 # check to ensure nano is installed
 if ! command -v nano >/dev/null 2>&1
 then
-	echo "A required package appears to not be installed."
+	echo "A required package is not installed."
 	echo "Please install the following package: nano"
 	echo "Once the package is installed, please run \"sudo ./${SCRIPT_NAME}\""
 	exit 1
@@ -115,7 +115,7 @@ do
 done
 
 # displays script name and version
-echo "Running ${SCRIPT_NAME} version ${SCRIPT_VERSION}"
+echo "Script:  ${SCRIPT_NAME} version ${SCRIPT_VERSION}"
 
 # check for and remove non-dkms installation
 if [[ -f "${MODDESTDIR}${MODULE_NAME}.ko" ]]
@@ -140,23 +140,23 @@ fi
 # information that helps with bug reports
 
 # display kernel version
-echo "Linux Kernel=${KVER}"
+echo "Kernel:  ${KVER}"
 
 # display architecture
-echo "CPU Architecture=${KARCH}"
+echo "Arch:  ${KARCH}"
 
 # display gcc version
 gcc_ver=$(gcc --version | grep -i gcc)
-echo "gcc --version="${gcc_ver}
+echo "gcc:  "${gcc_ver}
 
 # display ISO 3166-1 alpha-2 Country Code
 a2_country_code=$(iw reg get | grep -i country)
-echo "Country Code="${a2_country_code}
+echo "Country:  "${a2_country_code}
 if [[ $a2_country_code == *"00"* ]];
 then
     echo "The Country Code may not be properly set."
     echo "File alpha-2_Country_Codes is located in the driver directory."
-    echo "Please read and follow the directions in the file."
+    echo "Please read and follow the directions in the file after installation."
 fi
 
 # display secure mode status
@@ -182,9 +182,9 @@ then
 
 	if [[ "$RESULT" != "0" ]]
 	then
-		echo "An error occurred. Error = ${RESULT}"
+		echo "An error occurred:  ${RESULT}"
 		echo "Please report this error."
-		echo "Please copy all screen output and paste it into the report."
+		echo "Please copy all screen output and paste it into the problem report."
 		echo "You will need to run the following before reattempting installation."
 		echo "$ sudo ./remove-driver.sh"
 		exit $RESULT
@@ -202,9 +202,9 @@ then
         	make clean >/dev/null 2>&1
 		echo "The driver was installed successfully."
 	else
-		echo "An error occurred. Error = ${RESULT}"
+		echo "An error occurred:  ${RESULT}"
 		echo "Please report this error."
-		echo "Please copy all screen output and paste it into the report."
+		echo "Please copy all screen output and paste it into the problem report."
 		echo "You will need to run the following before reattempting installation."
 		echo "$ sudo ./remove-driver.sh"
 		exit $RESULT
@@ -213,7 +213,7 @@ else
 	echo "The dkms installation routines are in use."
 
 # 	the dkms add command requires source in /usr/src/${DRV_NAME}-${DRV_VERSION}
-	echo "Copying source files to: /usr/src/${DRV_NAME}-${DRV_VERSION}"
+	echo "Copying source files to /usr/src/${DRV_NAME}-${DRV_VERSION}"
 	cp -rf "${DRV_DIR}" /usr/src/${DRV_NAME}-${DRV_VERSION}
 	
 	dkms add -m ${DRV_NAME} -v ${DRV_VERSION}
@@ -230,9 +230,9 @@ else
 			echo "$ sudo ./remove-driver.sh"
 			exit $RESULT 
 		else
-			echo "An error occurred. dkms add error = ${RESULT}"
+			echo "An error occurred. dkms add error:  ${RESULT}"
 			echo "Please report this error."
-			echo "Please copy all screen output and paste it into the report."
+			echo "Please copy all screen output and paste it into the problem report."
 			echo "Run the following before reattempting installation."
 			echo "$ sudo ./remove-driver.sh"
 			exit $RESULT
@@ -241,14 +241,19 @@ else
 		echo "The driver was added to dkms successfully."
 	fi
 
-	dkms build -m ${DRV_NAME} -v ${DRV_VERSION}
+	if command -v /usr/bin/time >/dev/null 2>&1
+	then
+		/usr/bin/time -f "Compile time: %U seconds" dkms build -m ${DRV_NAME} -v ${DRV_VERSION}
+	else
+		dkms build -m ${DRV_NAME} -v ${DRV_VERSION}
+	fi
 	RESULT=$?
 
 	if [[ "$RESULT" != "0" ]]
 	then
-		echo "An error occurred. dkms build error = ${RESULT}"
+		echo "An error occurred. dkms build error:  ${RESULT}"
 		echo "Please report this error."
-		echo "Please copy all screen output and paste it into the report."
+		echo "Please copy all screen output and paste it into the problem report."
 		echo "Run the following before reattempting installation."
 		echo "$ sudo ./remove-driver.sh"
 		exit $RESULT
@@ -261,9 +266,9 @@ else
 
 	if [[ "$RESULT" != "0" ]]
 	then
-		echo "An error occurred. dkms install error = ${RESULT}"
+		echo "An error occurred. dkms install error:  ${RESULT}"
 		echo "Please report this error."
-		echo "Please copy all screen output and paste it into the report."
+		echo "Please copy all screen output and paste it into the problem report."
 		echo "Run the following before reattempting installation."
 		echo "$ sudo ./remove-driver.sh"
 		exit $RESULT
@@ -280,7 +285,7 @@ else
 	echo "Unable to run $ rfkill unblock wlan"	
 fi
 
-# if NoPrompt is not used, ask user some questions to complete installation
+# if NoPrompt is not used, ask user some questions
 if [ $NO_PROMPT -ne 1 ]
 then
 	read -p "Do you want to edit the driver options file now? [y/N] " -n 1 -r
