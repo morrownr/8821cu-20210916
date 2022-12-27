@@ -25,7 +25,7 @@
 /* kills AP mode
  * #define CONFIG_REGD_SRC_FROM_OS
  */
- 
+
 /* Set CONFIG_RTL8821C from Makefile */
 #ifndef CONFIG_RTL8821C
 #define CONFIG_RTL8821C
@@ -46,7 +46,8 @@
 #endif
 
 #ifdef CONFIG_80211N_HT
-	/* #define CONFIG_BEAMFORMING */
+	/* nrm */
+	#define CONFIG_BEAMFORMING
 #endif
 
 /* set CONFIG_IOCTL_CFG80211 from Makefile */
