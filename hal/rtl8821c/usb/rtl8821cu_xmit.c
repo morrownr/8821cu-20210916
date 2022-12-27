@@ -314,7 +314,8 @@ static s32 update_txdesc(struct xmit_frame *pxmitframe, u8 *pmem, s32 sz, u8 bag
 			if (pattrib->retry_ctrl == _TRUE)
 				SET_TX_DESC_RTS_DATA_RTY_LMT_8821C(ptxdesc, 6);
 			else
-				SET_TX_DESC_RTS_DATA_RTY_LMT_8821C(ptxdesc, 12);
+/* nrm */
+				SET_TX_DESC_RTS_DATA_RTY_LMT_8821C(ptxdesc, 0);
 		}
 
 #ifdef CONFIG_XMIT_ACK
