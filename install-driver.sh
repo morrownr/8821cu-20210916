@@ -167,7 +167,7 @@ then
 fi
 
 # sets module parameters (driver options) and blacklisted modules
-echo "Installing ${OPTIONS_FILE} to: /etc/modprobe.d"
+echo "Installing ${OPTIONS_FILE} to /etc/modprobe.d"
 cp -f ${OPTIONS_FILE} /etc/modprobe.d
 
 # determine if dkms is installed and run the appropriate routines
@@ -215,7 +215,7 @@ else
 # 	the dkms add command requires source in /usr/src/${DRV_NAME}-${DRV_VERSION}
 	echo "Copying source files to /usr/src/${DRV_NAME}-${DRV_VERSION}"
 	cp -rf "${DRV_DIR}" /usr/src/${DRV_NAME}-${DRV_VERSION}
-	
+
 	dkms add -m ${DRV_NAME} -v ${DRV_VERSION}
 	RESULT=$?
 
@@ -228,7 +228,7 @@ else
 			echo "This driver may already be installed."
 			echo "Run the following and then reattempt installation."
 			echo "$ sudo ./remove-driver.sh"
-			exit $RESULT 
+			exit $RESULT
 		else
 			echo "An error occurred. dkms add error:  ${RESULT}"
 			echo "Please report this error."
@@ -282,7 +282,7 @@ if command -v rfkill >/dev/null 2>&1
 then
 	rfkill unblock wlan
 else
-	echo "Unable to run $ rfkill unblock wlan"	
+	echo "Unable to run $ rfkill unblock wlan"
 fi
 
 # if NoPrompt is not used, ask user some questions

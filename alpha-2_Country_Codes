@@ -1,4 +1,4 @@
-2022-12-18
+2022-12-26
 
 Instructions for setting the ISO 3166-1 alpha-2 Country Code in your Linux
 distro. If it is not set, you may have problems using some channels, especially
@@ -593,14 +593,14 @@ British				VG
 Virgin Islands,
 U.S.				VI
 
-Wallis and
-Futuna				WF
+WF		Wallis and Futuna
 
 EH		Western Sahara
 
-Yemen				YE
+YE		Yemen
 
-Zambia				ZM
+ZM		Zambia
 
-Zimbabwe			ZW
+ZW		Zimbabwe
+
 ```
