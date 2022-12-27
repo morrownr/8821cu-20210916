@@ -1,6 +1,6 @@
 ## 8821cu ( 8821cu.ko ) :rocket:
 
-## Linux Driver for USB WiFi Adapters that are based on the RTL8811CU, RTL8821CU and RTL8731AU Chipsets
+## Linux Driver for USB WiFi Adapters that are based on the RTL8811CU, RTL8821CU, RTL8821CUH and RTL8731AU Chipsets
 
 - v5.12.0.4 (Realtek) (20210916) plus updates from the Linux community
 
@@ -11,18 +11,25 @@ confirm that this is the correct driver for your adapter.
 
 - IEEE 802.11 b/g/n/ac WiFi compliant
 - 802.1x, WEP, WPA TKIP and WPA2 AES/Mixed mode for PSK and TLS (Radius)
-- WPA3 (see FAQ)
+- WPA3-SAE (Personal) (see FAQ)
+- WPA3-Enterprise (Suite-B 192-bit)
+- WAPI 1.0 station mode
+- WPS - PIN and PBC Methods
 - IEEE 802.11b/g/n/ac Client mode
   * Supports wireless security for WEP, WPA TKIP and WPA2 AES PSK
   * Supports site survey scan and manual connect
   * Supports WPA/WPA2 TLS client
 - Power saving modes
+- WiFi-Direct
+- Miracast
+- MU-MIMO
+- Mesh
+- Wake on WLAN
 - Wireshark compatible
 - Aircrack-ng compatible
 - Packet injection
 - hostapd compatible
 - AP mode DFS channel support
-- Miracast
 - Supported interface modes
   * Managed
   * Monitor (see FAQ)
@@ -78,7 +85,7 @@ be provided via PR or message in Issues.
 
 - SkiffOS for Odroid XU4 (ARM 32 bit) (kernel 6.0.7)
 
-- Ubuntu 22.04 (kernel 5.15) and 22.10 (kernel 5.19)
+- Ubuntu 22.04 (kernel 5.15) and 22.10 (kernel 5.19) (kernel 6.2 rc1)
 
 - Void Linux (kernel 5.18)
 
@@ -87,10 +94,10 @@ supported due to the way kernel patches are handled. I will support
 knowledgable RHEL developers if they want to merge the required
 support and keep it current.
 
-Note: Android is not supported but I will support knowledgable Android
-developers if they want to merge and keep current the required support
-(most likely just instructions about how to compile and maybe a modification
-or two to the Makefile). 
+Note: Android is supported in the driver according to Realtek. I will support
+knowledgable Android developers if they want to merge and keep current the
+required support (most likely just instructions about how to compile and maybe
+a modification or two to the Makefile).
 
 
 ### Download Locations for Tested Linux Distributions
@@ -109,7 +116,7 @@ or two to the Makefile).
 
 ### Tested Hardware
 
-- EDUP EP-AC1651 USB WiFi Adapter AC650 Dual Band USB 2.0 Nano
+- EDUP EP-AC1651 USB WiFi Adapter AC650 Dual Band USB 2.0 (nano)
 - EDUP EP-AC1635 USB WiFi Adapter AC600 Dual Band USB 2.0
 
 ### Compatible Devices
@@ -119,7 +126,7 @@ click [here](https://github.com/morrownr/USB-WiFi) and look for Main Menu
 item 2 which will show information about and links to recommended adapters.
 
 * Cudy WU700
-* EDUP EP-AC1651
+* EDUP EP-AC1651 (nano)
 * EDUP EP-AC1635
 * TOTOLINK A650UA v3
 * Mercusys MU6H (multi-state)
