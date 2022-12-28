@@ -23,19 +23,17 @@ iw reg get
 ```
 ISO 3166-1 alpha-2 Country Codes
 
-Name				Code
+Code	Name
 
-Afghanistan			AF
+AF		Afghanistan
 
-Aland
-Islands				AX
+AX		Aland Islands
 
-Albania				AL
+AL		Albania
 
-Algeria				DZ
+DZ		Algeria
 
-American
-Samoa				AS
+AS		American Samoa
 
 Andorra				AD
 
