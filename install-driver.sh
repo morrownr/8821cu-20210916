@@ -16,7 +16,7 @@
 # GNU General Public License for more details.
 
 SCRIPT_NAME="install-driver.sh"
-SCRIPT_VERSION="20221225"
+SCRIPT_VERSION="20221228"
 MODULE_NAME="8821cu"
 DRV_VERSION="5.12.0.4"
 
@@ -177,7 +177,7 @@ then
 
 	make clean >/dev/null 2>&1
 
-	make
+	make -j$(nproc)
 	RESULT=$?
 
 	if [[ "$RESULT" != "0" ]]

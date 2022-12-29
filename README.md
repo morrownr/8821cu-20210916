@@ -121,7 +121,7 @@ a modification or two to the Makefile).
 
 ### Compatible Devices
 
-Warning: If you are looking for information about what adapter to buy,
+Note: If you are looking for information about what adapter to buy,
 click [here](https://github.com/morrownr/USB-WiFi) and look for Main Menu
 item 2 which will show information about and links to recommended adapters.
 
@@ -130,7 +130,7 @@ item 2 which will show information about and links to recommended adapters.
 * EDUP EP-AC1635
 * TOTOLINK A650UA v3
 * Mercusys MU6H (multi-state)
-* Numerous additional products that are based on the supported chipsets
+* Numerous adapters that are based on the supported chipset.
 
 ### Installation Information
 
@@ -210,7 +210,7 @@ If it is not set, you will likely have problems accessing some channels, especia
 5 Ghz and 6 GHz channels. To set your Country Code:
 
 ```
-iw reg set US
+sudo iw reg set US
 ```
 
 If you are not in the US, please use the country code for your country. See:
