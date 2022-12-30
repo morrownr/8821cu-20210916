@@ -59,11 +59,32 @@ done
 # displays script name and version
 echo "Script:  ${SCRIPT_NAME} version ${SCRIPT_VERSION}"
 
-# check for and remove non-dkms installation
+# check for and remove non-dkms installations
+# standard naming
 if [[ -f "${MODDESTDIR}${MODULE_NAME}.ko" ]]
 then
-	echo "Removing a non-dkms installation."
+	echo "Removing a non-dkms installation: ${MODDESTDIR}${MODULE_NAME}.ko"
 	rm -f ${MODDESTDIR}${MODULE_NAME}.ko
+	/sbin/depmod -a ${KVER}
+fi
+
+# check for and remove non-dkms installations
+# with rtl added to module name (PClinuxOS)
+if [[ -f "${MODDESTDIR}rtl${MODULE_NAME}.ko" ]]
+then
+	echo "Removing a non-dkms installation: ${MODDESTDIR}rtl${MODULE_NAME}.ko"
+	rm -f ${MODDESTDIR}rtl${MODULE_NAME}.ko
+	/sbin/depmod -a ${KVER}
+fi
+
+# check for and remove non-dkms installations
+# with compressed module in a unique non-standard location (Armbian)
+# Example: /usr/lib/modules/5.15.80-rockchip64/kernel/drivers/net/wireless/rtl8821cu/8821cu.ko.xz
+# Dear Armbiam, this is a really bad idea.
+if [[ -f "/usr/lib/modules/${KVER}/kernel/drivers/net/wireless/${DRV_NAME}/${MODULE_NAME}.ko.xz" ]]
+then
+	echo "Removing a non-dkms installation: /usr/lib/modules/${KVER}/kernel/drivers/net/wireless/${DRV_NAME}/${MODULE_NAME}.ko.xz"
+	rm -f /usr/lib/modules/${KVER}/kernel/drivers/net/wireless/${DRV_NAME}/${MODULE_NAME}.ko.xz
 	/sbin/depmod -a ${KVER}
 fi
 
