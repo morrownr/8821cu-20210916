@@ -16,7 +16,7 @@
 # GNU General Public License for more details.
 
 SCRIPT_NAME="remove-driver.sh"
-SCRIPT_VERSION="20221228"
+SCRIPT_VERSION="20230101"
 MODULE_NAME="8821cu"
 DRV_VERSION="5.12.0.4"
 
@@ -94,7 +94,7 @@ fi
 echo "Kernel:  ${KVER}"
 
 # display architecture
-echo "Arch:  ${KARCH}"
+echo "Arch  :  ${KARCH}"
 
 # determine if dkms is installed and run the appropriate routines
 if command -v dkms >/dev/null 2>&1

@@ -164,11 +164,11 @@ fi
 echo "Kernel:  ${KVER}"
 
 # display architecture
-echo "Arch:  ${KARCH}"
+echo "Arch  :  ${KARCH}"
 
 # display gcc version
 gcc_ver=$(gcc --version | grep -i gcc)
-echo "gcc:  "${gcc_ver}
+echo "gcc   :  "${gcc_ver}
 
 # display ISO 3166-1 alpha-2 Country Code
 #a2_country_code=$(iw reg get | grep -i country)
