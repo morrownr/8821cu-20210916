@@ -121,16 +121,20 @@ a modification or two to the Makefile).
 
 ### Compatible Devices
 
+* EDUP EP-AC1651 (nano) (single-state, single-function)
+* EDUP EP-AC1635 (single-state, single-function)
+* Numerous adapters that are based on the supported chipset.
+
 Note: If you are looking for information about what adapter to buy,
 click [here](https://github.com/morrownr/USB-WiFi) and look for Main Menu
 item 2 which will show information about and links to recommended adapters.
 
-* Cudy WU700
-* EDUP EP-AC1651 (nano)
-* EDUP EP-AC1635
-* TOTOLINK A650UA v3
-* Mercusys MU6H (multi-state)
-* Numerous adapters that are based on the supported chipset.
+Note: If you decide to buy an adapter that is supported by this driver, I
+recommend you search for an adapter that is `single-state and single-function`.
+Multi-function adapters, wifi and bluetooth, can be problematic. The rtl8821cu
+chipset is multi-fuction. The rtl8811cu chipset is single-function. For advice
+about single-state and multi-state adapaters. click
+[here](https://github.com/morrownr/USB-WiFi) and look for Main Menu item 1.
 
 ### Installation Information
 
@@ -204,24 +208,6 @@ performed if necessary. To test if secure boot is the problem:  If you
 install this driver and, after a reboot, the driver is not working, you
 can go into the BIOS and temporarily turn secure boot off to see if
 secure boot is the problem.
-
-Please ensure the ISO 3166-1 alpha-2 Country Code is set in your Linux distro.
-If it is not set, you will likely have problems accessing some channels, especially
-5 Ghz and 6 GHz channels. To set your Country Code:
-
-```
-sudo iw reg set US
-```
-
-If you are not in the US, please use the country code for your country. See:
-
-ISO 3166-1 alpha-2 codes: https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
-
-To check if your country code is properly set:
-
-```
-iw reg get
-```
 
 ### Installation Steps
 
@@ -567,17 +553,16 @@ sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
 
 Question: Is WPA3 supported?
 
-Answer: WPA3-SAE support is in this driver according to Realtek and it
-works well on some Linux distros but not all. Generally the reason for
-WPA3 not working on Linux distros is that the distro has an old version
-of wpa_supplicant or Network Manager. Your options are to upgrade to a
-more modern distro (most distros released after mid 2022) or compile and
-install new versions of the wpa_supplicant and Network Manager utilities.
+Answer: WPA3-SAE is supported. It works well on most modern Linux distros but
+not all. Generally the reason for WPA3 not working on Linux distros is that the
+distro has an old version of wpa_supplicant or Network Manager. Your options
+are to upgrade to a more modern distro (distros released after mid 2022) or
+compile and install new versions of wpa_supplicant and/or Network Manager.
 
 -----
 
-Question: I bought two rtl8811cu based adapters and am planning to use
-both in the same computer. How do I set that up?
+Question: I bought two usb wifi adapters based on this chipset and am planning
+to use both in the same computer. How do I set that up?
 
 Answer: Realtek drivers do not support more than one adapter with the
 same chipset in the same computer. You can have multiple Realtek based
@@ -681,8 +666,8 @@ and post in `Discussions` or `Issues`.
 Question: I have an adapter with the 8821cu chipset which means it supports
 bluetooth. The bluetooth works but the wifi does not. What is wrong?
 
-Answer: There appears to be a hardware bug in some 8821cu based adapters
-and the fix is to set the driver option ( `rtw_RFE_type` ) in 8821cu.conf.
+Answer: There appears to be an issue where adapters can be set up differently
+by makers. The fix is to set the driver option ( `rtw_RFE_type` ) in 8821cu.conf.
 The easiest way to edit 8821cu.conf is to run the following from the driver
 directory:
 

@@ -22,7 +22,7 @@
 #define RTL871X_MODULE_NAME "8821CU"
 #define DRV_NAME "rtl8821cu"
 
-/* kills AP mode
+/* nrm  - don't activate, kills AP mode
  * #define CONFIG_REGD_SRC_FROM_OS
  */
 
@@ -46,7 +46,7 @@
 #endif
 
 #ifdef CONFIG_80211N_HT
-	/* nrm */
+	/* nrm - activate beamforming */
 	#define CONFIG_BEAMFORMING
 #endif
 
@@ -172,6 +172,7 @@
 
 #define CONFIG_RTW_LED
 #ifdef CONFIG_RTW_LED
+/* nrm */
 //	#define CONFIG_RTW_SW_LED
 	#ifdef CONFIG_RTW_SW_LED
 		/* #define CONFIG_RTW_LED_HANDLED_BY_CMD_THREAD */
@@ -180,6 +181,7 @@
 
 #define CONFIG_GLOBAL_UI_PID
 
+/* nrm */
 #define CONFIG_RTW_80211K
 
 /*#define CONFIG_ADAPTOR_INFO_CACHING_FILE */ /* now just applied on 8192cu only, should make it general... */

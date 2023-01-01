@@ -16,7 +16,7 @@
 # GNU General Public License for more details.
 
 SCRIPT_NAME="install-driver.sh"
-SCRIPT_VERSION="20221228"
+SCRIPT_VERSION="20230101"
 MODULE_NAME="8821cu"
 DRV_VERSION="5.12.0.4"
 
@@ -115,7 +115,7 @@ do
 done
 
 # displays script name and version
-echo "Script:  ${SCRIPT_NAME} version ${SCRIPT_VERSION}"
+echo "Script:  ${SCRIPT_NAME} v${SCRIPT_VERSION}"
 
 # check for and remove non-dkms installations
 # standard naming
@@ -171,14 +171,14 @@ gcc_ver=$(gcc --version | grep -i gcc)
 echo "gcc:  "${gcc_ver}
 
 # display ISO 3166-1 alpha-2 Country Code
-a2_country_code=$(iw reg get | grep -i country)
-echo "Country:  "${a2_country_code}
-if [[ $a2_country_code == *"00"* ]];
-then
-    echo "The Country Code may not be properly set."
-    echo "File alpha-2_Country_Codes is located in the driver directory."
-    echo "Please read and follow the directions in the file after installation."
-fi
+#a2_country_code=$(iw reg get | grep -i country)
+#echo "Country:  "${a2_country_code}
+#if [[ $a2_country_code == *"00"* ]];
+#then
+#    echo "The Country Code may not be properly set."
+#    echo "File alpha-2_Country_Codes is located in the driver directory."
+#    echo "Please read and follow the directions in the file after installation."
+#fi
 
 # display secure mode status
 # run if mokutil is installed
