@@ -44,6 +44,8 @@ confirm that this is the correct driver for your adapter.
 
 ### A FAQ is available at the end of this document.
 
+### Additional documentation is the file `8821u.conf`.
+
 ### Compatible CPU Architectures
 
 - x86, i686
@@ -138,9 +140,15 @@ about single-state and multi-state adapaters. click
 
 ### Installation Information
 
-Warning: Installing multiple drivers for the same hardware usually does
-not end well. If a previous attempt to install this driver failed or if
-you have previously installed another driver for chipsets supported by
+Note: As of Linux kernel 6.2, an in-kernel driver for the chipsets supported by
+this driver has been included in the Linux kernel. The installation and removal
+scripts for the driver in this repo automatically deactivate the in-kernel
+driver on installation and reactivate the in-kernel driver on removal. No
+special action needs to be taken by users.
+
+Warning: Installing multiple out-of-kernel drivers for the same hardware
+usually does not end well. If a previous attempt to install this driver failed
+or if you have previously installed another driver for chipsets supported by
 this driver, you MUST remove anything that the previous attempt
 installed BEFORE attempting to install this driver. This driver can be
 removed with the script called `./remove-driver.sh`. Information is
@@ -217,7 +225,7 @@ on a best effort basis, based on the steps below.
 
 #### Step 1: Open a terminal (e.g. Ctrl+Alt+T)
 
-#### Step 2: Update and upgrade system packages (select the option for the OS you are using)
+#### Step 2: Update and upgrade system packages (select the option for the distro you are using)
 
 Note: If your Linux distro does not fall into one of options listed
 below, you will need to research how to update and upgrade your system
@@ -663,7 +671,7 @@ and post in `Discussions` or `Issues`.
 
 -----
 
-Question: I have an adapter with the 8821cu chipset which means it supports
+Question: I have an adapter with the 8821cu chipset and it supports
 bluetooth. The bluetooth works but the wifi does not. What is wrong?
 
 Answer: There appears to be an issue where adapters can be set up differently
