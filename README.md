@@ -33,7 +33,7 @@ confirm that this is the correct driver for your adapter.
 - Supported interface modes
   * Managed
   * Monitor (see FAQ)
-  * AP (see FAQ)
+  * AP
   * P2P-client
   * P2P-GO
 - Log level control
@@ -135,7 +135,7 @@ Note: If you decide to buy an adapter that is supported by this driver, I
 recommend you search for an adapter that is `single-state and single-function`.
 Multi-function adapters, wifi and bluetooth, can be problematic. The rtl8821cu
 chipset is multi-fuction. The rtl8811cu chipset is single-function. For advice
-about single-state and multi-state adapaters. click
+about single-state and multi-state adapters. click
 [here](https://github.com/morrownr/USB-WiFi) and look for Main Menu item 1.
 
 ### Installation Information
@@ -694,6 +694,12 @@ rtw_RFE_type=7
 Simply add that option to the end of the `options` line, save and reboot.
 
 -----
+
+Contributors:
+
+@Jibun-no-Kage
+
+----
 
 #### [Go to Main Menu](https://github.com/morrownr/USB-WiFi)
 
