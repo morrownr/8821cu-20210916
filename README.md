@@ -20,8 +20,8 @@ confirm that this is the correct driver for your adapter.
   * Supports site survey scan and manual connect
   * Supports WPA/WPA2 TLS client
 - Power saving modes
-- WiFi-Direct
 - Miracast
+- WiFi-Direct
 - MU-MIMO
 - Mesh
 - Wake on WLAN
@@ -44,7 +44,7 @@ confirm that this is the correct driver for your adapter.
 
 ### A FAQ is available at the end of this document.
 
-### Additional documentation is the file `8821u.conf`.
+### Additional documentation is the file `8821cu.conf`.
 
 ### Compatible CPU Architectures
 
