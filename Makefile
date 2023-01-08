@@ -123,7 +123,7 @@ CONFIG_RTW_DEBUG = y
 CONFIG_RTW_LOG_LEVEL = 1
 
 # enable /proc/net/rtlxxxx/ debug interfaces
-CONFIG_PROC_DEBUG = n
+CONFIG_PROC_DEBUG = y
 
 ######################## Wake On Lan ##########################
 CONFIG_WOWLAN = n
