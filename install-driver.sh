@@ -115,22 +115,36 @@ do
 done
 
 # displays script name and version
-echo "Script:  ${SCRIPT_NAME} v${SCRIPT_VERSION}"
+echo "Script: ${SCRIPT_NAME} v${SCRIPT_VERSION}"
 
 # information that helps with bug reports
 
-# display kernel version
-echo "Kernel:  ${KVER}"
-
 # display architecture
-echo "Arch  :  ${KARCH}"
+echo "Arch:${KARCH}"
 
 # display total memory in system
 grep MemTotal /proc/meminfo
 
+# display kernel version
+echo "Kernel:  ${KVER}"
+
 # display gcc version
 gcc_ver=$(gcc --version | grep -i gcc)
-echo "gcc   :  "${gcc_ver}
+echo "gcc: "${gcc_ver}
+
+# display dkms version
+# run if dkms is installed
+if command -v dkms >/dev/null 2>&1
+then
+	dkms --version
+fi
+
+# display secure mode status
+# run if mokutil is installed
+if command -v mokutil >/dev/null 2>&1
+then
+	mokutil --sb-state
+fi
 
 # display ISO 3166-1 alpha-2 Country Code
 #a2_country_code=$(iw reg get | grep -i country)
@@ -141,13 +155,6 @@ echo "gcc   :  "${gcc_ver}
 #    echo "File alpha-2_Country_Codes is located in the driver directory."
 #    echo "Please read and follow the directions in the file after installation."
 #fi
-
-# display secure mode status
-# run if mokutil is installed
-if command -v mokutil >/dev/null 2>&1
-then
-	mokutil --sb-state
-fi
 
 # check for and remove non-dkms installations
 # standard naming
@@ -251,7 +258,6 @@ then
 		exit $RESULT
 	fi
 else
-	dkms --version
 	echo "The dkms installation routines are in use."
 
 # 	the dkms add command requires source in /usr/src/${DRV_NAME}-${DRV_VERSION}
