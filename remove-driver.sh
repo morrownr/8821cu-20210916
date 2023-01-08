@@ -4,7 +4,7 @@
 #
 # Supports dkms and non-dkms removals.
 
-# Copyright(c) 2022 Nick Morrow
+# Copyright(c) 2023 Nick Morrow
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of version 2 of the GNU General Public License as
@@ -16,7 +16,7 @@
 # GNU General Public License for more details.
 
 SCRIPT_NAME="remove-driver.sh"
-SCRIPT_VERSION="20230101"
+SCRIPT_VERSION="20230107"
 MODULE_NAME="8821cu"
 DRV_VERSION="5.12.0.4"
 
