@@ -44,7 +44,7 @@ confirm that this is the correct driver for your adapter.
 
 ### A FAQ is available at the end of this document.
 
-### Additional documentation is the file `8821cu.conf`.
+### Additional documentation is in the file `8821cu.conf`.
 
 ### Compatible CPU Architectures
 
@@ -174,7 +174,7 @@ $ sudo ./install-driver.sh
 Temporary internet access is required for installation. There are numerous ways
 to enable temporary internet access depending on your hardware and situation.
 [One method is to use tethering from a phone.](https://www.makeuseof.com/tag/how-to-tether-your-smartphone-in-linux).
-Another method is to keep a [WiFi adapter that uses an in-kernel driver](https://github.com/morrownr/USB-WiFi) in your toolkit.
+Another method is to keep a [WiFi adapter that uses an in-kernel driver](https://github.com/morrownr/USB-WiFi/blob/main/home/USB_WiFi_Adapters_that_are_supported_with_Linux_in-kernel_drivers.md) in your toolkit.
 
 You will need to use the terminal interface. The quick way to open a terminal:
 Ctrl+Alt+T (hold down on the Ctrl and Alt keys then press the T key).
@@ -189,7 +189,7 @@ can be executed as the `root` user. (If the command `sudo echo Yes` returns
 "Yes", with or without having to enter your password, you do have sufficient
 access rights.)
 
-DKMS is used for the installation if available. DKMS is a system utility
+DKMS is used for the installation, if available. DKMS is a system utility
 which will automatically recompile and reinstall this driver when a new
 kernel is installed. DKMS is provided by and maintained by Dell.
 

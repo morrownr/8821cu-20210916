@@ -4,7 +4,7 @@
 #
 # Supports dkms and non-dkms installations.
 
-# Copyright(c) 2022 Nick Morrow
+# Copyright(c) 2023 Nick Morrow
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of version 2 of the GNU General Public License as
@@ -16,7 +16,7 @@
 # GNU General Public License for more details.
 
 SCRIPT_NAME="install-driver.sh"
-SCRIPT_VERSION="20230101"
+SCRIPT_VERSION="20230107"
 MODULE_NAME="8821cu"
 DRV_VERSION="5.12.0.4"
 
@@ -117,47 +117,6 @@ done
 # displays script name and version
 echo "Script:  ${SCRIPT_NAME} v${SCRIPT_VERSION}"
 
-# check for and remove non-dkms installations
-# standard naming
-if [[ -f "${MODDESTDIR}${MODULE_NAME}.ko" ]]
-then
-	echo "Removing a non-dkms installation: ${MODDESTDIR}${MODULE_NAME}.ko"
-	rm -f ${MODDESTDIR}${MODULE_NAME}.ko
-	/sbin/depmod -a ${KVER}
-fi
-
-# check for and remove non-dkms installations
-# with rtl added to module name (PClinuxOS)
-if [[ -f "${MODDESTDIR}rtl${MODULE_NAME}.ko" ]]
-then
-	echo "Removing a non-dkms installation: ${MODDESTDIR}rtl${MODULE_NAME}.ko"
-	rm -f ${MODDESTDIR}rtl${MODULE_NAME}.ko
-	/sbin/depmod -a ${KVER}
-fi
-
-# check for and remove non-dkms installations
-# with compressed module in a unique non-standard location (Armbian)
-# Example: /usr/lib/modules/5.15.80-rockchip64/kernel/drivers/net/wireless/rtl8821cu/8821cu.ko.xz
-# Dear Armbiam, this is a really bad idea.
-if [[ -f "/usr/lib/modules/${KVER}/kernel/drivers/net/wireless/${DRV_NAME}/${MODULE_NAME}.ko.xz" ]]
-then
-	echo "Removing a non-dkms installation: /usr/lib/modules/${KVER}/kernel/drivers/net/wireless/${DRV_NAME}/${MODULE_NAME}.ko.xz"
-	rm -f /usr/lib/modules/${KVER}/kernel/drivers/net/wireless/${DRV_NAME}/${MODULE_NAME}.ko.xz
-	/sbin/depmod -a ${KVER}
-fi
-
-# check for existing dkms installations of any version of this driver
-if command -v dkms >/dev/null 2>&1
-then
-	if dkms status | grep -i  ${DRV_NAME}; then
-		echo "The above driver needs to be removed before the installation can be successfull."
-		echo "Example: $ sudo dkms remove ${DRV_NAME}/X.X.X.X --all"
-		echo "Please replace X.X.X.X by the driver version number shown above."
-		echo "Once the driver is removed, please run \"sudo ./${SCRIPT_NAME}\""
-		exit 1
-	fi
-fi
-
 # information that helps with bug reports
 
 # display kernel version
@@ -165,6 +124,9 @@ echo "Kernel:  ${KVER}"
 
 # display architecture
 echo "Arch  :  ${KARCH}"
+
+# display total memory in system
+grep MemTotal /proc/meminfo
 
 # display gcc version
 gcc_ver=$(gcc --version | grep -i gcc)
@@ -185,6 +147,64 @@ echo "gcc   :  "${gcc_ver}
 if command -v mokutil >/dev/null 2>&1
 then
 	mokutil --sb-state
+fi
+
+# check for and remove non-dkms installations
+# standard naming
+if [[ -f "${MODDESTDIR}${MODULE_NAME}.ko" ]]
+then
+	echo "Removing a non-dkms installation: ${MODDESTDIR}${MODULE_NAME}.ko"
+	rm -f ${MODDESTDIR}${MODULE_NAME}.ko
+	/sbin/depmod -a ${KVER}
+	echo "Removing ${OPTIONS_FILE} from /etc/modprobe.d"
+	rm -f /etc/modprobe.d/${OPTIONS_FILE}
+	echo "Removing source files from /usr/src/${DRV_NAME}-${DRV_VERSION}"
+	rm -rf /usr/src/${DRV_NAME}-${DRV_VERSION}
+	make clean >/dev/null 2>&1
+fi
+
+# check for and remove non-dkms installations
+# with rtl added to module name (PClinuxOS)
+if [[ -f "${MODDESTDIR}rtl${MODULE_NAME}.ko" ]]
+then
+	echo "Removing a non-dkms installation: ${MODDESTDIR}rtl${MODULE_NAME}.ko"
+	rm -f ${MODDESTDIR}rtl${MODULE_NAME}.ko
+	/sbin/depmod -a ${KVER}
+	echo "Removing ${OPTIONS_FILE} from /etc/modprobe.d"
+	rm -f /etc/modprobe.d/${OPTIONS_FILE}
+	echo "Removing source files from /usr/src/${DRV_NAME}-${DRV_VERSION}"
+	rm -rf /usr/src/${DRV_NAME}-${DRV_VERSION}
+	make clean >/dev/null 2>&1
+fi
+
+# check for and remove non-dkms installations
+# with compressed module in a unique non-standard location (Armbian)
+# Example: /usr/lib/modules/5.15.80-rockchip64/kernel/drivers/net/wireless/rtl8821cu/8821cu.ko.xz
+# Dear Armbiam, this is a really bad idea.
+if [[ -f "/usr/lib/modules/${KVER}/kernel/drivers/net/wireless/${DRV_NAME}/${MODULE_NAME}.ko.xz" ]]
+then
+	echo "Removing a non-dkms installation: /usr/lib/modules/${KVER}/kernel/drivers/net/wireless/${DRV_NAME}/${MODULE_NAME}.ko.xz"
+	rm -f /usr/lib/modules/${KVER}/kernel/drivers/net/wireless/${DRV_NAME}/${MODULE_NAME}.ko.xz
+	/sbin/depmod -a ${KVER}
+	echo "Removing ${OPTIONS_FILE} from /etc/modprobe.d"
+	rm -f /etc/modprobe.d/${OPTIONS_FILE}
+	echo "Removing source files from /usr/src/${DRV_NAME}-${DRV_VERSION}"
+	rm -rf /usr/src/${DRV_NAME}-${DRV_VERSION}
+	make clean >/dev/null 2>&1
+fi
+
+# check for and remove dkms installations
+if command -v dkms >/dev/null 2>&1
+then
+	if dkms status | grep -i  ${DRV_NAME}
+	then
+		echo "Removing a dkms installation: ${DRV_NAME}"
+		dkms remove -m ${DRV_NAME} -v ${DRV_VERSION} --all
+		echo "Removing ${OPTIONS_FILE} from /etc/modprobe.d"
+		rm -f /etc/modprobe.d/${OPTIONS_FILE}
+		echo "Removing source files from /usr/src/${DRV_NAME}-${DRV_VERSION}"
+		rm -rf /usr/src/${DRV_NAME}-${DRV_VERSION}
+	fi
 fi
 
 # sets module parameters (driver options) and blacklisted modules
@@ -231,6 +251,7 @@ then
 		exit $RESULT
 	fi
 else
+	dkms --version
 	echo "The dkms installation routines are in use."
 
 # 	the dkms add command requires source in /usr/src/${DRV_NAME}-${DRV_VERSION}
