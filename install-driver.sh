@@ -16,18 +16,19 @@
 # GNU General Public License for more details.
 
 SCRIPT_NAME="install-driver.sh"
-SCRIPT_VERSION="20230109"
+SCRIPT_VERSION="20230111"
 MODULE_NAME="8821cu"
 DRV_VERSION="5.12.0.4"
 
 KVER="$(uname -r)"
 KARCH="$(uname -m)"
-#KSRC="/lib/modules/${KVER}/build"
+KSRC="/lib/modules/${KVER}/build"
 MODDESTDIR="/lib/modules/${KVER}/kernel/drivers/net/wireless/"
 
 DRV_NAME="rtl${MODULE_NAME}"
 DRV_DIR="$(pwd)"
 OPTIONS_FILE="${MODULE_NAME}.conf"
+SMEM=$(LANG=C free | awk '/Mem:/ { print $2 }')
 
 # check to ensure sudo was used
 if [[ $EUID -ne 0 ]]
@@ -120,13 +121,25 @@ echo ": ${SCRIPT_NAME} v${SCRIPT_VERSION}"
 # information that helps with bug reports
 
 # display architecture
-echo ": ${KARCH}"
+echo ": ${KARCH} (ARCH)"
 
-# display total memory in system
-#grep MemTotal /proc/meminfo
+# display total system memory
+echo ": ${SMEM} (SMEM)"
+
+export SPROC=$(nproc)
+# Avoid OOM in low-RAM systems.
+if [ "$SPROC" -gt 1 ]
+then
+	if [ "$SMEM" -lt 1400000 ]
+	then
+		SPROC=2
+	fi
+fi
+# display total number of cpu cores / in use
+echo ": ${SPROC}/$(nproc) (SPROC)"
 
 # display kernel version
-echo ": ${KVER}"
+echo ": ${KVER} (KVER)"
 
 # display gcc version
 gcc_ver=$(gcc --version | grep -i gcc)
