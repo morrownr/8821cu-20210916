@@ -16,19 +16,20 @@
 # GNU General Public License for more details.
 
 SCRIPT_NAME="install-driver.sh"
-SCRIPT_VERSION="20230111"
+SCRIPT_VERSION="20230114"
 MODULE_NAME="8821cu"
 DRV_VERSION="5.12.0.4"
 
 KVER="$(uname -r)"
 KARCH="$(uname -m)"
-KSRC="/lib/modules/${KVER}/build"
 MODDESTDIR="/lib/modules/${KVER}/kernel/drivers/net/wireless/"
 
 DRV_NAME="rtl${MODULE_NAME}"
 DRV_DIR="$(pwd)"
 OPTIONS_FILE="${MODULE_NAME}.conf"
-SMEM=$(LANG=C free | awk '/Mem:/ { print $2 }')
+
+export SMEM=$(LANG=C free | awk '/Mem:/ { print $2 }')
+export SPROC=$(nproc)
 
 # check to ensure sudo was used
 if [[ $EUID -ne 0 ]]
@@ -126,8 +127,7 @@ echo ": ${KARCH} (ARCH)"
 # display total system memory
 echo ": ${SMEM} (SMEM)"
 
-export SPROC=$(nproc)
-# Avoid OOM in low-RAM systems.
+# Avoid Out of Memory condition in low-RAM systems by limiting core usage.
 if [ "$SPROC" -gt 1 ]
 then
 	if [ "$SMEM" -lt 1400000 ]
