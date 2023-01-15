@@ -87,13 +87,17 @@ then
 	exit 1
 fi
 
-# check to ensure nano is installed
-if ! command -v nano >/dev/null 2>&1
+# Check if ${EDITOR} is an executable or try to default to nano or finally complain if it's not installed.
+if ! [ -x "${EDITOR}" ]
 then
-	echo "A required package is not installed."
-	echo "Please install the following package: nano"
-	echo "Once the package is installed, please run \"sudo ./${SCRIPT_NAME}\""
-	exit 1
+	EDITOR="$(which nano 2>/dev/null)"
+	if ! [ -x "${EDITOR}" ]
+	then
+		echo "No text editor found (default: nano)."
+		echo "Please install one and set the EDITOR variable to point to it."
+		echo "When you have an editor, please run \"sudo ./${SCRIPT_NAME}\""
+		exit 1
+	fi
 fi
 
 # support for the NoPrompt option allows non-interactive use of this script
@@ -353,7 +357,7 @@ then
 	echo
 	if [[ $REPLY =~ ^[Yy]$ ]]
 	then
-		nano /etc/modprobe.d/${OPTIONS_FILE}
+		${EDITOR} /etc/modprobe.d/${OPTIONS_FILE}
 	fi
 
 	read -p "Do you want to reboot now? (recommended) [y/N] " -n 1 -r
