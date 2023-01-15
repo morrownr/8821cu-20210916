@@ -28,8 +28,8 @@ DRV_NAME="rtl${MODULE_NAME}"
 DRV_DIR="$(pwd)"
 OPTIONS_FILE="${MODULE_NAME}.conf"
 
-export SMEM=$(LANG=C free | awk '/Mem:/ { print $2 }')
-export SPROC=$(nproc)
+SMEM=$(LANG=C free | awk '/Mem:/ { print $2 }')
+SPROC=$(nproc)
 
 # check to ensure sudo was used
 if [[ $EUID -ne 0 ]]
@@ -136,7 +136,7 @@ then
 	fi
 fi
 # display total number of cpu cores / in use
-echo ": ${SPROC}/$(nproc) (SPROC)"
+echo ": ${SPROC}/$(nproc) (SPROC/NPROC)"
 
 # display kernel version
 echo ": ${KVER} (KVER)"
