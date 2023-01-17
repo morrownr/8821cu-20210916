@@ -16,7 +16,7 @@
 # GNU General Public License for more details.
 
 SCRIPT_NAME="install-driver.sh"
-SCRIPT_VERSION="20230114"
+SCRIPT_VERSION="20230116"
 MODULE_NAME="8821cu"
 DRV_VERSION="5.12.0.4"
 
@@ -29,7 +29,7 @@ DRV_DIR="$(pwd)"
 OPTIONS_FILE="${MODULE_NAME}.conf"
 
 SMEM=$(LANG=C free | awk '/Mem:/ { print $2 }')
-SPROC=$(nproc)
+sproc=$(nproc)
 
 # check to ensure sudo was used
 if [[ $EUID -ne 0 ]]
@@ -116,6 +116,8 @@ do
 	shift
 done
 
+echo ": ---------------------------"
+
 # displays script name and version
 echo ": ${SCRIPT_NAME} v${SCRIPT_VERSION}"
 
@@ -128,15 +130,15 @@ echo ": ${KARCH} (ARCH)"
 echo ": ${SMEM} (SMEM)"
 
 # Avoid Out of Memory condition in low-RAM systems by limiting core usage.
-if [ "$SPROC" -gt 1 ]
+if [ "$sproc" -gt 1 ]
 then
 	if [ "$SMEM" -lt 1400000 ]
 	then
-		SPROC=2
+		sproc=2
 	fi
 fi
 # display total number of cpu cores / in use
-echo ": ${SPROC}/$(nproc) (SPROC/NPROC)"
+echo ": ${sproc}/$(nproc) (sproc/nproc)"
 
 # display kernel version
 echo ": ${KVER} (KVER)"
@@ -158,6 +160,8 @@ then
 	sb_state=$(mokutil --sb-state)
 	echo ": "${sb_state}
 fi
+
+echo ": ---------------------------"
 
 # display ISO 3166-1 alpha-2 Country Code
 #a2_country_code=$(iw reg get | grep -i country)
