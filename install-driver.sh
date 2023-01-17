@@ -19,6 +19,7 @@ SCRIPT_NAME="install-driver.sh"
 SCRIPT_VERSION="20230111"
 MODULE_NAME="8821cu"
 DRV_VERSION="5.12.0.4"
+DEFAULT_EDITOR="nano"
 
 KVER="$(uname -r)"
 KARCH="$(uname -m)"
@@ -87,17 +88,21 @@ then
 	exit 1
 fi
 
-# Check if ${EDITOR} is an executable or try to default to nano or finally complain if it's not installed.
-if ! [ -x "${EDITOR}" ]
+# Try to find the user's default text editor through ${VISUAL}, ${EDITOR} or nano
+if command -v "${VISUAL}" >/dev/null 2>&1
 then
-	EDITOR="$(which nano 2>/dev/null)"
-	if ! [ -x "${EDITOR}" ]
-	then
-		echo "No text editor found (default: nano)."
-		echo "Please install one and set the EDITOR variable to point to it."
-		echo "When you have an editor, please run \"sudo ./${SCRIPT_NAME}\""
-		exit 1
-	fi
+        TEXT_EDITOR="${VISUAL}"
+elif command -v "${EDITOR}" >/dev/null 2>&1
+then
+        TEXT_EDITOR="${EDITOR}"
+elif command -v "${DEFAULT_EDITOR}" >/dev/null 2>&1
+then
+        TEXT_EDITOR="${DEFAULT_EDITOR}"
+else
+        echo "No text editor found (default: ${DEFAULT_EDITOR})."
+        echo "Please install one and set the VISUAL or EDITOR variables to point to it."
+        echo "When you have an editor, please run \"sudo ./${SCRIPT_NAME}\""
+        exit 1
 fi
 
 # support for the NoPrompt option allows non-interactive use of this script
@@ -357,7 +362,7 @@ then
 	echo
 	if [[ $REPLY =~ ^[Yy]$ ]]
 	then
-		${EDITOR} /etc/modprobe.d/${OPTIONS_FILE}
+		${TEXT_EDITOR} /etc/modprobe.d/${OPTIONS_FILE}
 	fi
 
 	read -p "Do you want to reboot now? (recommended) [y/N] " -n 1 -r
