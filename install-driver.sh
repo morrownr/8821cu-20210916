@@ -19,6 +19,7 @@ SCRIPT_NAME="install-driver.sh"
 SCRIPT_VERSION="20230116"
 MODULE_NAME="8821cu"
 DRV_VERSION="5.12.0.4"
+DEFAULT_EDITOR="nano"
 
 KVER="$(uname -r)"
 KARCH="$(uname -m)"
@@ -88,13 +89,21 @@ then
 	exit 1
 fi
 
-# check to ensure nano is installed
-if ! command -v nano >/dev/null 2>&1
+# Try to find the user's default text editor through ${VISUAL}, ${EDITOR} or nano
+if command -v "${VISUAL}" >/dev/null 2>&1
 then
-	echo "A required package is not installed."
-	echo "Please install the following package: nano"
-	echo "Once the package is installed, please run \"sudo ./${SCRIPT_NAME}\""
-	exit 1
+        TEXT_EDITOR="${VISUAL}"
+elif command -v "${EDITOR}" >/dev/null 2>&1
+then
+        TEXT_EDITOR="${EDITOR}"
+elif command -v "${DEFAULT_EDITOR}" >/dev/null 2>&1
+then
+        TEXT_EDITOR="${DEFAULT_EDITOR}"
+else
+        echo "No text editor found (default: ${DEFAULT_EDITOR})."
+        echo "Please install one and set the VISUAL or EDITOR variables to point to it."
+        echo "When you have an editor, please run \"sudo ./${SCRIPT_NAME}\""
+        exit 1
 fi
 
 # support for the NoPrompt option allows non-interactive use of this script
@@ -357,7 +366,7 @@ then
 	echo
 	if [[ $REPLY =~ ^[Yy]$ ]]
 	then
-		nano /etc/modprobe.d/${OPTIONS_FILE}
+		${TEXT_EDITOR} /etc/modprobe.d/${OPTIONS_FILE}
 	fi
 
 	read -p "Do you want to reboot now? (recommended) [y/N] " -n 1 -r

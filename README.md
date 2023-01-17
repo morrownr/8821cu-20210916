@@ -546,7 +546,7 @@ dtoverlay=disable-wifi
 #### Step 1: Edit wpa_supplicant.conf
 
 ```
-sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
+sudo ${EDITOR} /etc/wpa_supplicant/wpa_supplicant.conf
 ```
 
 #### Step 2: Delete the relevant WiFi network block (including the 'network=' and opening/closing braces.
