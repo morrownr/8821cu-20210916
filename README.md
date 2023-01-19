@@ -152,7 +152,7 @@ or if you have previously installed another driver for chipsets supported by
 this driver, you MUST remove anything that the previous attempt
 installed BEFORE attempting to install this driver. This driver can be
 removed with the script called `./remove-driver.sh`. Information is
-available in the section called `Removal of the Driver.` You can get a
+available in the section called `Removal of the Driver`. You can get a
 good idea as to whether you need to remove a previously installed
 driver by running the following command:
 
@@ -372,7 +372,7 @@ git clone https://github.com/morrownr/8821cu-20210916.git
 cd ~/src/8821cu-20210916
 ```
 
-#### Step 8: Run the installation script ( install-driver.sh )
+#### Step 8: Run the installation script (`install-driver.sh`)
 
 Note: For automated builds (non-interactive), use _NoPrompt_ as an option.
 
@@ -387,7 +387,9 @@ not be applied. Rebooting is strongly recommended.
 Note: Fedora users that have secure boot turned on should run the following to
 enroll the key:
 
+```
 $ sudo mokutil --import /var/lib/dkms/mok.pub
+```
 
 Manual build instructions: The above script automates the installation
 process, however, if you want to or need to do a command line
@@ -405,7 +407,7 @@ the process each time a new kernel is installed in your distro.
 
 -----
 
-### Driver Options ( edit-options.sh )
+### Driver Options (`edit-options.sh`)
 
 A file called `8821cu.conf` will be installed in `/etc/modprobe.d` by
 default if you use the `./install-driver.sh` script.
@@ -460,7 +462,7 @@ sudo ./install-driver.sh
 ```
 
 -----
-### Removal of the Driver ( remove-driver.sh  )
+### Removal of the Driver (`remove-driver.sh`)
 
 Note: Removing the driver is advised in the following situations:
 
@@ -507,7 +509,7 @@ Note: These are general recommendations, some of which may not apply to your spe
 
 - Best location for the WiFi router/access point: Near center of apartment or house, at least a couple of feet away from walls, in an elevated location. You may have to test to see what the best location is in your environment.
 
-- Check congestion: There are apps available for smart phones that allow you to get an idea of the congestion levels on WiFi channels. The apps generally go by the name of ```WiFi Analyzer``` or something similar.
+- Check congestion: There are apps available for smart phones that allow you to get an idea of the congestion levels on WiFi channels. The apps generally go by the name of `WiFi Analyzer` or something similar.
 
 After making and saving changes, reboot the router.
 
@@ -533,7 +535,7 @@ After making and saving changes, reboot the router.
 
 ### How to disable onboard WiFi on Raspberry Pi 3B, 3B+, 3A+, 4B and Zero W
 
-Add the following line to /boot/config.txt
+Add the following line to `/boot/config.txt`
 
 ```
 dtoverlay=disable-wifi
@@ -543,15 +545,15 @@ dtoverlay=disable-wifi
 
 ### How to forget a saved WiFi network on a Raspberry Pi
 
-#### Step 1: Edit wpa_supplicant.conf
+#### Step 1: Edit `wpa_supplicant.conf`
 
 ```
 sudo ${EDITOR} /etc/wpa_supplicant/wpa_supplicant.conf
 ```
 
-#### Step 2: Delete the relevant WiFi network block (including the 'network=' and opening/closing braces.
+#### Step 2: Delete the relevant WiFi network block (including the '`network=`' and opening/closing braces).
 
-#### Step 3: Press ctrl-x followed by 'y' and enter to save the file.
+#### Step 3: Press ctrl-x followed by '`y`' and enter to save the file.
 
 #### Step 4: Reboot
 
