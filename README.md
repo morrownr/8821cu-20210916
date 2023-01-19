@@ -557,7 +557,7 @@ sudo ${EDITOR} /etc/wpa_supplicant/wpa_supplicant.conf
 
 -----
 
-### FAQ:
+### FAQ
 
 Question: Is WPA3 supported?
 
