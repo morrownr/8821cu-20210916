@@ -166,9 +166,11 @@ install the newest available before installing the new kernel. Use the
 following commands in the driver directory:
 
 ```
-$ sudo ./remove-driver.sh
-$ git pull
-$ sudo ./install-driver.sh
+sudo ./remove-driver.sh
+
+git pull
+
+sudo ./install-driver.sh
 ```
 
 Temporary internet access is required for installation. There are numerous ways
@@ -388,7 +390,7 @@ Note: Fedora users that have secure boot turned on should run the following to
 enroll the key:
 
 ```
-$ sudo mokutil --import /var/lib/dkms/mok.pub
+sudo mokutil --import /var/lib/dkms/mok.pub
 ```
 
 Manual build instructions: The above script automates the installation
