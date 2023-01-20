@@ -376,7 +376,7 @@ cd ~/src/8821cu-20210916
 
 #### Step 8: Run the installation script (`install-driver.sh`)
 
-Note: For automated builds (non-interactive), use _NoPrompt_ as an option.
+Note: For automated builds (non-interactive), use `NoPrompt` as an option.
 
 ```
 sudo ./install-driver.sh
@@ -485,7 +485,7 @@ cd ~/src/8821cu-20210916
 
 #### Step 3: Run the removal script
 
-Note: For automated builds (non-interactive), use _NoPrompt_ as an option.
+Note: For automated builds (non-interactive), use `NoPrompt` as an option.
 
 ```
 sudo ./remove-driver.sh
