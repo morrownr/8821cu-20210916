@@ -50,7 +50,7 @@ confirm that this is the correct driver for your adapter.
 
 - x86, i686
 - x86-64, amd64
-- armv7l, armv6l (arm)
+- armv6l, armv7l (arm)
 - aarch64 (arm64)
 
 ### Compatible Kernels
@@ -60,7 +60,7 @@ confirm that this is the correct driver for your adapter.
 
 ### Tested Compilers
 
-- gcc 9, 10, 11 and 12
+- gcc 10, 11 and 12
 
 ### Tested Linux Distributions
 
@@ -73,7 +73,7 @@ be provided via PR or message in Issues.
 
 - Debian 11 (kernels 5.10 and 5.15)
 
-- Fedora (kernel 5.11)
+- Fedora (kernel 5.11) and Fedora 37 (kernel 6.0)
 
 - Kali Linux (kernel 5.10)
 
@@ -161,8 +161,8 @@ sudo dkms status
 ```
 
 Warning: If you decide to upgrade to a new version of kernel such as
-5.15 to 5.19, you need to remove the driver you have installed and
-install the newest available before installing the new kernel. Use the
+5.15 to 5.19, you need to upgrade the driver you have installed with
+the newest available before installing the new kernel. Use the
 following commands in the driver directory:
 
 ```
@@ -271,7 +271,7 @@ system to work with. The installation can then be continued with Step 3.
 sudo reboot
 ```
 
-#### Step 3: Install the required packages (select the option for the OS you are using)
+#### Step 3: Install the required packages (select the option for the distro you are using)
 
 Note: If your Linux distro does not fall into one of options listed
 below, you will need to research how to properly setup up the development
@@ -375,6 +375,9 @@ cd ~/src/8821cu-20210916
 ```
 
 #### Step 8: Run the installation script (`install-driver.sh`)
+
+Note: It is recommended that you terminate running apps so as to provide the
+maximum amount of RAM to the compilation process.
 
 Note: For automated builds (non-interactive), use `NoPrompt` as an option.
 
