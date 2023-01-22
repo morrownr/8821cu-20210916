@@ -3,7 +3,15 @@
 # Purpose: Install Realtek out-of-kernel USB WiFi adapter drivers.
 #
 # Supports dkms and non-dkms installations.
-
+#
+# To make this file executable:
+#
+# $ chmod +x edit-options.sh
+#
+# To execute this file:
+#
+# $ sudo ./edit-options.sh
+#
 # Copyright(c) 2023 Nick Morrow
 #
 # This program is free software; you can redistribute it and/or modify
@@ -16,10 +24,9 @@
 # GNU General Public License for more details.
 
 SCRIPT_NAME="install-driver.sh"
-SCRIPT_VERSION="20230116"
+SCRIPT_VERSION="20230121"
 MODULE_NAME="8821cu"
 DRV_VERSION="5.12.0.4"
-DEFAULT_EDITOR="nano"
 
 KVER="$(uname -r)"
 KARCH="$(uname -m)"
@@ -31,6 +38,7 @@ OPTIONS_FILE="${MODULE_NAME}.conf"
 
 SMEM=$(LANG=C free | awk '/Mem:/ { print $2 }')
 sproc=$(nproc)
+DEFAULT_EDITOR=`cat default-editor`
 
 # check to ensure sudo was used
 if [[ $EUID -ne 0 ]]
@@ -66,8 +74,8 @@ fi
 # check to see if header files are installed
 if [ ! -d "/lib/modules/$(uname -r)/build" ]; then
 	echo "Your kernel header files aren't properly installed."
-	echo "Please consult your distro documentation."
-	echo "Once the header files are installed, please run \"sudo ./${SCRIPT_NAME}\""
+	echo "Please consult your distro documentation or user support forums."
+	echo "Once the header files are properly installed, please run \"sudo ./${SCRIPT_NAME}\""
 	exit 1
 fi
 
@@ -101,8 +109,8 @@ then
         TEXT_EDITOR="${DEFAULT_EDITOR}"
 else
         echo "No text editor found (default: ${DEFAULT_EDITOR})."
-        echo "Please install one and set the VISUAL or EDITOR variables to point to it."
-        echo "When you have an editor, please run \"sudo ./${SCRIPT_NAME}\""
+        echo "Please install ${DEFAULT_EDITOR} or edit the file 'default-editor' to specify your editor."
+        echo "Once complete, please run \"sudo ./${SCRIPT_NAME}\""
         exit 1
 fi
 
@@ -146,7 +154,7 @@ then
 		sproc=2
 	fi
 fi
-# display total number of cpu cores / in use
+# display total number of  in-use cpu processes / total cpu processes
 echo ": ${sproc}/$(nproc) (sproc/nproc)"
 
 # display kernel version

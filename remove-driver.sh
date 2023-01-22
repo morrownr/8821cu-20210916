@@ -3,7 +3,15 @@
 # Purpose: Remove Realtek out-of-kernel USB WiFi adapter drivers.
 #
 # Supports dkms and non-dkms removals.
-
+#
+# To make this file executable:
+#
+# $ chmod +x edit-options.sh
+#
+# To execute this file:
+#
+# $ sudo ./edit-options.sh
+#
 # Copyright(c) 2023 Nick Morrow
 #
 # This program is free software; you can redistribute it and/or modify
@@ -22,7 +30,6 @@ DRV_VERSION="5.12.0.4"
 
 KVER="$(uname -r)"
 KARCH="$(uname -m)"
-#KSRC="/lib/modules/${KVER}/build"
 MODDESTDIR="/lib/modules/${KVER}/kernel/drivers/net/wireless/"
 
 DRV_NAME="rtl${MODULE_NAME}"

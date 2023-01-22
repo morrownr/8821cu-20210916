@@ -1,10 +1,8 @@
 #!/bin/bash
-#
-OPTIONS_FILE="8821cu.conf"
-SCRIPT_NAME="edit-options.sh"
-DEFAULT_EDITOR="nano"
-#
+
 # Purpose: Make it easier to edit the driver options file.
+#
+# Flexible editor support.
 #
 # To make this file executable:
 #
@@ -14,6 +12,22 @@ DEFAULT_EDITOR="nano"
 #
 # $ sudo ./edit-options.sh
 #
+# Copyright(c) 2023 Nick Morrow
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of version 2 of the GNU General Public License as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+
+SCRIPT_NAME="edit-options.sh"
+SCRIPT_VERSION="20230120"
+OPTIONS_FILE="8821cu.conf"
+DEFAULT_EDITOR=`cat default-editor`
+
 if [[ $EUID -ne 0 ]]
 then
 	echo "You must run this script with superuser (root) privileges."
@@ -33,8 +47,8 @@ then
         TEXT_EDITOR="${DEFAULT_EDITOR}"
 else
         echo "No text editor found (default: ${DEFAULT_EDITOR})."
-        echo "Please install one and set the VISUAL or EDITOR variables to point to it."
-        echo "When you have an editor, please run \"sudo ./${SCRIPT_NAME}\""
+        echo "Please install ${DEFAULT_EDITOR} or edit the file 'default-editor' to specify your editor."
+        echo "Once complete, please run \"sudo ./${SCRIPT_NAME}\""
         exit 1
 fi
 
