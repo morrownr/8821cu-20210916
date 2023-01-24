@@ -38,7 +38,8 @@ OPTIONS_FILE="${MODULE_NAME}.conf"
 
 SMEM=$(LANG=C free | awk '/Mem:/ { print $2 }')
 sproc=$(nproc)
-DEFAULT_EDITOR=`cat default-editor`
+DEFAULT_EDITOR="$(<default-editor.txt)"
+EDITORS_SEARCH=("${VISUAL}" "${EDITOR}" "${DEFAULT_EDITOR}" "vi")
 
 # check to ensure sudo was used
 if [[ $EUID -ne 0 ]]
@@ -97,19 +98,21 @@ then
 	exit 1
 fi
 
-# Try to find the user's default text editor through ${VISUAL}, ${EDITOR} or nano
-if command -v "${VISUAL}" >/dev/null 2>&1
+# Try to find the user's default text editor through the EDITORS_SEARCH array
+for editor in ${EDITORS_SEARCH[@]}
+do
+	if command -v "${editor}" >/dev/null 2>&1
+	then
+		TEXT_EDITOR="${editor}"
+		break
+	fi
+done
+
+# Fail if no editor was found
+if ! command -v "${TEXT_EDITOR}" >/dev/null 2>&1
 then
-        TEXT_EDITOR="${VISUAL}"
-elif command -v "${EDITOR}" >/dev/null 2>&1
-then
-        TEXT_EDITOR="${EDITOR}"
-elif command -v "${DEFAULT_EDITOR}" >/dev/null 2>&1
-then
-        TEXT_EDITOR="${DEFAULT_EDITOR}"
-else
         echo "No text editor found (default: ${DEFAULT_EDITOR})."
-        echo "Please install ${DEFAULT_EDITOR} or edit the file 'default-editor' to specify your editor."
+        echo "Please install ${DEFAULT_EDITOR} or edit the file 'default-editor.txt' to specify your editor."
         echo "Once complete, please run \"sudo ./${SCRIPT_NAME}\""
         exit 1
 fi
