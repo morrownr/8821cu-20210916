@@ -24,7 +24,7 @@
 # GNU General Public License for more details.
 
 SCRIPT_NAME="install-driver.sh"
-SCRIPT_VERSION="20230121"
+SCRIPT_VERSION="20230124"
 MODULE_NAME="8821cu"
 DRV_VERSION="5.12.0.4"
 
@@ -72,7 +72,7 @@ then
 	exit 1
 fi
 
-# check to see if header files are installed
+# check to see if the correct header files are installed
 if [ ! -d "/lib/modules/$(uname -r)/build" ]; then
 	echo "Your kernel header files aren't properly installed."
 	echo "Please consult your distro documentation or user support forums."
