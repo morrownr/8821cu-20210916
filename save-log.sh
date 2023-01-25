@@ -1,4 +1,3 @@
-#!/usr/bin/dash
 #!/bin/sh
 #
 SCRIPT_NAME="save-log.sh"
