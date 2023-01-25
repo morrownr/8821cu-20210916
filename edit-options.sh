@@ -26,8 +26,7 @@
 SCRIPT_NAME="edit-options.sh"
 SCRIPT_VERSION="20230120"
 OPTIONS_FILE="8821cu.conf"
-DEFAULT_EDITOR="$(<default-editor.txt)"
-EDITORS_SEARCH=("${VISUAL}" "${EDITOR}" "${DEFAULT_EDITOR}" "vi")
+DEFAULT_EDITOR="$(cat default-editor.txt)"
 
 if [[ $EUID -ne 0 ]]
 then
@@ -37,13 +36,9 @@ then
 fi
 
 # Try to find the user's default text editor through the EDITORS_SEARCH array
-for editor in ${EDITORS_SEARCH[@]}
+for TEXT_EDITOR in "${VISUAL}" "${EDITOR}" "${DEFAULT_EDITOR}" vi;
 do
-        if command -v "${editor}" >/dev/null 2>&1
-        then
-                TEXT_EDITOR="${editor}"
-                break
-        fi
+        command -v "${TEXT_EDITOR}" >/dev/null 2>&1 && break
 done
 
 # Fail if no editor was found

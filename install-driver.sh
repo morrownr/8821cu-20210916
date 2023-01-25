@@ -38,8 +38,7 @@ OPTIONS_FILE="${MODULE_NAME}.conf"
 
 SMEM=$(LANG=C free | awk '/Mem:/ { print $2 }')
 sproc=$(nproc)
-DEFAULT_EDITOR="$(<default-editor.txt)"
-EDITORS_SEARCH=("${VISUAL}" "${EDITOR}" "${DEFAULT_EDITOR}" "vi")
+DEFAULT_EDITOR="$(cat default-editor.txt)"
 
 # check to ensure sudo was used
 if [[ $EUID -ne 0 ]]
@@ -99,13 +98,9 @@ then
 fi
 
 # Try to find the user's default text editor through the EDITORS_SEARCH array
-for editor in ${EDITORS_SEARCH[@]}
+for TEXT_EDITOR in "${VISUAL}" "${EDITOR}" "${DEFAULT_EDITOR}" vi;
 do
-	if command -v "${editor}" >/dev/null 2>&1
-	then
-		TEXT_EDITOR="${editor}"
-		break
-	fi
+	command -v "${TEXT_EDITOR}" >/dev/null 2>&1 && break
 done
 
 # Fail if no editor was found
