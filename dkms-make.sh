@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # SMEM needs to be set here if dkms build is not initiated by install-driver.sh
 SMEM=$(LANG=C free | awk '/Mem:/ { print $2 }')
