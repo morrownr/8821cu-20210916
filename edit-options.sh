@@ -28,22 +28,19 @@ SCRIPT_VERSION="20230120"
 OPTIONS_FILE="8821cu.conf"
 DEFAULT_EDITOR="$(cat default-editor.txt)"
 
-if [[ $EUID -ne 0 ]]
-then
+if [[ $EUID -ne 0 ]]; then
 	echo "You must run this script with superuser (root) privileges."
 	echo "Try: \"sudo ./${SCRIPT_NAME}\""
 	exit 1
 fi
 
 # Try to find the user's default text editor through the EDITORS_SEARCH array
-for TEXT_EDITOR in "${VISUAL}" "${EDITOR}" "${DEFAULT_EDITOR}" vi;
-do
+for TEXT_EDITOR in "${VISUAL}" "${EDITOR}" "${DEFAULT_EDITOR}" vi; do
         command -v "${TEXT_EDITOR}" >/dev/null 2>&1 && break
 done
 
 # Fail if no editor was found
-if ! command -v "${TEXT_EDITOR}" >/dev/null 2>&1
-then
+if ! command -v "${TEXT_EDITOR}" >/dev/null 2>&1; then
         echo "No text editor found (default: ${DEFAULT_EDITOR})."
         echo "Please install ${DEFAULT_EDITOR} or edit the file 'default-editor.txt' to specify your editor."
         echo "Once complete, please run \"sudo ./${SCRIPT_NAME}\""
@@ -54,8 +51,7 @@ ${TEXT_EDITOR} /etc/modprobe.d/${OPTIONS_FILE}
 
 read -p "Do you want to apply the new options by rebooting now? [y/N] " -n 1 -r
 echo    # move to a new line
-if [[ $REPLY =~ ^[Yy]$ ]]
-then
+if [[ $REPLY =~ ^[Yy]$ ]]; then
     reboot
 fi
 

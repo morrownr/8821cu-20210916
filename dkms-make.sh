@@ -7,10 +7,8 @@ SMEM=$(LANG=C free | awk '/Mem:/ { print $2 }')
 sproc=$(nproc)
 
 # Avoid Out of Memory condition in low-RAM systems by limiting core usage.
-if [ "$sproc" -gt 1 ]
-then
-	if [ "$SMEM" -lt 1400000 ]
-	then
+if [ "$sproc" -gt 1 ]; then
+	if [ "$SMEM" -lt 1400000 ]; then
 		sproc=2
 	fi
 fi
