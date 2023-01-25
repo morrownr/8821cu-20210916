@@ -52,11 +52,11 @@ echo ": ${SCRIPT_NAME} v${SCRIPT_VERSION}"
 
 ${TEXT_EDITOR} /etc/modprobe.d/${OPTIONS_FILE}
 
-echo "Do you want to apply the new options by rebooting now? [y/N] "
+printf "Do you want to apply the new options by rebooting now? [y/N] "
 read -r REPLY
 echo    # move to a new line
-if [ "${REPLY}" = y ] || [ "${REPLY}" = Y ]; then
-    reboot
-fi
+case "$REPLY" in
+	[yY]*) reboot ;;
+esac
 
 exit 0

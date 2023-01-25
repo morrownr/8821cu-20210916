@@ -129,12 +129,12 @@ echo "You may now delete the driver directory if desired."
 
 # if NoPrompt is not used, ask user some questions
 if [ $NO_PROMPT -ne 1 ]; then
-	echo "Do you want to reboot now? (recommended) [y/N]"
+	printf "Do you want to reboot now? (recommended) [y/N] "
 	read -r REPLY
 	echo
-	if [ "$REPLY" = y ] || [ "$REPLY" = Y ]; then
-		reboot
-	fi
+	case "$REPLY" in
+		[yY]*) reboot ;;
+	esac
 fi
 
 exit 0

@@ -342,19 +342,19 @@ fi
 
 # if NoPrompt is not used, ask user some questions
 if [ $NO_PROMPT -ne 1 ]; then
-	echo "Do you want to edit the driver options file now? [y/N]"
+	printf "Do you want to edit the driver options file now? [y/N] "
 	read -r REPLY
 	echo
-	if [ "$REPLY" = y ] || [ "$REPLY" = Y ]; then
-		${TEXT_EDITOR} /etc/modprobe.d/${OPTIONS_FILE}
-	fi
+	case "$REPLY" in
+		[yY]*) ${TEXT_EDITOR} /etc/modprobe.d/${OPTIONS_FILE} ;;
+	esac
 
-	echo "Do you want to reboot now? (recommended) [y/N]"
+	printf "Do you want to reboot now? (recommended) [y/N] "
 	read -r REPLY
 	echo
-	if [ "$REPLY" = y ] || [ "$REPLY" = Y ]; then
-		reboot
-	fi
+	case "$REPLY" in
+		[yY]*) reboot ;;
+	esac
 fi
 
 exit 0
