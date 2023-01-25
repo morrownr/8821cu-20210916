@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Purpose: Install Realtek out-of-kernel USB WiFi adapter drivers.
 #
@@ -41,7 +41,7 @@ sproc=$(nproc)
 DEFAULT_EDITOR="$(cat default-editor.txt)"
 
 # check to ensure sudo was used
-if [[ $EUID -ne 0 ]]; then
+if [ "$(id -u)" -ne 0 ]; then
 	echo "You must run this script with superuser (root) privileges."
 	echo "Try: \"sudo ./${SCRIPT_NAME}\""
 	exit 1
@@ -151,18 +151,18 @@ echo ": ${KVER} (KVER)"
 
 # display gcc version
 gcc_ver=$(gcc --version | grep -i gcc)
-echo ": "${gcc_ver}
+echo ": ${gcc_ver}"
 
 # display dkms version if installed
 if command -v dkms >/dev/null 2>&1; then
 	dkms_ver=$(dkms --version)
-	echo ": "${dkms_ver}
+	echo ": ${dkms_ver}"
 fi
 
 # display secure mode status if mokutil is installed
 if command -v mokutil >/dev/null 2>&1; then
 	sb_state=$(mokutil --sb-state)
-	echo ": "${sb_state}
+	echo ": ${sb_state}"
 fi
 
 echo ": ---------------------------"
@@ -179,10 +179,10 @@ echo ": ---------------------------"
 
 # check for and remove non-dkms installations
 # standard naming
-if [[ -f "${MODDESTDIR}${MODULE_NAME}.ko" ]]; then
+if [ -f "${MODDESTDIR}${MODULE_NAME}.ko" ]; then
 	echo "Removing a non-dkms installation: ${MODDESTDIR}${MODULE_NAME}.ko"
-	rm -f ${MODDESTDIR}${MODULE_NAME}.ko
-	/sbin/depmod -a ${KVER}
+	rm -f "${MODDESTDIR}${MODULE_NAME}.ko"
+	/sbin/depmod -a "${KVER}"
 	echo "Removing ${OPTIONS_FILE} from /etc/modprobe.d"
 	rm -f /etc/modprobe.d/${OPTIONS_FILE}
 	echo "Removing source files from /usr/src/${DRV_NAME}-${DRV_VERSION}"
@@ -192,10 +192,10 @@ fi
 
 # check for and remove non-dkms installations
 # with rtl added to module name (PClinuxOS)
-if [[ -f "${MODDESTDIR}rtl${MODULE_NAME}.ko" ]]; then
+if [ -f "${MODDESTDIR}rtl${MODULE_NAME}.ko" ]; then
 	echo "Removing a non-dkms installation: ${MODDESTDIR}rtl${MODULE_NAME}.ko"
-	rm -f ${MODDESTDIR}rtl${MODULE_NAME}.ko
-	/sbin/depmod -a ${KVER}
+	rm -f "${MODDESTDIR}rtl${MODULE_NAME}.ko"
+	/sbin/depmod -a "${KVER}"
 	echo "Removing ${OPTIONS_FILE} from /etc/modprobe.d"
 	rm -f /etc/modprobe.d/${OPTIONS_FILE}
 	echo "Removing source files from /usr/src/${DRV_NAME}-${DRV_VERSION}"
@@ -207,10 +207,10 @@ fi
 # with compressed module in a unique non-standard location (Armbian)
 # Example: /usr/lib/modules/5.15.80-rockchip64/kernel/drivers/net/wireless/rtl8821cu/8821cu.ko.xz
 # Dear Armbiam, this is a really bad idea.
-if [[ -f "/usr/lib/modules/${KVER}/kernel/drivers/net/wireless/${DRV_NAME}/${MODULE_NAME}.ko.xz" ]]; then
+if [ -f "/usr/lib/modules/${KVER}/kernel/drivers/net/wireless/${DRV_NAME}/${MODULE_NAME}.ko.xz" ]; then
 	echo "Removing a non-dkms installation: /usr/lib/modules/${KVER}/kernel/drivers/net/wireless/${DRV_NAME}/${MODULE_NAME}.ko.xz"
-	rm -f /usr/lib/modules/${KVER}/kernel/drivers/net/wireless/${DRV_NAME}/${MODULE_NAME}.ko.xz
-	/sbin/depmod -a ${KVER}
+	rm -f "/usr/lib/modules/${KVER}/kernel/drivers/net/wireless/${DRV_NAME}/${MODULE_NAME}.ko.xz"
+	/sbin/depmod -a "${KVER}"
 	echo "Removing ${OPTIONS_FILE} from /etc/modprobe.d"
 	rm -f /etc/modprobe.d/${OPTIONS_FILE}
 	echo "Removing source files from /usr/src/${DRV_NAME}-${DRV_VERSION}"
@@ -240,10 +240,10 @@ if ! command -v dkms >/dev/null 2>&1; then
 
 	make clean >/dev/null 2>&1
 
-	make -j$(nproc)
+	make "-j$(nproc)"
 	RESULT=$?
 
-	if [[ "$RESULT" != "0" ]]; then
+	if [ "$RESULT" != "0" ]; then
 		echo "An error occurred:  ${RESULT}"
 		echo "Please report this error."
 		echo "Please copy all screen output and paste it into the problem report."
@@ -259,7 +259,7 @@ if ! command -v dkms >/dev/null 2>&1; then
 	make install
 	RESULT=$?
 
-	if [[ "$RESULT" = "0" ]]; then
+	if [ "$RESULT" = "0" ]; then
         	make clean >/dev/null 2>&1
 		echo "The driver was installed successfully."
 	else
@@ -282,8 +282,8 @@ else
 
 #	RESULT will be 3 if the DKMS tree already contains the same module/version
 #	combo. You cannot add the same module/version combo more than once.
-	if [[ "$RESULT" != "0" ]]; then
-		if [[ "$RESULT" = "3" ]]; then
+	if [ "$RESULT" != "0" ]; then
+		if [ "$RESULT" = "3" ]; then
 			echo "This driver may already be installed."
 			echo "Run the following and then reattempt installation."
 			echo "$ sudo ./remove-driver.sh"
@@ -307,7 +307,7 @@ else
 	fi
 	RESULT=$?
 
-	if [[ "$RESULT" != "0" ]]; then
+	if [ "$RESULT" != "0" ]; then
 		echo "An error occurred. dkms build error:  ${RESULT}"
 		echo "Please report this error."
 		echo "Please copy all screen output and paste it into the problem report."
@@ -321,7 +321,7 @@ else
 	dkms install -m ${DRV_NAME} -v ${DRV_VERSION}
 	RESULT=$?
 
-	if [[ "$RESULT" != "0" ]]; then
+	if [ "$RESULT" != "0" ]; then
 		echo "An error occurred. dkms install error:  ${RESULT}"
 		echo "Please report this error."
 		echo "Please copy all screen output and paste it into the problem report."
@@ -342,15 +342,17 @@ fi
 
 # if NoPrompt is not used, ask user some questions
 if [ $NO_PROMPT -ne 1 ]; then
-	read -p "Do you want to edit the driver options file now? [y/N] " -n 1 -r
+	echo "Do you want to edit the driver options file now? [y/N]"
+	read -r REPLY
 	echo
-	if [[ $REPLY =~ ^[Yy]$ ]]; then
+	if [ "$REPLY" = y ] || [ "$REPLY" = Y ]; then
 		${TEXT_EDITOR} /etc/modprobe.d/${OPTIONS_FILE}
 	fi
 
-	read -p "Do you want to reboot now? (recommended) [y/N] " -n 1 -r
+	echo "Do you want to reboot now? (recommended) [y/N]"
+	read -r REPLY
 	echo
-	if [[ $REPLY =~ ^[Yy]$ ]]; then
+	if [ "$REPLY" = y ] || [ "$REPLY" = Y ]; then
 		reboot
 	fi
 fi
