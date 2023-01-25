@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Purpose: Make it easier to edit the driver options file.
 #
@@ -28,7 +28,7 @@ SCRIPT_VERSION="20230120"
 OPTIONS_FILE="8821cu.conf"
 DEFAULT_EDITOR="$(cat default-editor.txt)"
 
-if [[ $EUID -ne 0 ]]; then
+if [ "$(id -u)" -ne 0 ]; then
 	echo "You must run this script with superuser (root) privileges."
 	echo "Try: \"sudo ./${SCRIPT_NAME}\""
 	exit 1
@@ -47,11 +47,15 @@ if ! command -v "${TEXT_EDITOR}" >/dev/null 2>&1; then
         exit 1
 fi
 
+# displays script name and version
+echo ": ${SCRIPT_NAME} v${SCRIPT_VERSION}"
+
 ${TEXT_EDITOR} /etc/modprobe.d/${OPTIONS_FILE}
 
-read -p "Do you want to apply the new options by rebooting now? [y/N] " -n 1 -r
+echo "Do you want to apply the new options by rebooting now? [y/N] "
+read -r REPLY
 echo    # move to a new line
-if [[ $REPLY =~ ^[Yy]$ ]]; then
+if [ "${REPLY}" = y ] || [ "${REPLY}" = Y ]; then
     reboot
 fi
 
