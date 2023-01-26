@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Purpose: Remove Realtek out-of-kernel USB WiFi adapter drivers.
 #
@@ -33,12 +33,10 @@ KARCH="$(uname -m)"
 MODDESTDIR="/lib/modules/${KVER}/kernel/drivers/net/wireless/"
 
 DRV_NAME="rtl${MODULE_NAME}"
-DRV_DIR="$(pwd)"
 OPTIONS_FILE="${MODULE_NAME}.conf"
 
 # check to ensure sudo was used
-if [[ $EUID -ne 0 ]]
-then
+if [ "$(id -u)" -ne 0 ]; then
 	echo "You must run this script with superuser (root) privileges."
 	echo "Try: \"sudo ./${SCRIPT_NAME}\""
 	exit 1
@@ -48,8 +46,7 @@ fi
 NO_PROMPT=0
 
 # get the script options
-while [ $# -gt 0 ]
-do
+while [ $# -gt 0 ]; do
 	case $1 in
 		NoPrompt)
 			NO_PROMPT=1 ;;
@@ -68,31 +65,28 @@ echo ": ${SCRIPT_NAME} v${SCRIPT_VERSION}"
 
 # check for and remove non-dkms installations
 # standard naming
-if [[ -f "${MODDESTDIR}${MODULE_NAME}.ko" ]]
-then
+if [ -f "${MODDESTDIR}${MODULE_NAME}.ko" ]; then
 	echo "Removing a non-dkms installation: ${MODDESTDIR}${MODULE_NAME}.ko"
-	rm -f ${MODDESTDIR}${MODULE_NAME}.ko
-	/sbin/depmod -a ${KVER}
+	rm -f "${MODDESTDIR}${MODULE_NAME}.ko"
+	/sbin/depmod -a "${KVER}"
 fi
 
 # check for and remove non-dkms installations
 # with rtl added to module name (PClinuxOS)
-if [[ -f "${MODDESTDIR}rtl${MODULE_NAME}.ko" ]]
-then
+if [ -f "${MODDESTDIR}rtl${MODULE_NAME}.ko" ]; then
 	echo "Removing a non-dkms installation: ${MODDESTDIR}rtl${MODULE_NAME}.ko"
-	rm -f ${MODDESTDIR}rtl${MODULE_NAME}.ko
-	/sbin/depmod -a ${KVER}
+	rm -f "${MODDESTDIR}rtl${MODULE_NAME}.ko"
+	/sbin/depmod -a "${KVER}"
 fi
 
 # check for and remove non-dkms installations
 # with compressed module in a unique non-standard location (Armbian)
 # Example: /usr/lib/modules/5.15.80-rockchip64/kernel/drivers/net/wireless/rtl8821cu/8821cu.ko.xz
 # Dear Armbiam, this is a really bad idea.
-if [[ -f "/usr/lib/modules/${KVER}/kernel/drivers/net/wireless/${DRV_NAME}/${MODULE_NAME}.ko.xz" ]]
-then
+if [ -f "/usr/lib/modules/${KVER}/kernel/drivers/net/wireless/${DRV_NAME}/${MODULE_NAME}.ko.xz" ]; then
 	echo "Removing a non-dkms installation: /usr/lib/modules/${KVER}/kernel/drivers/net/wireless/${DRV_NAME}/${MODULE_NAME}.ko.xz"
-	rm -f /usr/lib/modules/${KVER}/kernel/drivers/net/wireless/${DRV_NAME}/${MODULE_NAME}.ko.xz
-	/sbin/depmod -a ${KVER}
+	rm -f "/usr/lib/modules/${KVER}/kernel/drivers/net/wireless/${DRV_NAME}/${MODULE_NAME}.ko.xz"
+	/sbin/depmod -a "${KVER}"
 fi
 
 # information that helps with bug reports
@@ -104,8 +98,7 @@ echo ": ${KVER}"
 echo ": ${KARCH}"
 
 # determine if dkms is installed and run the appropriate routines
-if command -v dkms >/dev/null 2>&1
-then
+if command -v dkms >/dev/null 2>&1; then
 	echo "Removing a dkms installation."
 	#  2>/dev/null suppresses the output of dkms
 	dkms remove -m ${DRV_NAME} -v ${DRV_VERSION} --all 2>/dev/null
@@ -115,10 +108,8 @@ then
 	# RESULT will be 3 if there are no instances of module to remove
 	# however we still need to remove various files or the install script
 	# may complain.
-	if [[ ("$RESULT" = "0")||("$RESULT" = "3") ]]
-	then
-		if [[ ("$RESULT" = "0") ]]
-		then
+	if [ "$RESULT" = "0" ] || [ "$RESULT" = "3" ]; then
+		if [ "$RESULT" = "0" ]; then
 			echo "${DRV_NAME}/${DRV_VERSION} has been removed"
 		fi
 	else
@@ -137,14 +128,13 @@ echo "The driver was removed successfully."
 echo "You may now delete the driver directory if desired."
 
 # if NoPrompt is not used, ask user some questions
-if [ $NO_PROMPT -ne 1 ]
-then
-	read -p "Do you want to reboot now? (recommended) [y/N] " -n 1 -r
+if [ $NO_PROMPT -ne 1 ]; then
+	printf "Do you want to reboot now? (recommended) [y/N] "
+	read -r REPLY
 	echo
-	if [[ $REPLY =~ ^[Yy]$ ]]
-	then
-		reboot
-	fi
+	case "$REPLY" in
+		[yY]*) reboot ;;
+	esac
 fi
 
 exit 0

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Purpose: Make it easier to edit the driver options file.
 #
@@ -26,42 +26,37 @@
 SCRIPT_NAME="edit-options.sh"
 SCRIPT_VERSION="20230120"
 OPTIONS_FILE="8821cu.conf"
-DEFAULT_EDITOR="$(<default-editor.txt)"
-EDITORS_SEARCH=("${VISUAL}" "${EDITOR}" "${DEFAULT_EDITOR}" "vi")
+DEFAULT_EDITOR="$(cat default-editor.txt)"
 
-if [[ $EUID -ne 0 ]]
-then
+if [ "$(id -u)" -ne 0 ]; then
 	echo "You must run this script with superuser (root) privileges."
 	echo "Try: \"sudo ./${SCRIPT_NAME}\""
 	exit 1
 fi
 
 # Try to find the user's default text editor through the EDITORS_SEARCH array
-for editor in ${EDITORS_SEARCH[@]}
-do
-        if command -v "${editor}" >/dev/null 2>&1
-        then
-                TEXT_EDITOR="${editor}"
-                break
-        fi
+for TEXT_EDITOR in "${VISUAL}" "${EDITOR}" "${DEFAULT_EDITOR}" vi; do
+        command -v "${TEXT_EDITOR}" >/dev/null 2>&1 && break
 done
 
 # Fail if no editor was found
-if ! command -v "${TEXT_EDITOR}" >/dev/null 2>&1
-then
+if ! command -v "${TEXT_EDITOR}" >/dev/null 2>&1; then
         echo "No text editor found (default: ${DEFAULT_EDITOR})."
         echo "Please install ${DEFAULT_EDITOR} or edit the file 'default-editor.txt' to specify your editor."
         echo "Once complete, please run \"sudo ./${SCRIPT_NAME}\""
         exit 1
 fi
 
+# displays script name and version
+echo ": ${SCRIPT_NAME} v${SCRIPT_VERSION}"
+
 ${TEXT_EDITOR} /etc/modprobe.d/${OPTIONS_FILE}
 
-read -p "Do you want to apply the new options by rebooting now? [y/N] " -n 1 -r
+printf "Do you want to apply the new options by rebooting now? [y/N] "
+read -r REPLY
 echo    # move to a new line
-if [[ $REPLY =~ ^[Yy]$ ]]
-then
-    reboot
-fi
+case "$REPLY" in
+	[yY]*) reboot ;;
+esac
 
 exit 0
