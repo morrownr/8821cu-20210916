@@ -51,7 +51,6 @@ ${TEXT_EDITOR} /etc/modprobe.d/${OPTIONS_FILE}
 
 printf "Do you want to apply the new options by rebooting now? (recommended) [y/N] "
 read -r REPLY
-echo    # move to a new line
 case "$REPLY" in
 	[yY]*) reboot ;;
 esac

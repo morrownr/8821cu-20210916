@@ -127,7 +127,7 @@ echo ": ${SCRIPT_NAME} v${SCRIPT_VERSION}"
 # information that helps with bug reports
 
 # display architecture
-echo ": ${KARCH} (ARCH)"
+echo ": ${KARCH} (architecture)"
 
 SMEM=$(LANG=C free | awk '/Mem:/ { print $2 }')
 sproc=$(nproc)
@@ -140,13 +140,13 @@ if [ "$sproc" -gt 1 ]; then
 fi
 
 # display number of in-use processing units / total processing units
-echo ": ${sproc}/$(nproc) (in-use processing units/total processing units)"
+echo ": ${sproc}/$(nproc) (in-use/total processing units)"
 
 # display total system memory
-echo ": ${SMEM} (MEM)"
+echo ": ${SMEM} (total system memory)"
 
 # display kernel version
-echo ": ${KVER} (KVER)"
+echo ": ${KVER} (kernel version)"
 
 # display gcc version
 gcc_ver=$(gcc --version | grep -i gcc)
@@ -166,7 +166,7 @@ fi
 
 # display ISO 3166-1 alpha-2 Country Code
 a2_country_code=$(iw reg get | grep -i country)
-echo ": ""${a2_country_code}"
+echo ": Location: ""${a2_country_code}"
 #if [[ $a2_country_code == *"00"* ]];
 #then
 #    echo "The Country Code may not be properly set."
@@ -343,14 +343,12 @@ fi
 if [ $NO_PROMPT -ne 1 ]; then
 	printf "Do you want to edit the driver options file now? [y/N] "
 	read -r REPLY
-	echo
 	case "$REPLY" in
 		[yY]*) ${TEXT_EDITOR} /etc/modprobe.d/${OPTIONS_FILE} ;;
 	esac
 
 	printf "Do you want to apply the new options by rebooting now? (recommended) [y/N] "
 	read -r REPLY
-	echo
 	case "$REPLY" in
 		[yY]*) reboot ;;
 	esac
