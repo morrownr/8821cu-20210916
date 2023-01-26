@@ -24,7 +24,7 @@
 # GNU General Public License for more details.
 
 SCRIPT_NAME="install-driver.sh"
-SCRIPT_VERSION="20230124"
+SCRIPT_VERSION="20230126"
 MODULE_NAME="8821cu"
 DRV_VERSION="5.12.0.4"
 
@@ -36,16 +36,30 @@ DRV_NAME="rtl${MODULE_NAME}"
 DRV_DIR="$(pwd)"
 OPTIONS_FILE="${MODULE_NAME}.conf"
 
-SMEM=$(LANG=C free | awk '/Mem:/ { print $2 }')
-sproc=$(nproc)
-DEFAULT_EDITOR="$(cat default-editor.txt)"
-
-# check to ensure sudo was used
+# check to ensure sudo was used to start the script
 if [ "$(id -u)" -ne 0 ]; then
 	echo "You must run this script with superuser (root) privileges."
 	echo "Try: \"sudo ./${SCRIPT_NAME}\""
 	exit 1
 fi
+
+# support for the NoPrompt option allows non-interactive use of this script
+NO_PROMPT=0
+# get the script options
+while [ $# -gt 0 ]
+do
+	case $1 in
+		NoPrompt)
+			NO_PROMPT=1 ;;
+		*h|*help|*)
+			echo "Syntax $0 <NoPrompt>"
+			echo "       NoPrompt - noninteractive mode"
+			echo "       -h|--help - Show help"
+			exit 1
+			;;
+	esac
+	shift
+done
 
 # ensure /usr/sbin is in the PATH so iw can be found
 if ! echo "$PATH" | grep -qw sbin; then
@@ -92,36 +106,18 @@ if ! command -v rfkill >/dev/null 2>&1; then
 	exit 1
 fi
 
-# Try to find the user's default text editor through the EDITORS_SEARCH array
+DEFAULT_EDITOR="$(cat default-editor.txt)"
+# try to find the user's default text editor through the EDITORS_SEARCH array
 for TEXT_EDITOR in "${VISUAL}" "${EDITOR}" "${DEFAULT_EDITOR}" vi; do
 	command -v "${TEXT_EDITOR}" >/dev/null 2>&1 && break
 done
-
-# Fail if no editor was found
+# fail if no editor was found
 if ! command -v "${TEXT_EDITOR}" >/dev/null 2>&1; then
         echo "No text editor found (default: ${DEFAULT_EDITOR})."
         echo "Please install ${DEFAULT_EDITOR} or edit the file 'default-editor.txt' to specify your editor."
         echo "Once complete, please run \"sudo ./${SCRIPT_NAME}\""
         exit 1
 fi
-
-# support for the NoPrompt option allows non-interactive use of this script
-NO_PROMPT=0
-
-# get the script options
-while [ $# -gt 0 ]; do
-	case $1 in
-		NoPrompt)
-			NO_PROMPT=1 ;;
-		*h|*help|*)
-			echo "Syntax $0 <NoPrompt>"
-			echo "       NoPrompt - noninteractive mode"
-			echo "       -h|--help - Show help"
-			exit 1
-			;;
-	esac
-	shift
-done
 
 echo ": ---------------------------"
 
@@ -133,43 +129,44 @@ echo ": ${SCRIPT_NAME} v${SCRIPT_VERSION}"
 # display architecture
 echo ": ${KARCH} (ARCH)"
 
-# display total system memory
-echo ": ${SMEM} (SMEM)"
-
-# Avoid Out of Memory condition in low-RAM systems by limiting core usage.
+SMEM=$(LANG=C free | awk '/Mem:/ { print $2 }')
+sproc=$(nproc)
+# avoid Out of Memory condition in low-RAM systems by limiting core usage
 if [ "$sproc" -gt 1 ]; then
 	if [ "$SMEM" -lt 1400000 ]
 	then
 		sproc=2
 	fi
 fi
-# display total number of  in-use cpu processes / total cpu processes
-echo ": ${sproc}/$(nproc) (sproc/nproc)"
+
+# display number of in-use processing units / total processing units
+echo ": ${sproc}/$(nproc) (in-use processing units/total processing units)"
+
+# display total system memory
+echo ": ${SMEM} (MEM)"
 
 # display kernel version
 echo ": ${KVER} (KVER)"
 
 # display gcc version
 gcc_ver=$(gcc --version | grep -i gcc)
-echo ": ${gcc_ver}"
+echo ": ""${gcc_ver}"
 
 # display dkms version if installed
 if command -v dkms >/dev/null 2>&1; then
 	dkms_ver=$(dkms --version)
-	echo ": ${dkms_ver}"
+	echo ": ""${dkms_ver}"
 fi
 
 # display secure mode status if mokutil is installed
 if command -v mokutil >/dev/null 2>&1; then
 	sb_state=$(mokutil --sb-state)
-	echo ": ${sb_state}"
+	echo ": ""${sb_state}"
 fi
 
-echo ": ---------------------------"
-
 # display ISO 3166-1 alpha-2 Country Code
-#a2_country_code=$(iw reg get | grep -i country)
-#echo "Country:  "${a2_country_code}
+a2_country_code=$(iw reg get | grep -i country)
+echo ": ""${a2_country_code}"
 #if [[ $a2_country_code == *"00"* ]];
 #then
 #    echo "The Country Code may not be properly set."
@@ -177,11 +174,13 @@ echo ": ---------------------------"
 #    echo "Please read and follow the directions in the file after installation."
 #fi
 
+echo ": ---------------------------"
+
 # check for and remove non-dkms installations
 # standard naming
 if [ -f "${MODDESTDIR}${MODULE_NAME}.ko" ]; then
 	echo "Removing a non-dkms installation: ${MODDESTDIR}${MODULE_NAME}.ko"
-	rm -f "${MODDESTDIR}${MODULE_NAME}.ko"
+	rm -f "${MODDESTDIR}"${MODULE_NAME}.ko
 	/sbin/depmod -a "${KVER}"
 	echo "Removing ${OPTIONS_FILE} from /etc/modprobe.d"
 	rm -f /etc/modprobe.d/${OPTIONS_FILE}
@@ -194,7 +193,7 @@ fi
 # with rtl added to module name (PClinuxOS)
 if [ -f "${MODDESTDIR}rtl${MODULE_NAME}.ko" ]; then
 	echo "Removing a non-dkms installation: ${MODDESTDIR}rtl${MODULE_NAME}.ko"
-	rm -f "${MODDESTDIR}rtl${MODULE_NAME}.ko"
+	rm -f "${MODDESTDIR}"rtl${MODULE_NAME}.ko
 	/sbin/depmod -a "${KVER}"
 	echo "Removing ${OPTIONS_FILE} from /etc/modprobe.d"
 	rm -f /etc/modprobe.d/${OPTIONS_FILE}
@@ -209,7 +208,7 @@ fi
 # Dear Armbiam, this is a really bad idea.
 if [ -f "/usr/lib/modules/${KVER}/kernel/drivers/net/wireless/${DRV_NAME}/${MODULE_NAME}.ko.xz" ]; then
 	echo "Removing a non-dkms installation: /usr/lib/modules/${KVER}/kernel/drivers/net/wireless/${DRV_NAME}/${MODULE_NAME}.ko.xz"
-	rm -f "/usr/lib/modules/${KVER}/kernel/drivers/net/wireless/${DRV_NAME}/${MODULE_NAME}.ko.xz"
+	rm -f /usr/lib/modules/"${KVER}"/kernel/drivers/net/wireless/${DRV_NAME}/${MODULE_NAME}.ko.xz
 	/sbin/depmod -a "${KVER}"
 	echo "Removing ${OPTIONS_FILE} from /etc/modprobe.d"
 	rm -f /etc/modprobe.d/${OPTIONS_FILE}
@@ -240,7 +239,7 @@ if ! command -v dkms >/dev/null 2>&1; then
 
 	make clean >/dev/null 2>&1
 
-	make "-j$(nproc)"
+	make -j"$(nproc)"
 	RESULT=$?
 
 	if [ "$RESULT" != "0" ]; then
@@ -349,12 +348,10 @@ if [ $NO_PROMPT -ne 1 ]; then
 		[yY]*) ${TEXT_EDITOR} /etc/modprobe.d/${OPTIONS_FILE} ;;
 	esac
 
-	printf "Do you want to reboot now? (recommended) [y/N] "
+	printf "Do you want to apply the new options by rebooting now? (recommended) [y/N] "
 	read -r REPLY
 	echo
 	case "$REPLY" in
 		[yY]*) reboot ;;
 	esac
 fi
-
-exit 0

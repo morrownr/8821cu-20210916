@@ -18,7 +18,7 @@ if [ "$(id -u)" -ne 0 ]; then
 	exit 1
 fi
 
-# Deletes existing log
+# deletes existing log
 rm -f -- rtw.log
 
 dmesg | cut -d"]" -f2- | grep "RTW" >> rtw.log
@@ -30,5 +30,4 @@ if [ "$RESULT" != "0" ]; then
 	exit 1
 else
 	echo "rtw.log saved successfully."
-	exit 0
 fi

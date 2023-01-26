@@ -705,6 +705,10 @@ Simply add that option to the end of the `options` line, save and reboot.
 Contributors:
 
 @Jibun-no-Kage
+@alkisg
+@M0les
+@mendel5
+@colincdean
 
 ----
 
