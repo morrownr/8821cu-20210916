@@ -73,7 +73,7 @@ be provided via PR or message in Issues.
 
 - Debian 11 (kernels 5.10 and 5.15)
 
-- Fedora (kernel 5.11) and Fedora 37 (kernel 6.0)
+- Fedora 37 (kernel 6.0)
 
 - Kali Linux (kernel 5.10)
 
@@ -167,9 +167,13 @@ following commands in the driver directory:
 
 ```
 sudo ./remove-driver.sh
+```
 
+```
 git pull
+```
 
+```
 sudo ./install-driver.sh
 ```
 
@@ -408,8 +412,17 @@ command line installation, use the following:
 
 ```
 make clean
+```
+
+```
 make
+```
+
+```
 sudo make install
+```
+
+```
 sudo reboot
 ```
 
@@ -417,6 +430,9 @@ To remove the driver if installed by the manual installation instructions:
 
 ```
 sudo make uninstall
+```
+
+```
 sudo reboot
 ```
 
@@ -725,6 +741,10 @@ Contributors:
 @mendel5
 @colincdean
 @jeff-hiner
+@paralin
+@tamojitray
+@amisix
+@henkv1
 
 ----
 
