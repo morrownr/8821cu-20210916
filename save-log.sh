@@ -1,7 +1,5 @@
 #!/bin/sh
-#
-SCRIPT_NAME="save-log.sh"
-#
+
 # Purpose: Save a log file with RTW lines only.
 #
 # To make this file executable:
@@ -11,7 +9,9 @@ SCRIPT_NAME="save-log.sh"
 # To execute this file:
 #
 # $ sudo ./edit-options.sh
-#
+
+SCRIPT_NAME="save-log.sh"
+
 if [ "$(id -u)" -ne 0 ]; then
 	echo "You must run this script with superuser (root) privileges."
 	echo "Try: \"sudo ./${SCRIPT_NAME}\""

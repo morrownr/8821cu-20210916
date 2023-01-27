@@ -164,9 +164,10 @@ if command -v mokutil >/dev/null 2>&1; then
 	echo ": ""${sb_state}"
 fi
 
+# needs work
 # display ISO 3166-1 alpha-2 Country Code
-a2_country_code=$(iw reg get | grep -i country)
-echo ": Location: ""${a2_country_code}"
+#a2_country_code=$(iw reg get | grep -i country)
+#echo ": Location: ""${a2_country_code}"
 #if [[ $a2_country_code == *"00"* ]];
 #then
 #    echo "The Country Code may not be properly set."

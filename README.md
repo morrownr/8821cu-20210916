@@ -385,6 +385,12 @@ Note: For automated builds (non-interactive), use `NoPrompt` as an option.
 sudo ./install-driver.sh
 ```
 
+or
+
+```
+sudo sh install-driver.sh
+```
+
 Note: If you elect to skip the reboot at the end of the installation
 script, the driver may not load immediately and the driver options will
 not be applied. Rebooting is strongly recommended.
@@ -396,9 +402,9 @@ enroll the key:
 sudo mokutil --import /var/lib/dkms/mok.pub
 ```
 
-Manual build instructions: The above script automates the installation
-process, however, if you want to or need to do a command line
-installation, use the following:
+Manual build and installation instructions: The above installation steps
+automate the installation process, however, if you want to or need to do a
+command line installation, use the following:
 
 ```
 make clean
@@ -407,7 +413,14 @@ sudo make install
 sudo reboot
 ```
 
-Note: If you use the manual build instructions, you will need to repeat
+To remove the driver if installed by the manual installation instructions:
+
+```
+sudo make uninstall
+sudo reboot
+```
+
+Note: If you use the manual installation instructions, you will need to repeat
 the process each time a new kernel is installed in your distro.
 
 -----
@@ -415,7 +428,7 @@ the process each time a new kernel is installed in your distro.
 ### Driver Options (`edit-options.sh`)
 
 A file called `8821cu.conf` will be installed in `/etc/modprobe.d` by
-default if you use the `./install-driver.sh` script.
+default if you use the `install-driver.sh` script.
 
 Note: The installation script will prompt you to edit the options.
 
@@ -556,6 +569,8 @@ dtoverlay=disable-wifi
 sudo ${EDITOR} /etc/wpa_supplicant/wpa_supplicant.conf
 ```
 
+Note: Replace ${EDITOR} with the name of the text editor you wish to use.
+
 #### Step 2: Delete the relevant WiFi network block (including the '`network=`' and opening/closing braces).
 
 #### Step 3: Press ctrl-x followed by '`y`' and enter to save the file.
@@ -661,7 +676,7 @@ reports of success or failure are needed. If you have yet to buy an
 adapter to use with monitor mode, there are adapters available that are
 known to work very well with monitor mode. My recommendation for those
 looking to buy an adapter for monitor mode is to buy adapters based on
-the following chipsets: mt7921au, mt7612u, mt7610u, rtl8812au and
+the following chipsets: mt7921au, mt7612u, mt7610u, rtl8812au, rtl8821cu and
 rtl8811au. My specific recommendations for adapters in order of
 preference are:
 
