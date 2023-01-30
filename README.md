@@ -745,8 +745,17 @@ Contributors:
 @tamojitray
 @amisix
 @henkv1
+@SubZero5
 
-----
+-----
+
+To-Do:
+
+- Test for installation in VM's.
+- Optimize scripts.
+- Installation script needs to check country code setup.
+
+-----
 
 #### [Go to Main Menu](https://github.com/morrownr/USB-WiFi)
 

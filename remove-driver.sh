@@ -28,8 +28,8 @@ SCRIPT_VERSION="20230126"
 MODULE_NAME="8821cu"
 DRV_VERSION="5.12.0.4"
 
-KVER="$(uname -r)"
 KARCH="$(uname -m)"
+KVER="$(uname -r)"
 MODDESTDIR="/lib/modules/${KVER}/kernel/drivers/net/wireless/"
 
 DRV_NAME="rtl${MODULE_NAME}"
@@ -67,7 +67,7 @@ echo ": ${SCRIPT_NAME} v${SCRIPT_VERSION}"
 # information that helps with bug reports
 
 # display architecture
-echo ": ${KARCH} (architecture"
+echo ": ${KARCH} (architecture)"
 
 # display kernel version
 echo ": ${KVER} (kernel version)"
@@ -132,7 +132,7 @@ echo "You may now delete the driver directory if desired."
 
 # if NoPrompt is not used, ask user some questions
 if [ $NO_PROMPT -ne 1 ]; then
-	printf "Do you want to apply the new options by rebooting now? (recommended) [y/N] "
+	printf "Do you want to reboot now? (recommended) [y/N] "
 	read -r REPLY
 	case "$REPLY" in
 		[yY]*) reboot ;;
