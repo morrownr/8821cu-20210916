@@ -735,6 +735,7 @@ Simply add that option to the end of the `options` line, save and reboot.
 
 Contributors:
 
+```
 @Jibun-no-Kage
 @alkisg
 @M0les
@@ -746,6 +747,7 @@ Contributors:
 @amisix
 @henkv1
 @SubZero5
+```
 
 -----
 
