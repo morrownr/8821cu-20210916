@@ -753,6 +753,8 @@ Contributors:
 
 To-Do:
 
+- Add driver compression for kernels > 5.3.
+- Detect and alert users when Airplane Mode is on.
 - Test for installation in VM's.
 - Optimize scripts.
 - Installation script needs to check country code setup.

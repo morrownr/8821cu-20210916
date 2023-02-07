@@ -1,11 +1,9 @@
 2023-01-26
 
-Note: The following information may not work on all distros.
+Note: This document is under coonstruction.
 
 Instructions for setting the ISO 3166-1 alpha-2 Country Code in your Linux
-distro. If it is not set, you may have problems using some channels, especially
-5 Ghz and 6 GHz channels. To set your Country Code from the command line
-interface:
+distro.
 
 Note: Package "iw" must be installed.
 
@@ -47,9 +45,9 @@ AQ		Antarctica
 
 AG		Antigua and Barbuda
 
-Argentina			AR
+AR      Argentina
 
-Armenia				AM
+AM      Armenia
 
 Aruba				AW
 
