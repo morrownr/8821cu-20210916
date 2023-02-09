@@ -931,7 +931,12 @@ s32	rtl8821cu_init_xmit_priv(PADAPTER padapter)
 	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(padapter);
 
 #ifdef PLATFORM_LINUX
-	tasklet_init(&pxmitpriv->xmit_tasklet, rtl8821cu_xmit_tasklet,
+	tasklet_init(&pxmitpriv->xmit_tasklet,
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 17, 0))
+		     (void(*)(unsigned long))rtl8821cu_xmit_tasklet,
+#else
+		     (void *)rtl8821cu_xmit_tasklet,
+#endif
 		     (unsigned long)padapter);
 #endif
 #ifdef CONFIG_TX_EARLY_MODE

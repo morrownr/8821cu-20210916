@@ -121,10 +121,10 @@ for TEXT_EDITOR in "${VISUAL}" "${EDITOR}" "${DEFAULT_EDITOR}" vi; do
 done
 # fail if no editor was found
 if ! command -v "${TEXT_EDITOR}" >/dev/null 2>&1; then
-        echo "No text editor found (default: ${DEFAULT_EDITOR})."
-        echo "Please install ${DEFAULT_EDITOR} or edit the file 'default-editor.txt' to specify your editor."
-        echo "Once complete, please run \"sudo ./${SCRIPT_NAME}\""
-        exit 1
+	echo "No text editor found (default: ${DEFAULT_EDITOR})."
+	echo "Please install ${DEFAULT_EDITOR} or edit the file 'default-editor.txt' to specify your editor."
+	echo "Once complete, please run \"sudo ./${SCRIPT_NAME}\""
+	exit 1
 fi
 
 echo ": ---------------------------"

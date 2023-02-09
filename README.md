@@ -166,10 +166,6 @@ the newest available before installing the new kernel. Use the
 following commands in the driver directory:
 
 ```
-sudo ./remove-driver.sh
-```
-
-```
 git pull
 ```
 
