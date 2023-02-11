@@ -7,7 +7,7 @@
 Note: Please read "supported-device-IDs" for information about how to
 confirm that this is the correct driver for your adapter.
 
-### Features
+### Supported Features
 
 - IEEE 802.11 b/g/n/ac WiFi compliant
 - 802.1x, WEP, WPA TKIP and WPA2 AES/Mixed mode for PSK and TLS (Radius)
@@ -42,6 +42,10 @@ confirm that this is the correct driver for your adapter.
 - VHT control (allows 80 MHz channel width in AP mode)
 - AP mode DFS channel control
 
+### Not supported
+
+- hcxdumptool
+
 ### A FAQ is available at the end of this document.
 
 ### Additional documentation is in the file `8821cu.conf`.
@@ -67,29 +71,29 @@ confirm that this is the correct driver for your adapter.
 Note: The information in this section depends largely on user reports which can
 be provided via PR or message in Issues.
 
-- Arch Linux (kernels 5.4 and 5.11)
+- [Arch Linux](https://www.archlinux.org) (kernels 5.4 and 5.11)
 
-- Armbian_22.11.1 (kernel 5.15) (Rock 4 SE (Rock 4b image with xfce))
+- [Armbian](https://www.armbian.com/) (kernel 5.15) (Rock 4 SE (Rock 4b image with xfce))
 
-- Debian 11 (kernels 5.10 and 5.15)
+- [Debian](https://www.debian.org/) (kernels 5.10 and 5.15)
 
-- Fedora 37 (kernel 6.0)
+- [Fedora](https://getfedora.org) (kernel 6.0)
 
-- Kali Linux (kernel 5.10)
+- [Kali Linux](https://www.kali.org/) (kernel 5.10)
 
-- Manjaro 21.1 (kernel 5.13)
+- [Manjaro](https://manjaro.org) (kernel 5.13)
 
-- openSUSE Tumbleweed (rolling) (kernel 5.15)
+- [openSUSE](https://www.opensuse.org/) Tumbleweed (rolling) (kernel 5.15)
 
-- Raspberry Pi OS (2022-09-22) (ARM 32 bit and 64 bit) (kernel 5.15)
+- [Raspberry Pi OS](https://www.raspberrypi.org) (2022-09-22) (ARM 32 bit and 64 bit) (kernel 5.15)
 
-- Raspberry Pi Desktop (2022-07-01) (x86 32 bit) (kernel 5.10)
+- [Raspberry Pi Desktop](https://www.raspberrypi.org) (2022-07-01) (x86 32 bit) (kernel 5.10)
 
-- SkiffOS for Odroid XU4 (ARM 32 bit) (kernel 6.0.7)
+- [SkiffOS](https://github.com/skiffos/skiffos/) for Odroid XU4 (ARM 32 bit) (kernel 6.0.7)
 
-- Ubuntu 22.04 (kernel 5.15) and 22.10 (kernel 5.19) (kernel 6.2)
+- [Ubuntu](https://www.ubuntu.com) 22.04 (kernel 5.15) and 22.10 (kernel 5.19) (kernel 6.2)
 
-- Void Linux (kernel 5.18)
+- [Void Linux](https://voidlinux.org/) (kernel 5.18)
 
 Note: Red Hat Enterprise Linux (RHEL) and distros based on RHEL are not
 supported due to the way kernel patches are handled. I will support
@@ -101,31 +105,11 @@ knowledgable Android developers if they want to merge and keep current the
 required support (most likely just instructions about how to compile and maybe
 a modification or two to the Makefile).
 
-
-### Download Locations for Tested Linux Distributions
-
-- [Arch Linux](https://www.archlinux.org)
-- [Armbian](https://www.armbian.com/)
-- [Debian](https://www.debian.org/)
-- [Fedora](https://getfedora.org)
-- [Kali Linux](https://www.kali.org/)
-- [Manjaro](https://manjaro.org)
-- [openSUSE](https://www.opensuse.org/)
-- [Raspberry Pi OS](https://www.raspberrypi.org)
-- [SkiffOS](https://github.com/skiffos/skiffos/)
-- [Ubuntu](https://www.ubuntu.com)
-- [Void Linux](https://voidlinux.org/)
-
-### Tested Hardware
-
-- EDUP EP-AC1651 USB WiFi Adapter AC650 Dual Band USB 2.0 (nano)
-- EDUP EP-AC1635 USB WiFi Adapter AC600 Dual Band USB 2.0
-
 ### Compatible Devices
 
-* EDUP EP-AC1651 (nano) (single-state, single-function)
-* EDUP EP-AC1635 (single-state, single-function)
-* Numerous adapters that are based on the supported chipset.
+- EDUP EP-AC1651 (nano) (single-state, single-function)
+- EDUP EP-AC1635 (single-state, single-function)
+- Numerous adapters that are based on the supported chipset.
 
 Note: If you are looking for information about what adapter to buy,
 click [here](https://github.com/morrownr/USB-WiFi) and look for Main Menu
@@ -745,15 +729,20 @@ Contributors:
 @SubZero5
 ```
 
+Without the above contributors, this driver would not be nearly
+as good as it.
+
 -----
 
 To-Do:
 
+- Improve secure boot support.
 - Add driver compression for kernels > 5.3.
 - Detect and alert users when Airplane Mode is on.
 - Test for installation in VM's.
-- Optimize scripts.
 - Installation script needs to check country code setup.
+- Reduce the size of the README while keeping the needed information.
+- Optimize scripts.
 
 -----
 
