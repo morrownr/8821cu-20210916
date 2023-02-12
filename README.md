@@ -32,7 +32,7 @@ confirm that this is the correct driver for your adapter.
 - AP mode DFS channel support
 - Supported interface modes
   * Managed
-  * Monitor (see FAQ)
+  * Monitor (see FAQ) (see [Monitor_Mode](https://github.com/morrownr/Monitor_Mode)
   * AP
   * P2P-client
   * P2P-GO
@@ -46,9 +46,11 @@ confirm that this is the correct driver for your adapter.
 
 - hcxdumptool
 
-### A FAQ is available at the end of this document.
+### A FAQ is available in this repo with the name FAQ.md
 
-### Additional documentation is in the file `8821cu.conf`.
+- Please read the FAQ and below documentation before posting issues.
+
+### Additional documentation is in the file `8821cu.conf`
 
 ### Compatible CPU Architectures
 
@@ -544,172 +546,6 @@ After making and saving changes, reboot the router.
 - Extention cables can be problematic. A way to check if the extension cable is the problem is to plug the adapter temporarily into a USB port on the computer.
 
 - Some USB WiFi adapters require considerable electrical current and push the capabilities of the power available via USB port. One example is adapters that use the Realtek 8814au chipset. Using a powered multiport USB extension can be a good idea in cases like this.
-
------
-
-### How to disable onboard WiFi on Raspberry Pi 3B, 3B+, 3A+, 4B and Zero W
-
-Add the following line to `/boot/config.txt`
-
-```
-dtoverlay=disable-wifi
-```
-
------
-
-### How to forget a saved WiFi network on a Raspberry Pi
-
-#### Step 1: Edit `wpa_supplicant.conf`
-
-```
-sudo ${EDITOR} /etc/wpa_supplicant/wpa_supplicant.conf
-```
-
-Note: Replace ${EDITOR} with the name of the text editor you wish to use.
-
-#### Step 2: Delete the relevant WiFi network block (including the '`network=`' and opening/closing braces).
-
-#### Step 3: Press ctrl-x followed by '`y`' and enter to save the file.
-
-#### Step 4: Reboot
-
------
-
-### FAQ
-
-Question: Is WPA3 supported?
-
-Answer: WPA3-SAE is supported. It works well on most modern Linux distros but
-not all. Generally the reason for WPA3 not working on Linux distros is that the
-distro has an old version of wpa_supplicant or Network Manager. Your options
-are to upgrade to a more modern distro (distros released after mid 2022) or
-compile and install new versions of wpa_supplicant and/or Network Manager.
-
------
-
-Question: I bought two usb wifi adapters based on this chipset and am planning
-to use both in the same computer. How do I set that up?
-
-Answer: Realtek drivers do not support more than one adapter with the
-same chipset in the same computer. You can have multiple Realtek based
-adapters in the same computer as long as the adapters are based on
-different chipsets.
-
------
-
-Question: Why do you recommend Mediatek based adapters when you maintain
-this repo for a Realtek driver?
-
-Answer: Many new and existing Linux users already have adapters based on
-Realtek chipsets. This repo is for Linux users to support their existing
-adapters but my STRONG recommendation is for Linux users to seek out USB
-WiFi solutions based on Mediatek chipsets:
-
-https://github.com/morrownr/USB-WiFi
-
------
-
-Question: Will you put volunteers to work?
-
-Answer: Yes. Post a message in `Issues` or `Discussions` if interested.
-
------
-
-Question: I am having problems with my adapter and I use Virtualbox?
-
-Answer: This [article](https://null-byte.wonderhowto.com/forum/wifi-hacking-attach-usb-wireless-adapter-with-virtual-box-0324433/) may help.
-
------
-
-Question: The driver installation script completed successfully and the
-driver is installed but does not seem to be working. What is wrong?
-
-Answer: Turn secure boot off to see if that allows the driver to work.
-This driver is primarily tested on Debian based distros such as Ubuntu,
-Raspberry Pi OS and Kali. In an attempt to make this driver work well on
-many Linux distros, other distros, including the Arch based Manjaro is
-used for testing. Currently I do not have installations of Fedora or
-OpenSUSE available for testing and reply on user reports of success or
-failure. I have two test systems with secure boot on so as to test secure
-boot. I have not seen any secure boot problems with Debian based systems
-and I don't remember problems with Manjaro.
-
-dkms is used in the installation script. It helps with a lot of issues that
-will come up if a simple manual installation is used. dkms has the
-capability to handle the needs of secure boot. dkms was written by and is
-maintained by Dell. Dell has been offering some Ubuntu pre-loaded systems
-for years so their devs likely test on Ubuntu. I suspect Fedora and
-OpenSUSE may be handing their secure boot support differently than Debian
-based systems and this is leading to problems. This and the other repos
-I have are VERY heavily used and I am sure there are plenty of non-Debian
-users that use this driver. Are they all turning off secure boot and not
-reporting the problem? I don't know. What I do know is that reports like
-this are rare.
-
-For the driver to compile and install correctly but not be available
-tells me there is likely a key issue. Here is an interesting link
-regarding Debian systems and secure boot:
-
-https://wiki.debian.org/SecureBoot
-
-That document contains a lot of information that can help an investigation
-into what the real problem is and I invite you and other Fedora, OpemSUSE
-and users of other distros that show this problem to investigate and
-present what you know to the devs of your distro via their problem
-reporting system. Turning off secure boot is NOT a fix. A real fix needs
-to happen.
-
------
-
-Question: Can you provide additional information about monitor mode?
-
-Answer: I have a repo that is setup to help with monitor mode:
-
-https://github.com/morrownr/Monitor_Mode
-
-Work to improve monitor mode is ongoing with this driver. Your
-reports of success or failure are needed. If you have yet to buy an
-adapter to use with monitor mode, there are adapters available that are
-known to work very well with monitor mode. My recommendation for those
-looking to buy an adapter for monitor mode is to buy adapters based on
-the following chipsets: mt7921au, mt7612u, mt7610u, rtl8812au, rtl8821cu and
-rtl8811au. My specific recommendations for adapters in order of
-preference are:
-
-ALFA AWUS036ACHM - long range - in-kernel driver
-
-ALFA AWUS036ACM - in-kernel driver
-
-ALFA AWUS036ACH - long range - [driver](https://github.com/morrownr/8812au-20210629)
-
-ALFA AWUS036ACS - [driver](https://github.com/morrownr/8821au-20210708)
-
-To ask questions, go to [USB-WiFi](https://github.com/morrownr/USB-WiFi)
-and post in `Discussions` or `Issues`.
-
------
-
-Question: I have an adapter with the 8821cu chipset and it supports
-bluetooth. The bluetooth works but the wifi does not. What is wrong?
-
-Answer: There appears to be an issue where adapters can be set up differently
-by makers. The fix is to set the driver option ( `rtw_RFE_type` ) in 8821cu.conf.
-The easiest way to edit 8821cu.conf is to run the following from the driver
-directory:
-
-```
-sudo ./edit-options.sh
-```
-
-Once in the document, you can scroll down to the documentation about
-`rtw_RFE_type`. You will likely have to experiment to find out what setting
-works best for your adapter but a good place to start is probably...
-
-```
-rtw_RFE_type=7
-```
-
-Simply add that option to the end of the `options` line, save and reboot.
 
 -----
 
