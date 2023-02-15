@@ -44,43 +44,46 @@ Answer: This [article](https://null-byte.wonderhowto.com/forum/wifi-hacking-atta
 
 -----
 
+Secure Boot Information
+
 Question: The driver installation script completed successfully and the
 driver is installed but does not seem to be working. What is wrong?
 
-Answer: Turn secure boot off to see if that allows the driver to work.
-This driver is primarily tested on Debian based distros such as Ubuntu,
-Raspberry Pi OS and Kali. In an attempt to make this driver work well on
-many Linux distros, other distros, including the Arch based Manjaro is
-used for testing. Currently I do not have installations of Fedora or
-OpenSUSE available for testing and reply on user reports of success or
-failure. I have two test systems with secure boot on so as to test secure
-boot. I have not seen any secure boot problems with Debian based systems
-and I don't remember problems with Manjaro.
+Answer: This question often comes up after installing the driver to a
+system that has Secure Boot on. To test if there is a Secure Boot related
+problem, turn secure boot off in the system BIOS and reboot.  If the driver
+works as expected after reboot, them the problem is likely related to
+Secure Boot.
 
-dkms is used in the installation script. It helps with a lot of issues that
-will come up if a simple manual installation is used. dkms has the
-capability to handle the needs of secure boot. dkms was written by and is
-maintained by Dell. Dell has been offering some Ubuntu pre-loaded systems
-for years so their devs likely test on Ubuntu. I suspect Fedora and
-OpenSUSE may be handing their secure boot support differently than Debian
-based systems and this is leading to problems. This and the other repos
-I have are VERY heavily used and I am sure there are plenty of non-Debian
-users that use this driver. Are they all turning off secure boot and not
-reporting the problem? I don't know. What I do know is that reports like
-this are rare.
+What will increase my chances of having a sucessessful installation on a
+system that has Secure Boot on?
 
-For the driver to compile and install correctly but not be available
-tells me there is likely a key issue. Here is an interesting link
-regarding Debian systems and secure boot:
+First and foremost, make sure Secure Boot is on when you initially install
+your Linux distro. If your Linux distro was installed with Secure Boot off,
+the easiest solution is likely to do a clean reinstallation with Secure Boot
+on.
+
+Ubuntu is used as the example but other distros should be similar to one
+degree or another. During the installation there will be a box on one of
+installation pages that will appear if the installation program detects
+that Secure Boot is on. You will need to check the box and supply a
+password. You can use the same password and you use for the system if you
+wish. After the installation and reboot completes, the first screen you
+should see is the mokutil screen. Mokutil will guide you through the 
+process of setting up your system to support Secure Boot
+
+The `install-driver.sh` script currently supports Secure Boot if `dkms`
+is installed. Here is a link to the `dkms` website. There is information
+regarding Secure Boot in two sections in the `README`.
+
+https://github.com/dell/dkms
+
+Here is a link regarding Debian and Secure Boot:
 
 https://wiki.debian.org/SecureBoot
 
-That document contains a lot of information that can help an investigation
-into what the real problem is and I invite you and other Fedora, OpemSUSE
-and users of other distros that show this problem to investigate and
-present what you know to the devs of your distro via their problem
-reporting system. Turning off secure boot is NOT a fix. A real fix needs
-to happen.
+There is work underway to add Secure Boot suuport for systems that do not
+have `dkms` available or if a manual installation is desired.
 
 -----
 
@@ -90,22 +93,23 @@ Answer: I have a repo that is setup to help with monitor mode:
 
 https://github.com/morrownr/Monitor_Mode
 
-Work to improve monitor mode is ongoing with this driver. Your
-reports of success or failure are needed. If you have yet to buy an
-adapter to use with monitor mode, there are adapters available that are
-known to work very well with monitor mode. My recommendation for those
-looking to buy an adapter for monitor mode is to buy adapters based on
-the following chipsets: mt7921au, mt7612u, mt7610u, rtl8812au, rtl8821cu and
-rtl8811au. My specific recommendations for adapters in order of
-preference are:
+Work to improve monitor mode is ongoing with this driver. Your reports of
+success or failure are needed. If you have yet to buy an adapter to use with
+monitor mode, there are adapters available that are known to work very well
+with monitor mode. My recommendation for those looking to buy an adapter for
+monitor mode is to buy adapters based on the following chipsets: mt7921au,
+mt7612u, mt7610u, rtl8821cu, rtl8812bu, rtl8812au, and rtl8811au. My specific
+recommendations for adapters in order of preference currently are:
 
 ALFA AWUS036ACHM - long range - in-kernel driver
 
 ALFA AWUS036ACM - in-kernel driver
 
-ALFA AWUS036ACH - long range - [driver](https://github.com/morrownr/8812au-20210629)
+ALFA AWUS036ACU - in-kernel driver (as of kernel 6.2) and [out-of-kernel driver](https://github.com/morrownr/8821cu)
 
-ALFA AWUS036ACS - [driver](https://github.com/morrownr/8821au-20210708)
+ALFA AWUS036ACH - long range - [driver](https://github.com/morrownr/8812au)
+
+ALFA AWUS036ACS - [driver](https://github.com/morrownr/8821au)
 
 To ask questions, go to [USB-WiFi](https://github.com/morrownr/USB-WiFi)
 and post in `Discussions` or `Issues`.

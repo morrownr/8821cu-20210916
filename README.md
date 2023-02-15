@@ -46,9 +46,9 @@ confirm that this is the correct driver for your adapter.
 
 - hcxdumptool
 
-### A FAQ is available in this repo with the name FAQ.md
+### A FAQ is available in this repo with the name `FAQ.md`
 
-- Please read the FAQ and below documentation before posting issues.
+- Please read the FAQ and this document before posting issues.
 
 ### Additional documentation is in the file `8821cu.conf`
 
@@ -147,7 +147,7 @@ sudo dkms status
 ```
 
 Warning: If you decide to upgrade to a new version of kernel such as
-5.15 to 5.19, you need to upgrade the driver you have installed with
+5.15 to 6.1, you need to upgrade the driver you have installed with
 the newest available before installing the new kernel. Use the
 following commands in the driver directory:
 
@@ -185,25 +185,7 @@ It is recommended that you do not delete the driver directory after
 installation as the directory contains information and scripts that you
 may need in the future.
 
-Secure Boot: The installation script, `install-driver.sh`, will
-automatically support secure boot... if your distro supports the method
-dkms uses. I regularly test the installation script on systems with
-secure boot on. It works seemlessly on modern Ubuntu based distros as
-long as secure boot was set up properly during the installation of the
-operating system. Some distros, such as the Raspberry Pi OS, do not
-support secure boot because the hardware they support does not support
-secure boot making it unnecessary to attempt to support it. There are
-distros that may require additional steps to sign the driver for secure
-boot operation. Fedora is an example. In installation Step 3, note that
-`openssl` must be installed as Fedora does not install it by default.
-There will also be another step for Fedora after `install-driver.sh`
-script is completed. This will be explained in the instructions at the
-appropriate time. Overall, secure boot requires that
-`openssl` and `mokutil` be installed and that additional steps be
-performed if necessary. To test if secure boot is the problem:  If you
-install this driver and, after a reboot, the driver is not working, you
-can go into the BIOS and temporarily turn secure boot off to see if
-secure boot is the problem.
+Secure Boot: see FAQ.
 
 ### Installation Steps
 
@@ -216,7 +198,7 @@ on a best effort basis, based on the steps below.
 #### Step 2: Update and upgrade system packages (select the option for the distro you are using)
 
 Note: If your Linux distro does not fall into one of options listed
-below, you will need to research how to update and upgrade your system
+below, you will need to research how to `update` and `upgrade` your system
 packages.
 
 - Option for Debian based distributions such as Ubuntu, Kali, Armbian and Raspberry Pi OS
@@ -261,7 +243,17 @@ sudo reboot
 
 Note: If your Linux distro does not fall into one of options listed
 below, you will need to research how to properly setup up the development
-environment for your system.
+environment for your system. General guidance is given the next paragraph.
+
+Development Environment Requirements: (package names may vary by distro)
+
+- Mandatory: `gcc` `make` `bc` `kernel-headers` `build-essential` `git`
+- Highly recommended: `dkms` `rfkill` `iw` `ip`
+- Mandatory if Secure Boot is active: `openssl` `mokutil`
+
+Note: The below options should take care of the mandatory and highly recommended
+requirements but only you know if Secure Boot is active. If Secure Boot is
+active on your system, please also install the mandatory packages for Secure Boot.
 
 - Option for Armbian (arm64)
 
@@ -289,10 +281,8 @@ sudo apt install -y build-essential dkms git iw
 
 - Option for Fedora
 
-Note: Installing `openssl` is only necessary for secure boot support.
-
 ```
-sudo dnf -y install git dkms kernel-devel openssl
+sudo dnf -y install git dkms kernel-devel
 ```
 
 - Option for openSUSE
