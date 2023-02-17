@@ -308,7 +308,7 @@ sudo xbps-install linux-headers dkms git make
 If using pacman
 
 ```
-sudo pacman -S --noconfirm linux-headers dkms git bc
+sudo pacman -S --noconfirm linux-headers dkms git bc iw
 ```
 
 Note: The following is needed if using Manjaro for RasPi4B.
