@@ -14,7 +14,7 @@
 #
 # or
 #
-# $  sudo sh install-driver.sh
+# $ sudo sh install-driver.sh
 #
 # Copyright(c) 2023 Nick Morrow
 #
