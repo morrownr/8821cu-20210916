@@ -28,7 +28,7 @@
 # GNU General Public License for more details.
 
 SCRIPT_NAME="install-driver.sh"
-SCRIPT_VERSION="20230126"
+SCRIPT_VERSION="20230221"
 MODULE_NAME="8821cu"
 DRV_VERSION="5.12.0.4"
 
@@ -188,6 +188,9 @@ fi
 #fi
 
 echo ": ---------------------------"
+echo
+echo "Checking for previously installed drivers."
+
 
 # check for and remove non-dkms installations
 # standard naming
@@ -200,6 +203,8 @@ if [ -f "${MODDESTDIR}${MODULE_NAME}.ko" ]; then
 	echo "Removing source files from /usr/src/${DRV_NAME}-${DRV_VERSION}"
 	rm -rf /usr/src/${DRV_NAME}-${DRV_VERSION}
 	make clean >/dev/null 2>&1
+	echo "Removal complete."
+	echo ": ---------------------------"
 fi
 
 # check for and remove non-dkms installations
@@ -213,6 +218,8 @@ if [ -f "${MODDESTDIR}rtl${MODULE_NAME}.ko" ]; then
 	echo "Removing source files from /usr/src/${DRV_NAME}-${DRV_VERSION}"
 	rm -rf /usr/src/${DRV_NAME}-${DRV_VERSION}
 	make clean >/dev/null 2>&1
+	echo "Removal complete."
+	echo ": ---------------------------"
 fi
 
 # check for and remove non-dkms installations
@@ -228,6 +235,8 @@ if [ -f "/usr/lib/modules/${KVER}/kernel/drivers/net/wireless/${DRV_NAME}/${MODU
 	echo "Removing source files from /usr/src/${DRV_NAME}-${DRV_VERSION}"
 	rm -rf /usr/src/${DRV_NAME}-${DRV_VERSION}
 	make clean >/dev/null 2>&1
+	echo "Removal complete."
+	echo ": ---------------------------"
 fi
 
 # check for and remove dkms installations
@@ -239,10 +248,13 @@ if command -v dkms >/dev/null 2>&1; then
 		rm -f /etc/modprobe.d/${OPTIONS_FILE}
 		echo "Removing source files from /usr/src/${DRV_NAME}-${DRV_VERSION}"
 		rm -rf /usr/src/${DRV_NAME}-${DRV_VERSION}
+		echo "Removal complete."
+		echo ": ---------------------------"
 	fi
 fi
 
 # sets module parameters (driver options) and blacklisted modules
+echo "Starting installation."
 echo "Installing ${OPTIONS_FILE} to /etc/modprobe.d"
 cp -f ${OPTIONS_FILE} /etc/modprobe.d
 
@@ -310,6 +322,7 @@ else
 		fi
 	else
 		echo "The driver was added to dkms successfully."
+		echo ": ---------------------------"
 	fi
 
 	if command -v /usr/bin/time >/dev/null 2>&1; then
@@ -328,6 +341,7 @@ else
 		exit $RESULT
 	else
 		echo "The driver was built by dkms successfully."
+		echo ": ---------------------------"
 	fi
 
 	dkms install -m ${DRV_NAME} -v ${DRV_VERSION}
@@ -342,6 +356,7 @@ else
 		exit $RESULT
 	else
 		echo "The driver was installed by dkms successfully."
+		echo ": ---------------------------"
 	fi
 fi
 
@@ -354,6 +369,7 @@ fi
 
 # if NoPrompt is not used, ask user some questions
 if [ $NO_PROMPT -ne 1 ]; then
+	echo
 	printf "Do you want to edit the driver options file now? [y/N] "
 	read -r REPLY
 	case "$REPLY" in

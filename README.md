@@ -563,10 +563,9 @@ as good as it.
 To-Do:
 
 - Improve secure boot support.
-- Add driver compression for kernels > 5.3.
 - Detect and alert users when Airplane Mode is on.
 - Test for installation in VM's.
-- Installation script needs to check country code setup.
+- Check country code setup.
 - Reduce the size of the README while keeping the needed information.
 - Optimize scripts.
 
@@ -575,4 +574,3 @@ To-Do:
 #### [Go to Main Menu](https://github.com/morrownr/USB-WiFi)
 
 -----
-

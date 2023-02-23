@@ -1079,7 +1079,7 @@ static void rtw_regsty_load_tx_ac_lifetime(struct registry_priv *regsty)
 			conf->en = parm[0] & 0xF;
 			conf->vo_vi = parm[1];
 			conf->be_bk = parm[2];
-		}	
+		}
 	}
 }
 #endif
@@ -2089,7 +2089,7 @@ static void rtw_ethtool_get_stats(struct net_device *dev,
 	struct recv_priv *precvpriv = NULL;
 
 	memset(data, 0, sizeof(u64) * RTW_ETHTOOL_STATS_LEN);
-	
+
 	padapter = (_adapter *)rtw_netdev_priv(dev);
 	if (padapter) {
 		pxmitpriv = &(padapter->xmitpriv);
@@ -2120,7 +2120,7 @@ static const struct ethtool_ops rtw_ethtool_ops = {
 	.get_ethtool_stats = rtw_ethtool_get_stats,
 	.get_sset_count = rtw_ethtool_get_sset_count,
 };
-#endif // LINUX_VERSION_CODE >= 3.7.8 
+#endif // LINUX_VERSION_CODE >= 3.7.8
 #endif /* CONFIG_IOCTL_CFG80211 */
 /* For ethtool --- */
 
@@ -2664,7 +2664,7 @@ struct dvobj_priv *devobj_init(void)
 	pdvobj->tpt_mode = 0;
 	pdvobj->edca_be_ul = 0x5ea42b;
 	pdvobj->edca_be_dl = 0x00a42b;
-#endif 
+#endif
 	pdvobj->scan_deny = _FALSE;
 
 	/* wpas type default from w1.fi */
@@ -2846,14 +2846,14 @@ u8 rtw_init_drv_sw(_adapter *padapter)
 		dvobj->macid_ctl.macid_txrpt_pgsz = hal_spec->macid_txrpt_pgsz;
 		dvobj->cam_ctl.sec_cap = hal_spec->sec_cap;
 		dvobj->cam_ctl.num = rtw_min(hal_spec->sec_cam_ent_num, SEC_CAM_ENT_NUM_SW_LIMIT);
-		
+
 		dvobj->wow_ctl.wow_cap = hal_spec->wow_cap;
 
 		#ifdef CONFIG_SDIO_TX_ENABLE_AVAL_INT
 		dvobj->tx_aval_int_thr_mode = 2; /*setting by max tx length*/
 		dvobj->tx_aval_int_thr_value = 0;
 		#endif /*CONFIG_SDIO_TX_ENABLE_AVAL_INT*/
-		
+
 		#if CONFIG_TX_AC_LIFETIME
 		{
 			struct registry_priv *regsty = adapter_to_regsty(padapter);
@@ -3092,7 +3092,7 @@ void rtw_cancel_all_timer(_adapter *padapter)
 	_cancel_timer_ex(&(adapter_to_pwrctl(padapter)->pwr_rpwm_timer));
 #endif /* CONFIG_LPS_RPWM_TIMER */
 
-#ifdef CONFIG_RTW_TOKEN_BASED_XMIT	
+#ifdef CONFIG_RTW_TOKEN_BASED_XMIT
 	_cancel_timer_ex(&padapter->mlmeextpriv.tbtx_xmit_timer);
 	_cancel_timer_ex(&padapter->mlmeextpriv.tbtx_token_dispatch_timer);
 #endif
@@ -3862,7 +3862,7 @@ int _netdev_open(struct net_device *pnetdev)
 
 	RTW_INFO(FUNC_NDEV_FMT" start\n", FUNC_NDEV_ARG(pnetdev));
 
-	if (!rtw_is_hw_init_completed(padapter)) { // ips 
+	if (!rtw_is_hw_init_completed(padapter)) { // ips
 		rtw_clr_surprise_removed(padapter);
 		rtw_clr_drv_stopped(padapter);
 		RTW_ENABLE_FUNC(padapter, DF_RX_BIT);
@@ -3884,7 +3884,7 @@ int _netdev_open(struct net_device *pnetdev)
 		{
 	#ifdef CONFIG_BT_COEXIST_SOCKET_TRX
 			_adapter *prim_adpt = GET_PRIMARY_ADAPTER(padapter);
-		
+
 			if (prim_adpt && (_TRUE == prim_adpt->EEPROMBluetoothCoexist)) {
 				rtw_btcoex_init_socket(prim_adpt);
 				prim_adpt->coex_info.BtMgnt.ExtConfig.HCIExtensionVer = 0x04;
@@ -4250,7 +4250,7 @@ int _pm_netdev_open(_adapter *padapter)
 
 	RTW_INFO(FUNC_NDEV_FMT" start\n", FUNC_NDEV_ARG(pnetdev));
 
-	if (!rtw_is_hw_init_completed(padapter)) { // ips 
+	if (!rtw_is_hw_init_completed(padapter)) { // ips
 		rtw_clr_surprise_removed(padapter);
 		rtw_clr_drv_stopped(padapter);
 		status = rtw_hal_init(padapter);
@@ -4805,14 +4805,14 @@ void rtw_dev_unload(PADAPTER padapter)
 #endif
 
 		rtw_intf_stop(padapter);
-		
+
 		rtw_stop_drv_threads(padapter);
 
 		if (ATOMIC_READ(&(pcmdpriv->cmdthd_running)) == _TRUE) {
 			RTW_ERR("cmd_thread not stop !!\n");
 			rtw_warn_on(1);
 		}
-		
+
 		/* check the status of IPS */
 		if (rtw_hal_check_ips_status(padapter) == _TRUE || pwrctl->rf_pwrstate == rf_off) { /* check HW status and SW state */
 			RTW_PRINT("%s: driver in IPS-FWLPS\n", __func__);
@@ -4945,16 +4945,16 @@ int rtw_suspend_wow(_adapter *padapter)
 		/* 2.1 clean interrupt */
 		rtw_hal_clear_interrupt(padapter);
 #endif /* CONFIG_SDIO_HCI */
-		
+
 		/* enable ac lifetime during scan to avoid txfifo not empty. */
 		dvobj->lifetime_en = rtw_read8(padapter, 0x426);
 		dvobj->pkt_lifetime = rtw_read32(padapter, 0x4c0);
 		rtw_write8(padapter, 0x426, rtw_read8(padapter, 0x426) | 0x0f);
 		if(hal_spec->tx_aclt_unit_factor == 1) {
-			rtw_write16(padapter, 0x4c0, 0x1000);	// unit: 32us. 131ms 
+			rtw_write16(padapter, 0x4c0, 0x1000);	// unit: 32us. 131ms
 			rtw_write16(padapter, 0x4c0 + 2 , 0x1000);	// unit: 32us. 131ms
 		} else {
-			rtw_write16(padapter, 0x4c0, 0x0200);	// unit: 256us. 131ms 
+			rtw_write16(padapter, 0x4c0, 0x0200);	// unit: 256us. 131ms
 			rtw_write16(padapter, 0x4c0 + 2 , 0x0200);	// unit: 256us. 131ms
 		}
 		for (i = 0; i < dvobj->iface_nums; i++) {
@@ -4966,7 +4966,7 @@ int rtw_suspend_wow(_adapter *padapter)
 		}
 		RTW_INFO("lifetime_en=%x, pkt_lifetime=%x\n", rtw_read8(padapter, 0x426), rtw_read32(padapter, 0x4c0));
 		rtw_msleep_os(200);
-		
+
 		/* 1. stop thread */
 		rtw_set_drv_stopped(padapter);	/*for stop thread*/
 		rtw_mi_stop_drv_threads(padapter);
@@ -5359,14 +5359,14 @@ int rtw_resume_process_wow(_adapter *padapter)
 
 		rtw_clr_drv_stopped(padapter);
 		RTW_INFO("%s: wowmode resuming, DriverStopped:%s\n", __func__, rtw_is_drv_stopped(padapter) ? "True" : "False");
-		
+
 		if(registry_par->suspend_type == FW_IPS_WRC)
 			rtw_hal_set_hwreg(padapter, HW_VAR_VENDOR_WOW_MODE, &en);
-		
+
 		rtw_mi_start_drv_threads(padapter);
 
 		rtw_mi_intf_start(padapter);
-		
+
 		if(registry_par->suspend_type == FW_IPS_DISABLE_BBRF && !check_fwstate(pmlmepriv, WIFI_ASOC_STATE)) {
 			if (!rtw_is_surprise_removed(padapter)) {
 				rtw_hal_deinit(padapter);
