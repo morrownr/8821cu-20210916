@@ -71,11 +71,14 @@ on.
 Ubuntu is used as the example but other distros should be similar to one
 degree or another. During the installation there will be a box on one of
 installation pages that will appear if the installation program detects
-that Secure Boot is on. You will need to check the box and supply a
-password. You can use the same password and you use for the system if you
-wish. After the installation and reboot completes, the first screen you
-should see is the mokutil screen. Mokutil will guide you through the 
-process of setting up your system to support Secure Boot
+that Secure Boot is on. You will need to check the appropriate box and
+supply a password. You can use the same password that you use for the system
+if you wish. After the installation and reboot completes, the first screen
+you should see is the mokutil screen. Mokutil will guide you through the
+process of setting up your system to support Secure Boot. If you are unsure
+what to do, I recommend you seek guidance from your distro documentation or
+user forums. Having Secure Boot properly set up in your installation is very
+important.
 
 The `install-driver.sh` script currently supports Secure Boot if `dkms`
 is installed. Here is a link to the `dkms` website. There is information
@@ -103,18 +106,14 @@ success or failure are needed. If you have yet to buy an adapter to use with
 monitor mode, there are adapters available that are known to work very well
 with monitor mode. My recommendation for those looking to buy an adapter for
 monitor mode is to buy adapters based on the following chipsets: mt7921au,
-mt7612u, mt7610u, rtl8821cu, rtl8812bu, rtl8812au, and rtl8811au. My specific
-recommendations for adapters in order of preference currently are:
+mt7612u, mt7610u, rtl8821cu, and rtl8812bu. My specific recommendations for
+adapters in order of preference currently are:
 
 ALFA AWUS036ACHM - long range - in-kernel driver
 
 ALFA AWUS036ACM - in-kernel driver
 
 ALFA AWUS036ACU - in-kernel driver (as of kernel 6.2) and [out-of-kernel driver](https://github.com/morrownr/8821cu)
-
-ALFA AWUS036ACH - long range - [driver](https://github.com/morrownr/8812au)
-
-ALFA AWUS036ACS - [driver](https://github.com/morrownr/8821au)
 
 To ask questions, go to [USB-WiFi](https://github.com/morrownr/USB-WiFi)
 and post in `Discussions` or `Issues`.

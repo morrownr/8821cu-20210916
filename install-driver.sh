@@ -254,6 +254,7 @@ if command -v dkms >/dev/null 2>&1; then
 fi
 
 # sets module parameters (driver options) and blacklisted modules
+echo
 echo "Starting installation."
 echo "Installing ${OPTIONS_FILE} to /etc/modprobe.d"
 cp -f ${OPTIONS_FILE} /etc/modprobe.d

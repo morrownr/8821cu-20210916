@@ -111,7 +111,7 @@ a modification or two to the Makefile).
 
 - EDUP EP-AC1651 (nano) (single-state, single-function)
 - EDUP EP-AC1635 (single-state, single-function)
-- Numerous adapters that are based on the supported chipset.
+- Numerous adapters that are based on the supported chipsets
 
 Note: If you are looking for information about what adapter to buy,
 click [here](https://github.com/morrownr/USB-WiFi) and look for Main Menu
