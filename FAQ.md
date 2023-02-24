@@ -2,16 +2,17 @@
 
 Question: Is WPA3 supported?
 
-Answer: WPA3-SAE is supported. It works well on most modern Linux distros but
-not all. Generally the reason for WPA3 not working on Linux distros is that the
-distro has an old version of wpa_supplicant or Network Manager. Your options
-are to upgrade to a more modern distro (distros released after mid 2022) or
-compile and install new versions of wpa_supplicant and/or Network Manager.
+Answer: WPA3-SAE is supported. It works well on most modern Linux distros
+but not all. Generally the reason for WPA3 not working on Linux distros is
+that the distro has an old version of wpa_supplicant or Network Manager.
+Your options are to upgrade to a more modern distro (distros released after
+mid 2022) or compile and install new versions of wpa_supplicant and/or
+Network Manager.
 
 -----
 
-Question: I bought two usb wifi adapters based on this chipset and am planning
-to use both in the same computer. How do I set that up?
+Question: I bought two usb wifi adapters based on this chipset and am
+planning to use both in the same computer. How do I set that up?
 
 Answer: Realtek drivers do not support more than one adapter with the
 same chipset in the same computer. You can have multiple Realtek based
@@ -26,7 +27,11 @@ this repo for a Realtek driver?
 Answer: Many new and existing Linux users already have adapters based on
 Realtek chipsets. This repo is for Linux users to support their existing
 adapters but my STRONG recommendation is for Linux users to seek out USB
-WiFi solutions based on Mediatek chipsets:
+WiFi solutions based on Mediatek chipsets. Mediatek is making and
+supporting their drivers per Linux Wireless Standards guidance per the
+Linux Foundation. This results in far fewer compatibility and support
+problems. More information and recommended adapters shown at the
+following site:
 
 https://github.com/morrownr/USB-WiFi
 
@@ -116,44 +121,6 @@ and post in `Discussions` or `Issues`.
 
 -----
 
-Question: I have an adapter with the 8821cu chipset and it supports
-bluetooth. The bluetooth works but the wifi does not. What is wrong?
-
-Answer: There appears to be an issue where adapters can be set up differently
-by makers. The fix is to set the driver option ( `rtw_RFE_type` ) in 8821cu.conf.
-The easiest way to edit 8821cu.conf is to run the following from the driver
-directory:
-
-```
-sudo ./edit-options.sh
-```
-
-Once in the document, you can scroll down to the documentation about
-`rtw_RFE_type`. You will likely have to experiment to find out what setting
-works best for your adapter but a good place to start is probably...
-
-```
-rtw_RFE_type=7
-```
-
-Simply add that option to the end of the `options` line, save and reboot.
-
------
-
-Question: How do I disable the onboard WiFi in a Raspberry Pi?
-
-Note: This answer is for the Raspberry Pi OS.
-
-Answer:
-
-Add the following line to `/boot/config.txt`
-
-```
-dtoverlay=disable-wifi
-```
-
------
-
 Question: How do I forget a saved WiFi network on a Raspberry Pi?
 
 Note: This answer is for the Raspberry Pi OS without Network Manager active.
@@ -171,5 +138,45 @@ Note: Replace ${EDITOR} with the name of the text editor you wish to use.
 #### Step 3: Save the file.
 
 #### Step 4: Reboot
+
+-----
+
+
+Question: How do I disable the onboard WiFi in a Raspberry Pi?
+
+Note: This answer is for the Raspberry Pi OS.
+
+Answer:
+
+Add the following line to `/boot/config.txt`
+
+```
+dtoverlay=disable-wifi
+```
+
+
+-----
+
+Question: I have an adapter with the 8821cu chipset and it supports
+bluetooth. The bluetooth works but the wifi does not. What is wrong?
+
+Answer: There appears to be an issue where adapters can be set up
+differently by makers. The fix is to set the driver option
+( `rtw_RFE_type` ) in 8821cu.conf. The easiest way to edit 8821cu.conf is
+to run the following from the driver directory:
+
+```
+sudo ./edit-options.sh
+```
+
+Once in the document, you can scroll down to the documentation about
+`rtw_RFE_type`. You will likely have to experiment to find out what setting
+works best for your adapter but a good place to start is probably...
+
+```
+rtw_RFE_type=7
+```
+
+Simply add that option to the end of the `options` line, save and reboot.
 
 -----
