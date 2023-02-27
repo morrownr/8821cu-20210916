@@ -370,7 +370,7 @@ fi
 echo "Info: Upgrade this driver with the following commands as needed:"
 echo "$ git pull"
 echo "$ sudo sh install-driver.sh"
-echo "Note: Upgrades should be performed before distro upgrades."
+echo "Note: Upgrades to this driver should be performed before distro upgrades."
 echo "Note: Upgrades can be performed as often as you like."
 echo "Note: Work on this driver is continuous."
 echo ": ---------------------------"
@@ -385,15 +385,25 @@ fi
 
 # if NoPrompt is not used, ask user some questions
 if [ $NO_PROMPT -ne 1 ]; then
-	printf "Do you want to edit the driver options file now? (y is recommended) [y/N] "
-	read -r REPLY
-	case "$REPLY" in
-		[yY]*) ${TEXT_EDITOR} /etc/modprobe.d/${OPTIONS_FILE} ;;
+	printf "Do you want to edit the driver options file now? (recommended) [Y/n] "
+	read -r yn
+	case "$yn" in
+		[nN])
+		;;
+
+		*)
+		${TEXT_EDITOR} /etc/modprobe.d/${OPTIONS_FILE}
+		;;
 	esac
 
-	printf "Do you want to apply the new options by rebooting now? ( y is recommended) [y/N] "
-	read -r REPLY
-	case "$REPLY" in
-		[yY]*) reboot ;;
+	printf "Do you want to apply the new options by rebooting now? (recommended) [Y/n] "
+	read -r yn
+	case "$yn" in
+		[nN])
+		;;
+
+		*)
+		reboot
+		;;
 	esac
 fi

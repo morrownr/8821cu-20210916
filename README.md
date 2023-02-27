@@ -32,8 +32,8 @@ confirm that this is the correct driver for your adapter.
 - AP mode DFS channel support
 - Supported interface modes
   * Managed
-  * Monitor (see FAQ) (see [Monitor_Mode](https://github.com/morrownr/Monitor_Mode)
-  * AP
+  * Monitor (see FAQ) (see [Monitor_Mode](https://github.com/morrownr/Monitor_Mode))
+  * AP (see [Bridged Wireless Access Point](https://github.com/morrownr/USB-WiFi/blob/main/home/AP_Mode/Bridged_Wireless_Access_Point.md))
   * P2P-client
   * P2P-GO
 - Log level control
@@ -100,11 +100,12 @@ be provided via PR or message in Issues.
 Note: Red Hat Enterprise Linux (RHEL) and distros based on RHEL are not
 supported due to the way kernel patches are handled. I will support
 knowledgable RHEL developers if they want to merge the required
-support and keep it current.
+support and keep it current. I reserve the right to delete this support
+if it causes any problems.
 
 Note: Android is supported in the driver according to Realtek. I will support
 knowledgable Android developers if they want to merge and keep current the
-required support (most likely just instructions about how to compile and maybe
+required support (most likely just instructions about how to compile and make
 a modification or two to the Makefile).
 
 ### Compatible Devices
@@ -133,22 +134,20 @@ driver on installation and reactivate the in-kernel driver on removal. No
 special action needs to be taken by users.
 
 Warning: Installing multiple out-of-kernel drivers for the same hardware
-usually does not end well. If a previous attempt to install this driver failed
-or if you have previously installed another driver for chipsets supported by
-this driver, you MUST remove anything that the previous attempt
-installed BEFORE attempting to install this driver. This driver can be
-removed with the script called `./remove-driver.sh`. Information is
-available in the section called `Removal of the Driver`. You can get a
-good idea as to whether you need to remove a previously installed
-driver by running the following command:
+usually does not end well. The install-driver.sh script has the capability
+to detect and remove many conflicting drivers but not all. If this driver
+does not work well after installation and you have previously installed a
+driver that you did not remove, it suggested that you run the following
+command in an effort to determine if you need to take action to manually
+remove conflicting drivers:
 
 ```
 sudo dkms status
 ```
 
-Warning: If you decide to upgrade to a new version of kernel such as
-5.15 to 6.1, you need to upgrade the driver you have installed with
-the newest available before installing the new kernel. Use the
+Warning: If you decide to do a distro upgrade, which will likely install a
+new version of kernel such as 5.15 to 6.1, you need to upgrade this driver
+with the newest available before performing the disto upgrade. Use the
 following commands in the driver directory:
 
 ```
@@ -243,7 +242,7 @@ sudo reboot
 
 Note: If your Linux distro does not fall into one of options listed
 below, you will need to research how to properly setup up the development
-environment for your system. General guidance is given the next paragraph.
+environment for your system. General guidance follows.
 
 Development Environment Requirements: (package names may vary by distro)
 
