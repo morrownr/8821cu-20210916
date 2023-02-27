@@ -28,7 +28,7 @@
 # GNU General Public License for more details.
 
 SCRIPT_NAME="remove-driver.sh"
-SCRIPT_VERSION="20230126"
+SCRIPT_VERSION="20230226"
 MODULE_NAME="8821cu"
 DRV_VERSION="5.12.0.4"
 
@@ -77,6 +77,7 @@ echo ": ${KARCH} (architecture)"
 echo ": ${KVER} (kernel version)"
 
 echo ": ---------------------------"
+echo
 
 # check for and remove non-dkms installations
 # standard naming
@@ -133,6 +134,8 @@ rm -rf /usr/src/${DRV_NAME}-${DRV_VERSION}
 make clean >/dev/null 2>&1
 echo "The driver was removed successfully."
 echo "You may now delete the driver directory if desired."
+echo ": ---------------------------"
+echo
 
 # if NoPrompt is not used, ask user some questions
 if [ $NO_PROMPT -ne 1 ]; then

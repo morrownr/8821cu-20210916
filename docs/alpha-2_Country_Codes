@@ -1,11 +1,10 @@
-2023-01-26
+2023-02-26
 
-Note: This document is under coonstruction.
-
-Instructions for setting the ISO 3166-1 alpha-2 Country Code in your Linux
-distro.
+Purpose: Provide instructions for setting the ISO 3166-1 alpha-2 Country Code.
 
 Note: Package "iw" must be installed.
+
+To set the country code:
 
 ```
 sudo iw reg set XX
@@ -45,15 +44,17 @@ AQ		Antarctica
 
 AG		Antigua and Barbuda
 
-AR      Argentina
+AR		Argentina
 
-AM      Armenia
+AM		Armenia
 
-Aruba				AW
+AW		Aruba
 
-Australia			AU
+AU		Australia
 
-Austria				AT
+AT		Austria
+
+>> under construction <<
 
 Azerbaijan			AZ
 
@@ -552,40 +553,33 @@ Turkey				TR
 
 TM		Turkmenistan
 
-Turks and
-Caicos
-Islands				TC
+TC		Turks and Caicos Islands
 
-Tuvalu				TV
+TV		Tuvalu
 
-Uganda				UG
+UG		Uganda
 
-Ukraine				UA
+UA		Ukraine
 
-United Arab
-Emirates			AE
+AE		United Arab Emirates
 
 GB		United Kingdom
 
 US		United States
 
-United States
-Minor
-Outlying
-Islands				UM
+UM		United States Minor Outlying Islands
 
-Uruguay				UY
+UY		Uruguay
 
-Uzbekistan			UZ
+UZ		Uzbekistan
 
-Vanuatu				VU
+VU		Vanuatu
 
-Venezuela			VE
+VE		Venezuela
 
-Viet Nam			VN
+VN		Viet Nam
 
-Virgin Islands,
-British				VG
+VG		Virgin Islands, British
 
 VI      Virgin Islands, U.S.
 
