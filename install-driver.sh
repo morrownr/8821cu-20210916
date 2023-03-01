@@ -388,22 +388,14 @@ if [ $NO_PROMPT -ne 1 ]; then
 	printf "Do you want to edit the driver options file now? (recommended) [Y/n] "
 	read -r yn
 	case "$yn" in
-		[nN])
-		;;
-
-		*)
-		${TEXT_EDITOR} /etc/modprobe.d/${OPTIONS_FILE}
-		;;
+		[nN]) ;;
+		*) ${TEXT_EDITOR} /etc/modprobe.d/${OPTIONS_FILE} ;;
 	esac
 
 	printf "Do you want to apply the new options by rebooting now? (recommended) [Y/n] "
 	read -r yn
 	case "$yn" in
-		[nN])
-		;;
-
-		*)
-		reboot
-		;;
+		[nN]) ;;
+		*) reboot ;;
 	esac
 fi

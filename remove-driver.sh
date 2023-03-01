@@ -139,9 +139,10 @@ echo
 
 # if NoPrompt is not used, ask user some questions
 if [ $NO_PROMPT -ne 1 ]; then
-	printf "Do you want to reboot now? (recommended) [y/N] "
-	read -r REPLY
-	case "$REPLY" in
-		[yY]*) reboot ;;
+	printf "Do you want to reboot now? (recommended) [Y/n] "
+	read -r yn
+	case "$yn" in
+		[nN]) ;;
+		*) reboot ;;
 	esac
 fi
