@@ -177,12 +177,6 @@ if command -v mokutil >/dev/null 2>&1; then
 	fi
 fi
 
-# check ISO 3166-1 alpha-2 Country Code is not 00
-#if iw reg get | grep -i  00 >/dev/null 2>&1; then
-#    echo ": The Country Code may not be properly set."
-#    echo ": File 'alpha-2_Country_Codes' is located in the docs directory."
-#    echo ": Please read and follow the directions in the file after installation."
-#fi
 
 echo ": ---------------------------"
 echo
