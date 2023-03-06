@@ -4254,7 +4254,7 @@ int recv_func(_adapter *padapter, union recv_frame *rframe)
 
 	if (check_fwstate(mlmepriv, WIFI_MONITOR_STATE) 
 #ifdef RTW_SIMPLE_CONFIG
-		|| (check_fwstate(mlmepriv, WIFI_AP_STATE) && padapter->rtw_simple_config == _TRUE && IS_MCAST(get_ra(ptr)))
+		|| (check_fwstate(mlmepriv, WIFI_AP_STATE) && padapter->rtw_simple_config == _TRUE && IS_MCAST(rtl_get_ra(ptr)))
 #endif
 		) {
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 24))
@@ -4607,7 +4607,7 @@ void rx_query_phy_status(
 	wlanhdr = get_recvframe_data(precvframe);
 
 	ta = get_ta(wlanhdr);
-	ra = get_ra(wlanhdr);
+	ra = rtl_get_ra(wlanhdr);
 	is_ra_bmc = IS_MCAST(ra);
 
 	if (_rtw_memcmp(adapter_mac_addr(padapter), ta, ETH_ALEN) == _TRUE) {
@@ -4755,7 +4755,7 @@ s32 pre_recv_entry(union recv_frame *precvframe, u8 *pphy_status)
 {
 	s32 ret = _SUCCESS;
 	u8 *pbuf = precvframe->u.hdr.rx_data;
-	u8 *ra = get_ra(pbuf);
+	u8 *ra = rtl_get_ra(pbuf);
 	u8 ra_is_bmc = IS_MCAST(ra);
 	bool phy_queried = 0;
 	_adapter *primary_padapter = precvframe->u.hdr.adapter;
