@@ -4083,7 +4083,7 @@ int recv_frame_monitor(_adapter *padapter, union recv_frame *rframe)
 	if (!RTW_CANNOT_RUN(padapter)) {
 		/* indicate this recv_frame */
 		ret = rtw_recv_monitor(padapter, rframe);
-	} else 
+	} else
 		ret = _FAIL;
 
 exit:
@@ -4252,7 +4252,7 @@ int recv_func(_adapter *padapter, union recv_frame *rframe)
 	u8 type;
 #endif
 
-	if (check_fwstate(mlmepriv, WIFI_MONITOR_STATE) 
+	if (check_fwstate(mlmepriv, WIFI_MONITOR_STATE)
 #ifdef RTW_SIMPLE_CONFIG
 		|| (check_fwstate(mlmepriv, WIFI_AP_STATE) && padapter->rtw_simple_config == _TRUE && IS_MCAST(rtl_get_ra(ptr)))
 #endif
