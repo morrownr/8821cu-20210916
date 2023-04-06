@@ -251,8 +251,8 @@ Development Environment Requirements: (package names may vary by distro)
 - Mandatory if Secure Boot is active: `openssl` `mokutil`
 
 Note: The below options should take care of the mandatory and highly recommended
-requirements but only you know if Secure Boot is active. If Secure Boot is
-active on your system, please also install the mandatory packages for Secure Boot.
+requirements. If Secure Boot is active on your system, please also install the
+mandatory packages for Secure Boot.
 
 - Option for Armbian (arm64)
 
@@ -354,6 +354,13 @@ cd ~/src/8821cu-20210916
 Note: It is recommended that you terminate running apps so as to provide the
 maximum amount of RAM to the compilation process.
 
+Note: Fedora users that have secure boot turned on should run the following to
+enroll the key:
+
+```
+sudo mokutil --import /var/lib/dkms/mok.pub
+```
+
 Note: For automated builds (non-interactive), use `NoPrompt` as an option.
 
 ```
@@ -369,13 +376,6 @@ sudo sh install-driver.sh
 Note: If you elect to skip the reboot at the end of the installation
 script, the driver may not load immediately and the driver options will
 not be applied. Rebooting is strongly recommended.
-
-Note: Fedora users that have secure boot turned on should run the following to
-enroll the key:
-
-```
-sudo mokutil --import /var/lib/dkms/mok.pub
-```
 
 Manual build and installation instructions: The above installation steps
 automate the installation process, however, if you want to or need to do a
@@ -407,8 +407,9 @@ sudo make uninstall
 sudo reboot
 ```
 
-Note: If you use the manual installation instructions, you will need to repeat
-the process each time a new kernel is installed in your distro.
+Note: If you use the manual installation instructions, or if dkms is not
+installed, you will need to repeat the process each time a new kernel is
+installed in your distro.
 
 -----
 
