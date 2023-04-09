@@ -246,9 +246,9 @@ environment for your system. General guidance follows.
 
 Development Environment Requirements: (package names may vary by distro)
 
-- Mandatory: `gcc` `make` `bc` `kernel-headers` `build-essential` `git`
-- Highly recommended: `dkms` `rfkill` `iw` `ip`
-- Mandatory if Secure Boot is active: `openssl` `sign-file` `mokutil`
+- Mandatory packages: `gcc` `make` `bc` `kernel-headers` `build-essential` `git`
+- Highly recommended packages: `dkms` `rfkill` `iw` `ip`
+- Mandatory packages if Secure Boot is active: `openssl` `sign-file` `mokutil`
 
 Note: The below options should take care of the mandatory and highly recommended
 requirements. If Secure Boot is active on your system, please also install the
@@ -279,6 +279,8 @@ sudo apt install -y build-essential dkms git iw
 ```
 
 - Option for Fedora
+
+Note: Fedora users should also install `openssl` if secure boot is active.
 
 ```
 sudo dnf -y install git dkms kernel-devel
