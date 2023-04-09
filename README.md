@@ -77,7 +77,7 @@ be provided via PR or message in Issues.
 
 - [Armbian](https://www.armbian.com/) (kernel 5.15) (Rock 4 SE (Rock 4b image with xfce))
 
-- [Debian](https://www.debian.org/) (kernels 5.10 and 5.15)
+- [Debian](https://www.debian.org/) (kernels 5.10, 5.15 and 6.1)
 
 - [Fedora](https://getfedora.org) (kernel 6.0)
 
@@ -248,11 +248,11 @@ Development Environment Requirements: (package names may vary by distro)
 
 - Mandatory: `gcc` `make` `bc` `kernel-headers` `build-essential` `git`
 - Highly recommended: `dkms` `rfkill` `iw` `ip`
-- Mandatory if Secure Boot is active: `openssl` `mokutil`
+- Mandatory if Secure Boot is active: `openssl` `sign-file` `mokutil`
 
 Note: The below options should take care of the mandatory and highly recommended
 requirements. If Secure Boot is active on your system, please also install the
-mandatory packages for Secure Boot.
+mandatory packages for Secure Boot as shown above.
 
 - Option for Armbian (arm64)
 
