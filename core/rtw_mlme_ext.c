@@ -12799,14 +12799,15 @@ void linked_status_chk(_adapter *padapter, u8 from_timer)
 #elif defined(CONFIG_LAYER2_ROAMING)
 		if (rtw_chk_roam_flags(padapter, RTW_ROAM_ACTIVE)) {
 			RTW_INFO("signal_strength_data.avg_val = %d\n", precvpriv->signal_strength_data.avg_val);
-			if ((precvpriv->signal_strength_data.avg_val < pmlmepriv->roam_rssi_threshold)
-				&& (rtw_get_passing_time_ms(pmlmepriv->last_roaming) >= pmlmepriv->roam_scan_int*2000)) {
+			if (precvpriv->signal_strength_data.avg_val < pmlmepriv->roam_rssi_threshold) {
+				if (rtw_get_passing_time_ms(pmlmepriv->last_roaming) >= pmlmepriv->roam_scan_int*2000) {
 #ifdef CONFIG_RTW_80211K
-				rtw_roam_nb_discover(padapter, _FALSE);
+					rtw_roam_nb_discover(padapter, _FALSE);
 #endif
-				pmlmepriv->need_to_roam = _TRUE;
-				rtw_drv_scan_by_self(padapter, RTW_AUTO_SCAN_REASON_ROAM);
-				pmlmepriv->last_roaming = rtw_get_current_time();
+					pmlmepriv->need_to_roam = _TRUE;
+					rtw_drv_scan_by_self(padapter, RTW_AUTO_SCAN_REASON_ROAM);
+					pmlmepriv->last_roaming = rtw_get_current_time();
+				}
 			} else
 				pmlmepriv->need_to_roam = _FALSE;
 		}
