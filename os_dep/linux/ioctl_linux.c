@@ -13058,3 +13058,14 @@ int rtw_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
 
 	return ret;
 }
+
+#if ((LINUX_VERSION_CODE >= KERNEL_VERSION(5, 15, 0)) && defined(CONFIG_MP_INCLUDED))
+int rtw_siocdevprivate(struct net_device *dev, struct ifreq *ifr,
+                       void __user *data, int cmd)
+{
+	if (cmd != SIOCDEVPRIVATE)
+		return -EOPNOTSUPP;
+
+	return rtw_ioctl_standard_wext_private(dev, ifr);
+}
+#endif
