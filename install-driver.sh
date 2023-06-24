@@ -274,13 +274,21 @@ if ! command -v dkms >/dev/null 2>&1; then
 		exit $RESULT
 	fi
 
-# 	As shown in Makefile
-# 	install:
-#		install -p -m 644 $(MODULE_NAME).ko  $(MODDESTDIR)
-#		/sbin/depmod -a ${KVER}
-	make install
-	RESULT=$?
-
+#	if secure boot is active, use sign-install
+	if command -v mokutil >/dev/null 2>&1; then
+		if mokutil --sb-state | grep -i  enabled >/dev/null 2>&1; then
+			echo ": SecureBoot enabled - read FAQ about SecureBoot"
+			make sign-install
+			RESULT=$?
+		else
+			make install
+			RESULT=$?		
+		fi
+	else
+		make install
+		RESULT=$?
+	fi
+	
 	if [ "$RESULT" = "0" ]; then
         	make clean >/dev/null 2>&1
 		echo "The driver was installed successfully."

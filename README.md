@@ -62,7 +62,7 @@ confirm that this is the correct driver for your adapter.
 ### Compatible Kernels
 
 - Kernels: 4.19 - 5.11 (Realtek)
-- Kernels: 5.12 - 6.3  (community support)
+- Kernels: 5.12 - 6.4  (community support)
 
 ### Tested Compilers
 
@@ -79,7 +79,7 @@ be provided via PR or message in Issues.
 
 - [Debian](https://www.debian.org/) (kernels 5.10, 5.15 and 6.1)
 
-- [Fedora](https://getfedora.org) (kernel 6.0)
+- [Fedora](https://getfedora.org) Fedora 38 (6.2.13-300)
 
 - [Kali Linux](https://www.kali.org/) (kernel 5.10)
 
@@ -103,10 +103,10 @@ knowledgable RHEL developers if they want to merge the required
 support and keep it current. I reserve the right to delete this support
 if it causes any problems.
 
-Note: Android is supported in the driver according to Realtek. I will support
-knowledgable Android developers if they want to merge and keep current the
-required support (most likely just instructions about how to compile and make
-a modification or two to the Makefile).
+Note: Android is supported in the driver according to Realtek. I will
+support knowledgable Android developers if they want to merge and keep
+current the required support (most likely just instructions about how to
+compile and maybe a modification or two to the Makefile).
 
 ### Compatible Devices
 
@@ -137,7 +137,7 @@ Warning: Installing multiple out-of-kernel drivers for the same hardware
 usually does not end well. The install-driver.sh script has the capability
 to detect and remove many conflicting drivers but not all. If this driver
 does not work well after installation and you have previously installed a
-driver that you did not remove, it suggested that you run the following
+driver that you did not remove, it is suggested that you run the following
 command in an effort to determine if you need to take action to manually
 remove conflicting drivers:
 
@@ -147,8 +147,8 @@ sudo dkms status
 
 Warning: If you decide to do a distro upgrade, which will likely install a
 new version of kernel such as 5.15 to 6.1, you need to upgrade this driver
-with the newest available before performing the disto upgrade. Use the
-following commands in the driver directory:
+with the newest available code before performing the disto upgrade. Use
+the following commands in the driver directory:
 
 ```
 git pull
@@ -280,8 +280,6 @@ sudo apt install -y build-essential dkms git iw
 
 - Option for Fedora
 
-Note: Fedora users should also install `openssl` if secure boot is active.
-
 ```
 sudo dnf -y install git dkms kernel-devel
 ```
@@ -356,13 +354,6 @@ cd ~/src/8821cu-20210916
 Note: It is recommended that you terminate running apps so as to provide the
 maximum amount of RAM to the compilation process.
 
-Note: Fedora users that have secure boot turned on should run the following to
-enroll the key:
-
-```
-sudo mokutil --import /var/lib/dkms/mok.pub
-```
-
 Note: For automated builds (non-interactive), use `NoPrompt` as an option.
 
 ```
@@ -379,9 +370,18 @@ Note: If you elect to skip the reboot at the end of the installation
 script, the driver may not load immediately and the driver options will
 not be applied. Rebooting is strongly recommended.
 
-Manual build and installation instructions: The above installation steps
-automate the installation process, however, if you want to or need to do a
-command line installation, use the following:
+Note: Fedora users that have secure boot turned on may need to run the
+following to enroll the key:
+
+```
+sudo mokutil --import /var/lib/dkms/mok.pub
+```
+
+### Manual Installation Instructions
+
+Note: The above installation steps automate the installation process,
+however, if you want to or need to do a basic command line installation,
+use the following:
 
 ```
 make clean
@@ -391,6 +391,8 @@ make clean
 make
 ```
 
+If secure boot is off:
+
 ```
 sudo make install
 ```
@@ -398,6 +400,47 @@ sudo make install
 ```
 sudo reboot
 ```
+
+If secure boot is on:
+
+Note: Please read to the end of this section before coming back here to
+enter commands.
+
+```
+sudo make sign-install
+```
+
+You will be promted for a password, please remember the password as it
+will be used in some of the following steps.
+
+```
+sudo reboot
+```
+
+The MOK managerment screen will appear during boot:
+
+`Shim UEFI Key Management"
+
+`Press any key...`
+
+Select "Enroll key"
+
+Select "Continue"
+
+Select "Yes"
+
+When promted, enter the password you entered earlier.
+
+If you enter the wrong password, your computer will not be bootable. In
+this case, use the BOOT menu from your BIOS to boot then as follows:
+
+```
+sudo mokutil --reset
+```
+
+Restart your computer and use the BOOT menu from BIOS to boot. In the MOK
+managerment screen, select `reset MOK list`. Then Reboot and retry from
+the step `sudo make sign-install`.
 
 To remove the driver if installed by the manual installation instructions:
 
@@ -409,9 +452,8 @@ sudo make uninstall
 sudo reboot
 ```
 
-Note: If you use the manual installation instructions, or if dkms is not
-installed, you will need to repeat the process each time a new kernel is
-installed in your distro.
+Note: If you use the manual installation instructions, you will need to
+repeat the process each time a new kernel is installed in your distro.
 
 -----
 
@@ -564,10 +606,8 @@ as good as it.
 
 To-Do:
 
-- Improve secure boot support.
 - Detect and alert users when Airplane Mode is on.
 - Test for installation in VM's.
-- Check country code setup.
 - Reduce the size of the README while keeping the needed information.
 - Optimize scripts.
 

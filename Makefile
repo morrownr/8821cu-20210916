@@ -2516,7 +2516,7 @@ sign:
 	@mokutil --import MOK.der
 	@$(KSRC)/scripts/sign-file sha256 MOK.priv MOK.der 8821cu.ko
 
-sign-install: all sign install
+sign-install: sign install
 
 backup_rtlwifi:
 	@echo "Making backup rtlwifi drivers"
@@ -2573,4 +2573,5 @@ clean:
 	rm -fr Module.symvers ; rm -fr Module.markers ; rm -fr modules.order
 	rm -fr *.mod.c *.mod *.o .*.cmd *.ko *~
 	rm -fr .tmp_versions
+	rm -fr MOK.der MOK.priv
 endif
