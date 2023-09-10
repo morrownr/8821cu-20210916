@@ -52,16 +52,6 @@ inline int RTW_STATUS_CODE(int error_code)
 }
 #endif
 
-/* Include namespace when file system namespace errors occur during kernel build.
- * about 'kernel_read' or 'kernel_write'
- *
- * This declaration was created to resolve an error on the Rockchip side
- * You can modify or add flags in the fs/Makefile.
- */
-#ifdef ANDROID_GKI_VFS_EXPORT_ONLY
-	MODULE_IMPORT_NS(VFS_internal_I_am_really_a_filesystem_and_am_NOT_a_driver);
-#endif
-
 u32 rtw_atoi(u8 *s)
 {
 
