@@ -8,7 +8,7 @@ driver is installed but does not seem to be working. What is wrong?
 Answer: This question often comes up after installing the driver to a
 system that has Secure Boot on. To test if there is a Secure Boot related
 problem, turn secure boot off in the system BIOS and reboot.  If the driver
-works as expected after reboot, them the problem is likely related to
+works as expected after reboot, then the problem is likely related to
 Secure Boot.
 
 What will increase my chances of having a sucessessful installation on a
@@ -20,7 +20,7 @@ the easiest solution is likely to do a clean reinstallation with Secure Boot
 on.
 
 Ubuntu is used as the example but other distros should be similar to one
-degree or another. During the installation there will be a box on one of
+degree or another. During the installation there may be a box on one of
 installation pages that will appear if the installation program detects
 that Secure Boot is on. You will need to check the appropriate box and
 supply a password. You can use the same password that you use for the system
@@ -41,8 +41,43 @@ Here is a link regarding Debian and Secure Boot:
 
 https://wiki.debian.org/SecureBoot
 
-There is work underway to add Secure Boot support for systems that do not
-have `dkms` available or if a manual installation is desired.
+If you are using a basic command line (non-dkms) installation, see the
+following section in the Installation Steps part of the README:
+
+If you use the `install-driver.sh` script and see the following message
+
+`SecureBoot enabled - read FAQ about SecureBoot`
+
+You need to read the following:
+
+The MOK managerment screen will appear during boot:
+
+`Shim UEFI Key Management"
+
+`Press any key...`
+
+Select "Enroll key"
+
+Select "Continue"
+
+Select "Yes"
+
+When promted, enter the password you entered earlier.
+
+If you enter the wrong password, your computer will not be bootable. In
+this case, use the BOOT menu from your BIOS to boot then as follows:
+
+```
+sudo mokutil --reset
+```
+
+Restart your computer and use the BOOT menu from BIOS to boot. In the MOK
+managerment screen, select `reset MOK list`. Then Reboot and retry the
+driver installation.
+
+Manual Installation Instructions
+
+It provides secure boot instructions.
 
 -----
 
@@ -155,6 +190,34 @@ Add the following line to `/boot/config.txt`
 ```
 dtoverlay=disable-wifi
 ```
+
+-----
+
+Question: When running `sudo sh install-driver.sh` on my RasPi 4B or
+400, I see the following:
+
+```
+Your kernel header files aren't properly installed.
+Please consult your distro documentation or user support forums.
+Once the header files are properly installed, please run...
+```
+
+Answer: The Pi 4/400 firmware now prefers the 64-bit kernel if one
+exists so even if you installed the 32 bit version of the RasPiOS,
+you may now have the 64 bit kernel active.
+
+The fix:
+
+add the following to /boot/config.txt and reboot:
+
+arm_64bit=0
+
+Reference:
+
+https://forums.raspberrypi.com/viewtopic.php?p=2091532&hilit=Tp+link#p2091532
+
+Note to RasPiOS devs: We really really wish you would consider the 
+consequences of the changes you make. Thank you.
 
 -----
 

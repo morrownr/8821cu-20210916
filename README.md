@@ -44,7 +44,7 @@ confirm that this is the correct driver for your adapter.
 
 ### Not supported
 
-- hcxdumptool
+- hcxdumptool (see hcxdumptool documentation)
 
 ### A FAQ is available in this repo with the name `FAQ.md`
 
@@ -54,24 +54,27 @@ confirm that this is the correct driver for your adapter.
 
 ### Compatible CPU Architectures
 
-- x86, i686
+- x86, i386, i686
 - x86-64, amd64
 - armv6l, armv7l (arm)
 - aarch64 (arm64)
 
+Note: Additional CPU architectures may work but I currently only have
+the hardware to test the above.
+
 ### Compatible Kernels
 
 - Kernels: 4.19 - 5.11 (Realtek)
-- Kernels: 5.12 - 6.5  (community support)
+- Kernels: 5.12 - 6.6  (community support)
 
 ### Tested Compilers
 
-- gcc 10, 11 and 12
+- gcc 10, 11, 12 and 13
 
 ### Tested Linux Distributions
 
-Note: The information in this section depends largely on user reports which can
-be provided via PR or message in Issues.
+Note: The information in this section depends largely on user reports
+which can be provided via PR or message in Issues.
 
 - [Arch Linux](https://www.archlinux.org) (kernels 5.4 and 5.11)
 
@@ -81,13 +84,13 @@ be provided via PR or message in Issues.
 
 - [Fedora](https://getfedora.org) Fedora 38 (6.2.13-300)
 
-- [Kali Linux](https://www.kali.org/) (kernel 5.10)
+- [Kali Linux](https://www.kali.org/) (kernel 6.3)
 
-- [Manjaro](https://manjaro.org) (kernel 5.13)
+- [Manjaro](https://manjaro.org) (kernel 5.15)
 
 - [openSUSE](https://www.opensuse.org/) Tumbleweed (rolling) (kernel 5.15)
 
-- [Raspberry Pi OS](https://www.raspberrypi.org) (2023-05-03) (ARM 32 bit and 64 bit) (kernel 6.1.38)
+- [Raspberry Pi OS](https://www.raspberrypi.org) (2023-05-03)(ARM 32 bit and 64 bit) (kernel 6.1.38)
 
 - [Raspberry Pi Desktop](https://www.raspberrypi.org) (2022-07-01) (x86 32 bit) (kernel 5.10)
 
@@ -97,16 +100,26 @@ be provided via PR or message in Issues.
 
 - [Void Linux](https://voidlinux.org/) (kernel 5.18)
 
-Note: Red Hat Enterprise Linux (RHEL) and distros based on RHEL are not
-supported due to the way kernel patches are handled. I will support
-knowledgable RHEL developers if they want to merge the required
-support and keep it current. I reserve the right to delete this support
-if it causes any problems.
+Note: Red Hat Enterprise Linux (RHEL) and distros based on RHEL are
+supported by Red Hat devs due to the way kernel patches are handled in
+Red Hat. I support knowledgable RHEL developers if they want to merge
+the required support and keep it current. I reserve the right to delete
+this support without notice if it causes any problems.
+
+Current RHEL maintainer: none
 
 Note: Android is supported in the driver according to Realtek. I will
 support knowledgable Android developers if they want to merge and keep
 current the required support (most likely just instructions about how to
 compile and maybe a modification or two to the Makefile).
+
+Current Android maintainer: none
+
+Note: OpenWRT is not supported. OpenWRT provides drivers for USB WiFi
+adapters. OpenWRT provided drivers include support for the MT7921au
+(AXE3000), MT7612u (AC1200), MT7610u (AC600) chipsets. It is a challenge
+to use Realtek based adapters that use out-of-kernel drivers with
+OpenWRT so it is strongly advised to use the already supported chipsets.
 
 ### Compatible Devices
 
@@ -604,11 +617,12 @@ as good as it.
 
 -----
 
-To-Do:
+To Contribute:
 
-- Test for installation in VM's.
-- Reduce the size of the README while keeping the needed information.
-- Optimize scripts.
+Fork this repository.
+Make your edits.
+TEST THEM!
+Create a pull request.
 
 -----
 
