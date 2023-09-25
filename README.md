@@ -4,8 +4,8 @@
 
 - v5.12.0.4 (Realtek) (20210916) plus updates from the Linux community
 
-Note: Please read "supported-device-IDs" for information about how to
-confirm that this is the correct driver for your adapter.
+Note: Please read the file "supported-device-IDs" for information about
+how to confirm that this is the correct driver for your adapter.
 
 ### Supported Features
 
@@ -66,6 +66,9 @@ the hardware to test the above.
 
 - Kernels: 4.19 - 5.11 (Realtek)
 - Kernels: 5.12 - 6.6  (community support)
+
+Note: Kernels earlier than 4.19 may work but are not tested or
+supported.
 
 ### Tested Compilers
 
@@ -128,56 +131,68 @@ OpenWRT so it is strongly advised to use the already supported chipsets.
 - Numerous adapters that are based on the supported chipsets
 
 Note: If you are looking for information about what adapter to buy,
-click [here](https://github.com/morrownr/USB-WiFi) and look for Main Menu
-item 2 which will show information about and links to recommended adapters.
+click [here](https://github.com/morrownr/USB-WiFi) and look for Main
+Menu item 2 which will show information about and links to recommended
+adapters.
 
-Note: If you decide to buy an adapter that is supported by this driver, I
-recommend you search for an adapter that is `single-state and single-function`.
-Multi-function adapters, wifi and bluetooth, can be problematic. The rtl8821cu
-chipset is multi-fuction. The rtl8811cu chipset is single-function. For advice
-about single-state and multi-state adapters. click
-[here](https://github.com/morrownr/USB-WiFi) and look for Main Menu item 1.
+Note: If you decide to buy an adapter that is supported by this driver,
+I recommend you search for an adapter that is `single-state and
+single-function`. Multi-function adapters, wifi and bluetooth, can be
+problematic. For advice about single-state and multi-state adapters, 
+click [here](https://github.com/morrownr/USB-WiFi) and look for Main
+Menu item 1.
 
 ### Installation Information
 
-Note: As of Linux kernel 6.2, an in-kernel driver for the chipsets supported by
-this driver has been included in the Linux kernel. The installation and removal
-scripts for the driver in this repo automatically deactivate the in-kernel
-driver on installation and reactivate the in-kernel driver on removal. No
-special action needs to be taken by users.
+Warning: It is recommended that you follow the installation instructions
+in the Installation Steps section. Avoid installation by downloading the
+zip file if at all possible. Support can only be provided, on a best
+effort basis, if the Installation Steps in the next section are followed.
 
 Warning: Installing multiple out-of-kernel drivers for the same hardware
-usually does not end well. The install-driver.sh script has the capability
-to detect and remove many conflicting drivers but not all. If this driver
-does not work well after installation and you have previously installed a
-driver that you did not remove, it is suggested that you run the following
-command in an effort to determine if you need to take action to manually
-remove conflicting drivers:
+usually does not end well. The install-driver.sh script has the
+capability to detect and remove most conflicting drivers but not all. If
+this driver does not work well after installation and you have
+previously installed a driver that you did not remove, it is suggested
+that you run the following command in an effort to determine if you need
+to take action to manually remove conflicting drivers:
 
 ```
 sudo dkms status
 ```
 
-Warning: If you decide to do a distro upgrade, which will likely install a
-new version of kernel such as 5.15 to 6.1, you need to upgrade this driver
-with the newest available code before performing the disto upgrade. Use
-the following commands in the driver directory:
+Warning: If you decide to do a distro upgrade, which will likely install
+a new version of kernel such as 5.15 to 6.1, you need to update this
+driver with the newest available code and then run the removal script
+before performing the disto upgrade. Use the following commands in the
+driver directory:
 
 ```
 git pull
 ```
 
+Note: Do not reboot before running the below command so that the driver
+stays active until after your distro upgrade is complete.
+
 ```
-sudo ./install-driver.sh
+sudo sh remove-driver.sh
 ```
 
-Temporary internet access is required for installation. There are numerous ways
-to enable temporary internet access depending on your hardware and situation.
-[One method is to use tethering from a phone.](https://www.makeuseof.com/tag/how-to-tether-your-smartphone-in-linux).
+Note: The following command will reinstall the updated driver after you
+are finished with the distro upgrade and reboot.
+
+```
+sudo sh install-driver.sh
+```
+
+Internet access is required for initial installation. There are
+numerous ways to enable temporary internet access depending on your
+hardware and situation. [One method is to use tethering from a phone.](https://www.makeuseof.com/tag/how-to-tether-your-smartphone-in-linux).
 Another method is to keep a [WiFi adapter that uses an in-kernel driver](https://github.com/morrownr/USB-WiFi/blob/main/home/USB_WiFi_Adapters_that_are_supported_with_Linux_in-kernel_drivers.md) in your toolkit.
 
-You will need to use the terminal interface. The quick way to open a terminal:
-Ctrl+Alt+T (hold down on the Ctrl and Alt keys then press the T key).
+You will need to use the terminal interface. The quick way to open a
+terminal: Ctrl+Alt+T (hold down on the Ctrl and Alt keys then press the
+T key).
 
 An alternative terminal is to use SSH (Secure Shell) from the same or from
 another computer, in which case you will be in a suitable terminal after logging
@@ -201,19 +216,22 @@ Secure Boot: see FAQ.
 
 ### Installation Steps
 
-Note: The installation instructions are for the novice user. Experienced users are
-welcome to alter the installation to meet their needs. Support will be provided,
-on a best effort basis, based on the steps below.
+Note: The installation instructions are for the novice user. Experienced
+users are welcome to alter the installation to meet their needs. Support
+will be provided, on a best effort basis, based on the steps below. Another
+way to word this paragraph is that if you do not follow the below steps for
+installation, you are your own tech support.
 
 #### Step 1: Open a terminal (e.g. Ctrl+Alt+T)
 
 #### Step 2: Update and upgrade system packages (select the option for the distro you are using)
 
 Note: If your Linux distro does not fall into one of options listed
-below, you will need to research how to `update` and `upgrade` your system
-packages.
+below, you will need to research how to `update` and `upgrade` your
+system packages.
 
-- Option for Debian based distributions such as Ubuntu, Kali, Armbian and Raspberry Pi OS
+- Option for Debian based distributions such as Ubuntu, Kali, Armbian
+and Raspberry Pi OS
 
 ```
 sudo apt update && sudo apt upgrade
@@ -364,10 +382,44 @@ cd ~/src/8821cu-20210916
 
 #### Step 8: Run the installation script (`install-driver.sh`)
 
-Note: It is recommended that you terminate running apps so as to provide the
-maximum amount of RAM to the compilation process.
+Important: The compilation may fail if the major version of gcc that is
+in use is not the same as the major version of the gcc that was used to
+compile the kernel that is in use:
 
-Note: For automated builds (non-interactive), use `NoPrompt` as an option.
+Example of bad situation:
+
+gcc 12.1 (used to compile the kernel)
+gcc 10.3 (version of gcc in use)
+
+Example of good situation:
+
+gcc 12.2 (used to compile the kernel)
+gcc 12.1 (version of gcc in use)
+
+To determine the values:
+
+```
+cat /proc/version
+```
+
+```
+gcc --version
+```
+
+If you find your system in a bad situation, it is recommended that you
+install a version of gcc that matches the major version of gcc that was
+used to compile your kernel. Here is an example for Ubuntu:
+
+```
+sudo apt install gcc-12
+```
+
+Note: If your system is a low memory system, it is recommended that you
+terminate running apps so as to provide the maximum amount of RAM to the
+compilation process.
+
+Note: For automated builds (non-interactive), use `NoPrompt` as an
+option.
 
 ```
 sudo ./install-driver.sh
@@ -392,16 +444,16 @@ sudo mokutil --import /var/lib/dkms/mok.pub
 
 ### Manual Installation Instructions
 
-Note: The above installation steps automate the installation process,
-however, if you want to or need to do a basic command line installation,
-use the following:
+Note: The installation script, install-driver.sh, automates the
+installation process, however, if you want to or need to do a basic
+command line installation, use the following:
 
 ```
 make clean
 ```
 
 ```
-make
+make -j$(nproc)
 ```
 
 If secure boot is off:
@@ -423,8 +475,8 @@ enter commands.
 sudo make sign-install
 ```
 
-You will be promted for a password, please remember the password as it
-will be used in some of the following steps.
+Note: You will be promted for a password, please remember the password
+as it will be used in some of the following steps.
 
 ```
 sudo reboot
@@ -432,7 +484,7 @@ sudo reboot
 
 The MOK managerment screen will appear during boot:
 
-`Shim UEFI Key Management"
+`Shim UEFI Key Management`
 
 `Press any key...`
 
@@ -444,18 +496,28 @@ Select "Yes"
 
 When promted, enter the password you entered earlier.
 
-If you enter the wrong password, your computer will not be bootable. In
-this case, use the BOOT menu from your BIOS to boot then as follows:
+Warning: If you enter the wrong password, your computer will not be
+bootable. In this case, use the BOOT menu from your BIOS to boot then as
+follows:
 
 ```
 sudo mokutil --reset
 ```
 
-Restart your computer and use the BOOT menu from BIOS to boot. In the MOK
-managerment screen, select `reset MOK list`. Then Reboot and retry from
-the step `sudo make sign-install`.
+Restart your computer. Use the BOOT menu from BIOS to boot. In the MOK
+managerment screen, select `reset MOK list`, then reboot and retry from
+the above step `sudo make sign-install`.
 
-To remove the driver if installed by the manual installation instructions:
+Note: If you use the Manual Installation Instructions, you will need to
+repeat the installation process each time a new kernel is installed in
+your distro.
+
+-----
+
+### Manual Removal Instructions
+
+To remove the driver if installed by the Manual Installation
+Instructions:
 
 ```
 sudo make uninstall
@@ -465,21 +527,25 @@ sudo make uninstall
 sudo reboot
 ```
 
-Note: If you use the manual installation instructions, you will need to
-repeat the process each time a new kernel is installed in your distro.
+Note: If you use the manual installation instructions, or if dkms is not
+installed, you will need to repeat the process each time a new kernel is
+installed in your distro.
 
 -----
 
 ### Driver Options (`edit-options.sh`)
 
-A file called `8821cu.conf` will be installed in `/etc/modprobe.d` by
-default if you use the `install-driver.sh` script.
+Note: In Linux, driver options are called module parameters.
 
-Note: The installation script will prompt you to edit the options.
+A file called `88x2bu.conf` will be installed in `/etc/modprobe.d` by
+default if you use the installation script, `install-driver.sh`. If you
+are following the Manual Installation Instructions, you can use the
+`edit-options.sh` script to install and/or edit the file.
 
-Location: `/etc/modprobe.d/8821cu.conf`
+Note: The installation script, `install-driver.sh`. will prompt you to
+edit the options.
 
-This file will be read and applied to the driver on each system boot.
+`88x2bu.conf` will be read and applied to the driver on each system boot.
 
 To edit the driver options file, run the `edit-options.sh` script
 
@@ -487,18 +553,21 @@ To edit the driver options file, run the `edit-options.sh` script
 sudo ./edit-options.sh
 ```
 
-Note: Documentation for Driver Options is included in the file `8821cu.conf`.
+Note: Documentation for Driver Options is included in the file
+ `8821cu.conf`.
 
 -----
 
 ### Upgrading the Driver
 
-Note: Linux development is continuous therefore work on this driver is continuous.
+Note: Linux development is continuous therefore work on this driver is
+continuous.
 
 Note: Upgrading the driver is advised in the following situations:
 
 - if a new or updated version of the driver needs to be installed
-- if a distro version upgrade is going to be installed (i.e. going from kernel 5.10 to kernel 5.15)
+- if a distro version upgrade is going to be installed (i.e. going from
+kernel 5.10 to kernel 5.15)
 
 #### Step 1: Move to the driver directory
 
@@ -546,7 +615,8 @@ cd ~/src/8821cu-20210916
 
 #### Step 3: Run the removal script
 
-Note: For automated builds (non-interactive), use `NoPrompt` as an option.
+Note: For automated builds (non-interactive), use `NoPrompt` as an
+option.
 
 ```
 sudo ./remove-driver.sh
@@ -556,23 +626,44 @@ sudo ./remove-driver.sh
 
 ### Recommended WiFi Router/ Access Point Settings
 
-Note: These are general recommendations, some of which may not apply to your specific situation.
+Note: These are general recommendations, some of which may not apply to
+your specific situation.
 
-- Security: Set WPA2-AES or WPA2/WPA3 mixed or WPA3. Do not set WPA2 mixed mode or WPA or TKIP.
+- Security: Set WPA2-AES or WPA2/WPA3 mixed or WPA3. Do not set WPA2
+mixed mode or WPA or TKIP.
 
-- Channel width for 2.4 GHz: Set 20 MHz fixed width. Do not use 40 MHz or 20/40 automatic.
+- Channel width for 2.4 GHz: Set 20 MHz fixed width. Do not use 40 MHz
+or 20/40 automatic.
 
-- Channels for 2.4 GHz: Set channel 1 or 6 or 11 depending on the congestion at your location. Do not set automatic channel selection. As time passes, if you notice poor performance, recheck congestion and set channel appropriately. The environment around you can and does change over time.
+- Channels for 2.4 GHz: Set channel 1 or 6 or 11 depending on the
+congestion at your location. Do not set automatic channel selection. As
+time passes, if you notice poor performance, recheck congestion and set
+channel appropriately. The environment around you can and does change
+over time.
 
-- Mode for 2.4 GHz: For best performance, set "N only" if you no longer use B or G capable devices.
+- Mode for 2.4 GHz: For best performance, set "N only" if you no longer
+use B or G capable devices.
 
-- Network names: Do not set the 2.4 GHz Network and the 5 GHz Network to the same name. Note: Unfortunately many routers come with both networks set to the same name. You need to be able to control which network that is in use so changing the name of one of the networks is recommended. Since many IoT devices use the 2.4 GHz network, it may be better to change the name of the 5 GHz network.
+- Network names: Do not set the 2.4 GHz Network and the 5 GHz Network
+to the same name. Note: Unfortunately many routers come with both
+networks set to the same name. You need to be able to control which
+network that is in use so changing the name of one of the networks is
+recommended. Since many IoT devices use the 2.4 GHz network, it may be
+better to change the name of the 5 GHz network.
 
-- Channels for 5 GHz: Not all devices are capable of using DFS channels (I'm looking at you Roku.) It may be necessary to set a fixed channel in the range of 36 to 48 or 149 to 165 in order for all of your devices to work on 5 GHz. (For US, other countries may vary.)
+- Channels for 5 GHz: Not all devices are capable of using DFS channels
+(I'm looking at you Roku.) It may be necessary to set a fixed channel in
+the range of 36 to 48 or 149 to 165 in order for all of your devices to
+work on 5 GHz. (For US, other countries may vary.)
 
-- Best location for the WiFi router/access point: Near center of apartment or house, at least a couple of feet away from walls, in an elevated location. You may have to test to see what the best location is in your environment.
+- Best location for the WiFi router/access point: Near center of
+apartment or house, at least a couple of feet away from walls, in an
+elevated location. You may have to test to see what the best location is
+in your environment.
 
-- Check congestion: There are apps available for smart phones that allow you to get an idea of the congestion levels on WiFi channels. The apps generally go by the name of `WiFi Analyzer` or something similar.
+- Check congestion: There are apps available for smart phones that allow
+you to get an idea of the congestion levels on WiFi channels. The apps
+generally go by the name of `WiFi Analyzer` or something similar.
 
 After making and saving changes, reboot the router.
 
@@ -580,19 +671,33 @@ After making and saving changes, reboot the router.
 
 ### Recommendations regarding USB
 
-- Moving your USB WiFi adapter to a different USB port has been known to fix a variety of problems.
+- Moving your USB WiFi adapter to a different USB port has been known to
+fix a variety of problems.
 
-- If connecting your USB WiFi adapter to a desktop computer, use the USB ports on the rear of the computer. Why? The ports on the rear are directly connected to the motherboard which will reduce problems with interference and disconnection.
+- If connecting your USB WiFi adapter to a desktop computer, use the USB
+ports on the rear of the computer. Why? The ports on the rear are
+directly connected to the motherboard which will reduce problems with
+interference and disconnection.
 
-- If your USB WiFi adapter is USB 3 capable and you want it to operate in USB3 mode, plug it into a USB 3 port.
+- If your USB WiFi adapter is USB 3 capable and you want it to operate
+in USB3 mode, plug it into a USB 3 port.
 
-- Avoid USB 3.1 Gen 2 ports if possible as almost all currently available adapters have been tested with USB 3.1 Gen 1 (aka USB 3) and not with USB 3.1 Gen 2.
+- Avoid USB 3.1 Gen 2 ports if possible as almost all currently
+available adapters have been tested with USB 3.1 Gen 1 (aka USB 3) and
+not with USB 3.1 Gen 2.
 
-- If you use an extension cable and your adapter is USB 3 capable, the cable needs to be USB 3 capable (if not, you will be limited to USB 2 speeds).
+- If you use an extension cable and your adapter is USB 3 capable, the
+cable needs to be USB 3 capable (if not, you will be limited to USB 2
+speeds).
 
-- Extention cables can be problematic. A way to check if the extension cable is the problem is to plug the adapter temporarily into a USB port on the computer.
+- Extention cables can be problematic. A way to check if the extension
+cable is the problem is to plug the adapter temporarily into a USB port
+on the computer.
 
-- Some USB WiFi adapters require considerable electrical current and push the capabilities of the power available via USB port. One example is adapters that use the Realtek 8814au chipset. Using a powered multiport USB extension can be a good idea in cases like this.
+- Some USB WiFi adapters require considerable electrical current and
+push the capabilities of the power available via USB port. One example
+is adapters that use the Realtek 8814au chipset. Using a powered
+multiport USB extension can be a good idea in cases like this.
 
 -----
 
