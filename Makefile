@@ -32,6 +32,12 @@ EXTRA_CFLAGS += -DCONFIG_LED_ENABLE
 EXTRA_CFLAGS += -Wno-address
 EXTRA_CFLAGS += -Wframe-larger-than=1648
 
+# gcc-13
+EXTRA_CFLAGS += -Wno-enum-int-mismatch
+EXTRA_CFLAGS += -Wno-stringop-overread
+EXTRA_CFLAGS += -Wno-enum-conversion
+EXTRA_CFLAGS += -Wno-int-in-bool-context
+
 GCC_VER_49 := $(shell echo `$(CC) -dumpversion | cut -f1-2 -d.` \>= 4.9 | bc )
 ifeq ($(GCC_VER_49),1)
 EXTRA_CFLAGS += -Wno-date-time	# Fix compile error && warning on gcc 4.9 and later
@@ -2504,7 +2510,8 @@ sign:
 	@mokutil --import MOK.der
 	@$(KSRC)/scripts/sign-file sha256 MOK.priv MOK.der 8821cu.ko
 
-sign-install: sign install
+sign-install:
+	sign install
 
 backup_rtlwifi:
 	@echo "Making backup rtlwifi drivers"
