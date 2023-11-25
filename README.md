@@ -311,6 +311,9 @@ sudo apt install -y build-essential dkms git iw
 
 - Option for Fedora
 
+Note: Fedora users should also install `openssl` if secure boot is
+active.
+
 ```
 sudo dnf -y install git dkms kernel-devel
 ```
@@ -388,13 +391,17 @@ compile the kernel that is in use:
 
 Example of bad situation:
 
+```
 gcc 12.1 (used to compile the kernel)
 gcc 10.3 (version of gcc in use)
+```
 
 Example of good situation:
 
+```
 gcc 12.2 (used to compile the kernel)
 gcc 12.1 (version of gcc in use)
+```
 
 To determine the values:
 
