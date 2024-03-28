@@ -42,10 +42,6 @@ how to confirm that this is the correct driver for your adapter.
 - VHT control (allows 80 MHz channel width in AP mode)
 - AP mode DFS channel control
 
-### Not supported
-
-- hcxdumptool (see hcxdumptool documentation)
-
 ### A FAQ is available in this repo with the name `FAQ.md`
 
 - Please read the FAQ and this document before posting issues.
@@ -65,7 +61,7 @@ the hardware to test the above.
 ### Compatible Kernels
 
 - Kernels: 4.19 - 5.11 (Realtek)
-- Kernels: 5.12 - 6.7  (community support)
+- Kernels: 5.12 - 6.9  (community support)
 
 Note: Kernels earlier than 4.19 may work but are not tested or
 supported.
