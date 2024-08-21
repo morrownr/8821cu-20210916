@@ -2485,11 +2485,15 @@ ifeq ($(CONFIG_RTL8723B), y)
 $(MODULE_NAME)-$(CONFIG_MP_INCLUDED)+= core/rtw_bt_mp.o
 endif
 
-obj-$(CONFIG_RTL8821CU) := $(MODULE_NAME).o
+# export CONFIG_RTL8821CU=y to build driver in tree
+# else driver will be built out of tree by default
+ifeq ($(CONFIG_RTL8821CU), y)
+	obj-y := $(MODULE_NAME).o
+else
+	obj-m := $(MODULE_NAME).o
+endif
 
 else
-
-export CONFIG_RTL8821CU = m
 
 all: modules
 
