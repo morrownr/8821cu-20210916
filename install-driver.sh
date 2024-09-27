@@ -28,7 +28,7 @@
 # GNU General Public License for more details.
 
 SCRIPT_NAME="install-driver.sh"
-SCRIPT_VERSION="20231115"
+SCRIPT_VERSION="20240927"
 
 MODULE_NAME="8821cu"
 
@@ -285,7 +285,7 @@ if ! command -v dkms >/dev/null 2>&1; then
 
 	make clean >/dev/null 2>&1
 
-	make -j"$(nproc)"
+	make -j"$(sproc)"
 	RESULT=$?
 
 	if [ "$RESULT" != "0" ]; then
