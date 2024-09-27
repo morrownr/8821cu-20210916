@@ -285,7 +285,7 @@ if ! command -v dkms >/dev/null 2>&1; then
 
 	make clean >/dev/null 2>&1
 
-	make -j"$(sproc)"
+	make -j"${sproc}"
 	RESULT=$?
 
 	if [ "$RESULT" != "0" ]; then
