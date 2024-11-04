@@ -487,10 +487,10 @@ void phydm_cfo_tracking(void *dm_void)
 
 			if (dm->support_ic_type & (ODM_RTL8822C | ODM_RTL8814B |
 			    ODM_RTL8195B | ODM_RTL8812F|ODM_RTL8723F)) {
-				if (crystal_cap > 0x7F)
+				if (crystal_cap & ~0x7F)
 					crystal_cap = 0x7F;
 			} else {
-				if (crystal_cap > 0x3F)
+				if (crystal_cap & ~0x3F)
 					crystal_cap = 0x3F;
 			}
 			if (crystal_cap < 0)
