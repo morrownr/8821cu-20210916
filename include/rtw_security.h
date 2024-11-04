@@ -49,8 +49,8 @@ enum security_type {
 #define IEEE80211W_WRONG_KEY	0x1
 #define IEEE80211W_NO_KEY		0x2
 
-#define CCMPH_2_PN(ch)	((ch) & 0x000000000000ffff) \
-			| (((ch) & 0xffffffff00000000) >> 16)
+#define CCMPH_2_PN(ch)	((ch) & 0x000000000000ffffull) \
+			| (((ch) & 0xffffffff00000000ull) >> 16)
 
 #define is_wep_enc(alg) (((alg) == _WEP40_) || ((alg) == _WEP104_))
 

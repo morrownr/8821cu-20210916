@@ -197,7 +197,7 @@ struct phy_status_rpt_8812 {
 __PACK struct phy_sts_rpt_jgr2_type0 {
 	/* @DW0 */
 	u8 page_num;
-	u8 pwdb;
+	s8 pwdb;
 #if (ODM_ENDIAN_TYPE == ODM_ENDIAN_LITTLE)
 	u8 gain : 6;
 	u8 rsvd_0 : 1;

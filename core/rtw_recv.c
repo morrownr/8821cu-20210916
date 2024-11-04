@@ -793,9 +793,9 @@ union recv_frame *portctrl(_adapter *adapter, union recv_frame *precv_frame)
  *	1. If old PN is 0, any PN is legal
  *	2. PN > old PN
  */
-#define PN_LESS_CHK(a, b)	(((a-b) & 0x800000000000) != 0)
+#define PN_LESS_CHK(a, b)	(((a-b) & 0x800000000000ull) != 0)
 #define VALID_PN_CHK(new, old)	(((old) == 0) || PN_LESS_CHK(old, new))
-#define CCMPH_2_KEYID(ch)	(((ch) & 0x00000000c0000000) >> 30)
+#define CCMPH_2_KEYID(ch)	(((ch) & 0x00000000c0000000ull) >> 30)
 sint recv_ucast_pn_decache(union recv_frame *precv_frame);
 sint recv_ucast_pn_decache(union recv_frame *precv_frame)
 {
@@ -849,7 +849,7 @@ sint recv_bcast_pn_decache(union recv_frame *precv_frame)
 		pkt_pn = CCMPH_2_PN(tmp_iv_hdr);
 
 		curr_pn = le64_to_cpu(*(u64*)psecuritypriv->iv_seq[key_id]);
-		curr_pn &= 0x0000ffffffffffff;
+		curr_pn &= 0x0000ffffffffffffull;
 
 		if (!VALID_PN_CHK(pkt_pn, curr_pn))
 			return _FAIL;
