@@ -3795,7 +3795,7 @@ void halrf_tssi_trigger(void *dm_void)
 			return;
 		}
 	} else {
-		if (rf->power_track_type >= 0 && rf->power_track_type <= 3) {
+		if (/* rf->power_track_type >= 0 && */ rf->power_track_type <= 3) {
 			RF_DBG(dm, DBG_RF_TX_PWR_TRACK,
 				"[TSSI]======>%s Normal Mode efues is thermal tracking. return !!!\n", __func__);
 			return;
