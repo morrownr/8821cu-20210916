@@ -2516,8 +2516,7 @@ sign:
 	@mokutil --import MOK.der
 	@$(KSRC)/scripts/sign-file sha256 MOK.priv MOK.der 8821cu.ko
 
-sign-install:
-	sign install
+sign-install: sign install
 
 backup_rtlwifi:
 	@echo "Making backup rtlwifi drivers"
