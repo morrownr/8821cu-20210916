@@ -1,0 +1,71 @@
+From 14c2716b36484ec1af0e60329a680e458cda2fdf Mon Sep 17 00:00:00 2001
+From: achillelamb <achille.lambrughi98@gmail.com>
+Date: Fri, 7 Mar 2025 12:52:02 +0100
+Subject: [PATCH] feat(channels): add support for more channels
+
+---
+ Makefile          |  5 ++++-
+ core/rtw_chplan.c | 13 +++++++++++--
+ 2 files changed, 15 insertions(+), 3 deletions(-)
+
+Index: git/Makefile
+===================================================================
+--- git.orig/Makefile
++++ git/Makefile
+@@ -94,7 +94,7 @@ CONFIG_TXPWR_BY_RATE = y
+ CONFIG_TXPWR_BY_RATE_EN = n
+ CONFIG_TXPWR_LIMIT = y
+ CONFIG_TXPWR_LIMIT_EN = n
+-CONFIG_RTW_CHPLAN = 0xFF
++CONFIG_RTW_CHPLAN = 0x7F
+ CONFIG_RTW_ADAPTIVITY_EN = disable
+ CONFIG_RTW_ADAPTIVITY_MODE = normal
+ CONFIG_SIGNAL_SCALE_MAPPING = n
+@@ -223,6 +223,9 @@ CONFIG_PLATFORM_NV_TK1_UBUNTU = n
+ CONFIG_PLATFORM_RTL8197D = n
+ CONFIG_PLATFORM_AML_S905 = n
+ CONFIG_PLATFORM_ZTE_ZX296716 = n
++CONFIG_RTW_HOSTAPD_ACS = y
++CONFIG_BACKGROUND_NOISE_MONITOR = y
++CONFIG_RTW_DEBUG = y
+ ########### CUSTOMER ################################
+ CONFIG_CUSTOMER_HUAWEI_GENERAL = n
+ 
+Index: git/core/rtw_chplan.c
+===================================================================
+--- git.orig/core/rtw_chplan.c
++++ git/core/rtw_chplan.c
+@@ -146,7 +146,7 @@ static const struct ch_list_t rtw_channe
+ 	/* 19, RTW_CHD_5G_19 */	CH_LIST_ENT(16, 36, 40, 44, 48, 52, 56, 60, 64, 100, 104, 108, 112, 116, 132, 136, 140, CLA_5G_B2_DFS | CLA_5G_B3_DFS),
+ 	/* 20, RTW_CHD_5G_20 */	CH_LIST_ENT(20, 36, 40, 44, 48, 52, 56, 60, 64, 100, 104, 108, 112, 116, 132, 136, 140, 149, 153, 157, 161, CLA_5G_B2_DFS | CLA_5G_B3_DFS),
+ 	/* 21, RTW_CHD_5G_21 */	CH_LIST_ENT(11, 36, 40, 44, 48, 52, 56, 60, 64, 132, 136, 140, CLA_5G_B2_DFS | CLA_5G_B3_DFS),
+-	/* 22, RTW_CHD_5G_22 */	CH_LIST_ENT(25, 36, 40, 44, 48, 52, 56, 60, 64, 100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 144, 149, 153, 157, 161, 165, CLA_5G_B2_DFS | CLA_5G_B3_DFS),
++	/* 22, RTW_CHD_5G_22 */	CH_LIST_ENT(28, 36, 40, 44, 48, 52, 56, 60, 64, 100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 144, 149, 153, 157, 161, 165, 169, 173, 177),
+ 	/* 23, RTW_CHD_5G_23 */	CH_LIST_ENT(21, 36, 40, 44, 48, 52, 56, 60, 64, 100, 104, 108, 112, 116, 120, 124, 128, 149, 153, 157, 161, 165, CLA_5G_B2_DFS | CLA_5G_B3_DFS),
+ 	/* 24, RTW_CHD_5G_24 */	CH_LIST_ENT(24, 36, 40, 44, 48, 52, 56, 60, 64, 100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 149, 153, 157, 161, 165, CLA_5G_B2_PASSIVE | CLA_5G_B3_PASSIVE | CLA_5G_B4_PASSIVE),
+ 	/* 25, RTW_CHD_5G_25 */	CH_LIST_ENT(24, 36, 40, 44, 48, 52, 56, 60, 64, 100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 149, 153, 157, 161, 165, CLA_5G_B2_PASSIVE | CLA_5G_B3_PASSIVE),
+@@ -324,7 +324,11 @@ static const struct chplan_ent_t RTW_Cha
+ 	/* 0x7C */	CHPLAN_ENT(TXPWR_LMT_ETSI,		RTW_CHD_2G_02,	TXPWR_LMT_ETSI,		RTW_CHD_5G_47),
+ 	/* 0x7D */	CHPLAN_ENT(TXPWR_LMT_MKK,		RTW_CHD_2G_04,	TXPWR_LMT_MKK,		RTW_CHD_5G_48),
+ 	/* 0x7E */	CHPLAN_ENT(TXPWR_LMT_MKK,		RTW_CHD_2G_02,	TXPWR_LMT_MKK,		RTW_CHD_5G_48),
+-	/* 0x7F */	CHPLAN_ENT(TXPWR_LMT_FCC,		RTW_CHD_2G_01,	TXPWR_LMT_FCC,		RTW_CHD_5G_03),
++	/* CHPLAN 0x7F is the one defined in the Makefile! We are using this one.
++	 * Consider this repo as a reference https://github.com/alecava/rtl8821CU
++	 * RTW_RD_2G_GLOBAL is now RTW_CHD_2G_04
++	 * RTW_RD_5G_WORLD is now RTW_CHD_5G_22 */
++	/* 0x7F */	CHPLAN_ENT(TXPWR_LMT_FCC,		RTW_CHD_2G_04,	TXPWR_LMT_FCC,		RTW_CHD_5G_22),
+ };
+ 
+ const int RTW_ChannelPlanMap_size = sizeof(RTW_ChannelPlanMap) / sizeof(RTW_ChannelPlanMap[0]);
+@@ -483,6 +487,11 @@ static u8 init_channel_set_from_rtk_priv
+ 				|| (rtw_is_5g_band2(ch) && (attrib & CLA_5G_B2_PASSIVE)) /* band2 passive */
+ 				|| (rtw_is_5g_band3(ch) && (attrib & CLA_5G_B3_PASSIVE)) /* band3 passive */
+ 				|| (rtw_is_5g_band4(ch) && (attrib & CLA_5G_B4_PASSIVE)) /* band4 passive */
++				/* Additional check on added channels as not considered in the other conditions)*/
++				|| (channel_set[chanset_size].ChannelNum == 144)
++				|| (channel_set[chanset_size].ChannelNum == 169)
++				|| (channel_set[chanset_size].ChannelNum == 173)
++				|| (channel_set[chanset_size].ChannelNum == 177)
+ 			)
+ 				channel_set[chanset_size].flags |= RTW_CHF_NO_IR;
+ 

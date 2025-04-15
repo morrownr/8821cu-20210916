@@ -1,0 +1,37 @@
+From ec714b0e815dd5354700fdfd129ede54eebd7724 Mon Sep 17 00:00:00 2001
+From: achillelamb <achille.lambrughi98@gmail.com>
+Date: Tue, 11 Mar 2025 15:52:52 +0100
+Subject: [PATCH] hal: early exit on channels 114 and 130
+
+This patch is needed to suppress a warning in dmesg that complains
+it cannot set ch_idx for these two channels. We don't use those channels,
+so we simply do not perform the check and exit with error
+---
+ hal/hal_com_phycfg.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/hal/hal_com_phycfg.c b/hal/hal_com_phycfg.c
+index 0e0da62..697aefd 100644
+--- a/hal/hal_com_phycfg.c
++++ b/hal/hal_com_phycfg.c
+@@ -2277,6 +2277,8 @@ bool phy_chk_ch_setting_consistency(_adapter *adapter, u8 ch)
+ 	u8 ch_idx = 0xFF;
+ 	u8 ret = _FAIL;
+ 
++	if (ch == 114 || ch == 130) return ret;
++
+ 	phy_get_ch_idx(ch, &ch_idx);
+ 	if (ch_idx == 0xFF) {
+ 		rtw_warn_on(1);
+@@ -2312,9 +2314,8 @@ bool phy_chk_ch_setting_consistency(_adapter *adapter, u8 ch)
+ 	ret = _SUCCESS;
+ 
+ exit:
+-	if (ret != _SUCCESS)
+-		RTW_WARN("ch:%u, hal band:%u, ch:%u, bw:%u\n", ch
+-			, hal_data->current_band_type, hal_data->current_channel, hal_data->current_channel_bw);
++	WARN(ret != _SUCCESS, "ch:%u, hal band:%u, ch:%u, bw:%u\n", ch
++		, hal_data->current_band_type, hal_data->current_channel, hal_data->current_channel_bw);
+ 
+ 	return ret;
+ }

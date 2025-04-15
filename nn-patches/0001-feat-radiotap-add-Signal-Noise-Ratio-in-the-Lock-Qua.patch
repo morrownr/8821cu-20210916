@@ -1,0 +1,41 @@
+From 2d7be9cf2e9d6fbd786dbe28663f3ba8b3d9570d Mon Sep 17 00:00:00 2001
+From: achillelamb <achille.lambrughi98@gmail.com>
+Date: Thu, 6 Mar 2025 17:47:42 +0100
+Subject: [PATCH] feat(radiotap): add Signal Noise Ratio in the Lock Quality
+ hdr field
+
+This patch is built on files that use <TAB> instead of spaces for
+indentation, copy-pasting is discouraged, the patch may fail to apply!
+---
+ core/monitor/rtw_radiotap.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/core/monitor/rtw_radiotap.c b/core/monitor/rtw_radiotap.c
+index 1f9fc49..81980af 100644
+--- a/core/monitor/rtw_radiotap.c
++++ b/core/monitor/rtw_radiotap.c
+@@ -293,15 +293,16 @@ sint rtw_fill_radiotap_hdr(_adapter *padapter, struct rx_pkt_attrib *a, u8 *buf)
+ 	hdr_buf[rt_len] = 0;
+ 	rt_len += 1;
+ #endif
+-#if 0
+ 	/* Signal Quality, Required Alignment: 2 bytes */
+-	rtap_hdr->it_present |= BIT(IEEE80211_RADIOTAP_LOCK_QUALITY);
+-	if (!IS_ALIGNED(rt_len, 2))
+-	rt_len++;
+-	hdr_buf[rt_len] = a->phy_info.signal_quality;
+-	rt_len += 2;
+-
+-#endif
++	/* Here, we are using the Signal Quality field to actually store the
++	 * signal Noise in the radiotap header! Don't be fooled by the name. */
++	s8 rx_snr = a->phy_info.rx_snr[0];
++	if (rx_snr) {
++		rtap_hdr->it_present |= BIT(IEEE80211_RADIOTAP_LOCK_QUALITY);
++		if (!IS_ALIGNED(rt_len, 2)) rt_len++;
++		hdr_buf[rt_len] = rx_snr;
++		rt_len += 2;
++	}
+ 
+ #if 0
+ 	/* Antenna */
