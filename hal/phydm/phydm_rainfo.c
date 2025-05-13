@@ -981,73 +981,73 @@ u64 phydm_get_bb_mod_ra_mask(void *dm_void, u8 sta_idx)
 		/*N_2G*/
 		if (tx_stream_num == 1) {
 			if (bw == CHANNEL_WIDTH_40)
-				ra_mask_bitmap &= 0x000ff015;
+				ra_mask_bitmap &= 0x000ff015ull;
 			else
-				ra_mask_bitmap &= 0x000ff005;
+				ra_mask_bitmap &= 0x000ff005ull;
 		} else if (tx_stream_num == 2) {
 			if (bw == CHANNEL_WIDTH_40)
-				ra_mask_bitmap &= 0x0ffff015;
+				ra_mask_bitmap &= 0x0ffff015ull;
 			else
-				ra_mask_bitmap &= 0x0ffff005;
+				ra_mask_bitmap &= 0x0ffff005ull;
 		} else if (tx_stream_num == 3) {
-			ra_mask_bitmap &= 0xffffff015;
+			ra_mask_bitmap &= 0xffffff015ull;
 		} else {
-			ra_mask_bitmap &= 0xffffffff015;
+			ra_mask_bitmap &= 0xffffffff015ull;
 		}
 	} else if (wrls_mode == (WIRELESS_OFDM | WIRELESS_HT)) { /*N_5G*/
 
 		if (tx_stream_num == 1) {
 			if (bw == CHANNEL_WIDTH_40)
-				ra_mask_bitmap &= 0x000ff030;
+				ra_mask_bitmap &= 0x000ff030ull;
 			else
-				ra_mask_bitmap &= 0x000ff010;
+				ra_mask_bitmap &= 0x000ff010ull;
 		} else if (tx_stream_num == 2) {
 			if (bw == CHANNEL_WIDTH_40)
-				ra_mask_bitmap &= 0x0ffff030;
+				ra_mask_bitmap &= 0x0ffff030ull;
 			else
-				ra_mask_bitmap &= 0x0ffff010;
+				ra_mask_bitmap &= 0x0ffff010ull;
 		} else if (tx_stream_num == 3) {
-			ra_mask_bitmap &= 0xffffff010;
+			ra_mask_bitmap &= 0xffffff010ull;
 		} else {
-			ra_mask_bitmap &= 0xffffffff010;
+			ra_mask_bitmap &= 0xffffffff010ull;
 		}
 	} else if (wrls_mode == (WIRELESS_CCK | WIRELESS_OFDM | WIRELESS_VHT)) {
 		/*@AC_2G*/
 		if (tx_stream_num == 1)
-			ra_mask_bitmap &= 0x003ff015;
+			ra_mask_bitmap &= 0x003ff015ull;
 		else if (tx_stream_num == 2)
-			ra_mask_bitmap &= 0xfffff015;
+			ra_mask_bitmap &= 0xfffff015ull;
 		else if (tx_stream_num == 3)
-			ra_mask_bitmap &= 0x3fffffff015;
+			ra_mask_bitmap &= 0x3fffffff015ull;
 		else /*@AC_4SS 2G*/
-			ra_mask_bitmap &= 0x000ffffffffff015;
+			ra_mask_bitmap &= 0x000ffffffffff015ull;
 		if (bw == CHANNEL_WIDTH_20) {
 		/* @AC 20MHz doesn't support MCS9 except 3SS & 6SS*/
-			ra_mask_bitmap &= 0x0007ffff7fdff015;
+			ra_mask_bitmap &= 0x0007ffff7fdff015ull;
 		} else if (bw == CHANNEL_WIDTH_80) {
 		/* @AC 80MHz doesn't support 3SS MCS6*/
-			ra_mask_bitmap &= 0x000fffbffffff015;
+			ra_mask_bitmap &= 0x000fffbffffff015ull;
 		}
 	} else if (wrls_mode == (WIRELESS_OFDM | WIRELESS_VHT)) { /*@AC_5G*/
 
 		if (tx_stream_num == 1)
-			ra_mask_bitmap &= 0x003ff010;
+			ra_mask_bitmap &= 0x003ff010ull;
 		else if (tx_stream_num == 2)
-			ra_mask_bitmap &= 0xfffff010;
+			ra_mask_bitmap &= 0xfffff010ull;
 		else if (tx_stream_num == 3)
-			ra_mask_bitmap &= 0x3fffffff010;
+			ra_mask_bitmap &= 0x3fffffff010ull;
 		else /*@AC_4SS 5G*/
-			ra_mask_bitmap &= 0x000ffffffffff010;
+			ra_mask_bitmap &= 0x000ffffffffff010ull;
 
 		if (bw == CHANNEL_WIDTH_20) {
 		/* @AC 20MHz doesn't support MCS9 except 3SS & 6SS*/
-			ra_mask_bitmap &= 0x0007ffff7fdff010;
+			ra_mask_bitmap &= 0x0007ffff7fdff010ull;
 		} else if (bw == CHANNEL_WIDTH_80) {
 		/* @AC 80MHz doesn't support 3SS MCS6*/
-			ra_mask_bitmap &= 0x000fffbffffff010;
+			ra_mask_bitmap &= 0x000fffbffffff010ull;
 		} else if (bw == CHANNEL_WIDTH_160) {
 		/* @AC 80M+80M doesn't support 3SS & 4SS*/
-			ra_mask_bitmap &= 0xfffff010;
+			ra_mask_bitmap &= 0xfffff010ull;
 		}
 	} else {
 		PHYDM_DBG(dm, DBG_RA, "[Warrning] RA mask is Not found\n");
@@ -1065,23 +1065,23 @@ u64 phydm_get_bb_mod_ra_mask(void *dm_void, u8 sta_idx)
 	if (wrls_mode != WIRELESS_CCK) {
 		if (iot_table->patch_id_40010700) {
 			ra_mask_bitmap &= (rssi_lv == 0 ?
-					  0xffffffffffffffff :
-					  0xfffffffffffffff0);
+					  0xffffffffffffffffull :
+					  0xfffffffffffffff0ull);
 			return ra_mask_bitmap;
 		}
 
 		if (rssi_lv == 0)
-			ra_mask_bitmap &= 0xffffffffffffffff;
+			ra_mask_bitmap &= 0xffffffffffffffffull;
 		else if (rssi_lv == 1)
-			ra_mask_bitmap &= 0xfffffffffffffff0;
+			ra_mask_bitmap &= 0xfffffffffffffff0ull;
 		else if (rssi_lv == 2)
-			ra_mask_bitmap &= 0xffffffffffffefe0;
+			ra_mask_bitmap &= 0xffffffffffffefe0ull;
 		else if (rssi_lv == 3)
-			ra_mask_bitmap &= 0xffffffffffffcfc0;
+			ra_mask_bitmap &= 0xffffffffffffcfc0ull;
 		else if (rssi_lv == 4)
-			ra_mask_bitmap &= 0xffffffffffff8f80;
+			ra_mask_bitmap &= 0xffffffffffff8f80ull;
 		else if (rssi_lv >= 5)
-			ra_mask_bitmap &= 0xffffffffffff0f00;
+			ra_mask_bitmap &= 0xffffffffffff0f00ull;
 	}
 	PHYDM_DBG(dm, DBG_RA, "Mod by RSSI=0x%llx\n", ra_mask_bitmap);
 
