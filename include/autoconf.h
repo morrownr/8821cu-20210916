@@ -20,7 +20,7 @@
  */
 #define AUTOCONF_INCLUDED
 #define RTL871X_MODULE_NAME "8821CU"
-#define DRV_NAME "rtl8821cu"
+#define DRV_NAME "8821cu"
 
 /* nrm  - don't activate, kills AP mode
  * #define CONFIG_REGD_SRC_FROM_OS
