@@ -1,3 +1,32 @@
+Notice: An updated standards compliant (mac80211), in-kernel driver for
+rtl8821/11cu chipset based adapters and modules is available and as of
+kernel 6.12 is of good quality. If your distro uses kernel 6.12 or
+later, there is no need to install this driver. The in-kernel driver is
+part of the rtw88 series of drivers. The in-kernel driver is Linux
+Standards compliant (mac80211) and is a much better driver than this
+one. This driver will no longer get API related updates beyond kernel
+6.14 (unless provided by a user). If you use a kernel prior to 6.14, it
+is possible to use the new standards compliant driver by going to the
+following repo:
+
+https://github.com/lwfinger/rtw88
+
+If you decide to use the in-kernel driver, remember to first remove the
+driver in this repo. You can run the following to remove the driver in
+this repo:
+
+$ sudo sh remove-driver.sh
+
+It has been my pleasure to maintain this driver for the last several
+years. Thanks to all of those who helped.
+
+Remember: Ask not what your operating system can do for you, but
+what you can do for your operating system.
+
+Regards,
+
+@morrownr
+
 ## 8821cu ( 8821cu.ko ) :rocket:
 
 ## Linux Driver for USB WiFi Adapters that are based on the RTL8811CU, RTL8821CU, RTL8821CUH and RTL8731AU Chipsets
@@ -60,15 +89,15 @@ the hardware to test the above.
 
 ### Compatible Kernels
 
-- Kernels: 5.4  - 5.11 (Realtek)
-- Kernels: 5.12 - 6.11 (community support)
+- Kernels: 5.10 - 5.11 (Realtek)
+- Kernels: 5.12 - 6.14 (community support)
 
-Note: Kernels earlier than 5.4 may work but are not tested or
+Note: Kernels earlier than 5.10 may work but are not tested or
 supported.
 
 ### Tested Compilers
 
-- gcc 11, 12 and 13
+- gcc 12, 13 and 14
 
 ### Tested Linux Distributions
 

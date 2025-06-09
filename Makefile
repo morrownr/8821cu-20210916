@@ -21,6 +21,11 @@ EXTRA_CFLAGS += -Wno-implicit-fallthrough
 #EXTRA_CFLAGS += -Wno-discarded-qualifiers
 EXTRA_CFLAGS += -Wno-missing-prototypes
 EXTRA_CFLAGS += -Wno-missing-declarations
+EXTRA_CFLAGS += -Wno-incompatible-pointer-type
+EXTRA_CFLAGS += -Wno-int-conversion
+EXTRA_CFLAGS += -Wno-declaration-after-statement
+EXTRA_CFLAGS += -Wno-undef
+
 # Activates Concurrent Mode if uncommented
 #EXTRA_CFLAGS += -DCONFIG_CONCURRENT_MODE
 
@@ -47,7 +52,7 @@ endif
 
 EXTRA_CFLAGS += -I$(src)/include
 
-EXTRA_LDFLAGS += --strip-debug
+ldflags-y += --strip-debug
 
 CONFIG_AUTOCFG_CP = n
 
@@ -2516,8 +2521,7 @@ sign:
 	@mokutil --import MOK.der
 	@$(KSRC)/scripts/sign-file sha256 MOK.priv MOK.der 8821cu.ko
 
-sign-install:
-	sign install
+sign-install: sign install
 
 backup_rtlwifi:
 	@echo "Making backup rtlwifi drivers"
@@ -2576,3 +2580,7 @@ clean:
 	rm -fr .tmp_versions
 	rm -fr MOK.der MOK.priv
 endif
+
+# For compatibility with kernels prior to 2.6.24.
+# EXTRA_CFLAGS += $(EXTRA_CFLAGS)
+EXTRA_LDFLAGS += $(ldflags-y)
