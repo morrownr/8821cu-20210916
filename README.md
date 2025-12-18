@@ -36,6 +36,28 @@ Regards,
 Note: Please read the file "supported-device-IDs" for information about
 how to confirm that this is the correct driver for your adapter.
 
+## TOC
+
+<!-- TOC start (generated with https://github.com/derlin/bitdowntoc) -->
+ - [Supported Features](#supported-features)
+ - [A FAQ is available in this repo with the name `FAQ.md`](#a-faq-is-available-in-this-repo-with-the-name-faqmd)
+ - [Additional documentation is in the file `8821cu.conf`](#additional-documentation-is-in-the-file-8821cuconf)
+ - [Compatible CPU Architectures](#compatible-cpu-architectures)
+ - [Compatible Kernels](#compatible-kernels)
+ - [Tested Compilers](#tested-compilers)
+ - [Tested Linux Distributions](#tested-linux-distributions)
+ - [Compatible Devices](#compatible-devices)
+ - [Installation Information](#installation-information)
+ - [Installation Steps](#installation-steps)
+ - [Manual Installation Instructions](#manual-installation-instructions)
+ - [Manual Removal Instructions](#manual-removal-instructions)
+ - [Driver Options (`edit-options.sh`)](#driver-options-edit-optionssh)
+ - [Upgrading the Driver](#upgrading-the-driver)
+ - [Removal of the Driver (`remove-driver.sh`)](#removal-of-the-driver-remove-driversh)
+ - [Recommended WiFi Router/ Access Point Settings](#recommended-wifi-router-access-point-settings)
+ - [Recommendations regarding USB](#recommendations-regarding-usb)
+<!-- TOC end -->
+
 ### Supported Features
 
 - IEEE 802.11 b/g/n/ac WiFi compliant
