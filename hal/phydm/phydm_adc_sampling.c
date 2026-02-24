@@ -29,95 +29,15 @@
 #if (PHYDM_LA_MODE_SUPPORT)
 
 #if (DM_ODM_SUPPORT_TYPE & ODM_AP)
-	#if (RTL8197F_SUPPORT || RTL8822B_SUPPORT || RTL8192F_SUPPORT)
-	#include "rtl8197f/Hal8197FPhyReg.h"
-	#include "WlanHAL/HalMac88XX/halmac_reg2.h"
-	#else
 	#include "WlanHAL/HalHeader/HalComReg.h"
-	#endif
 #elif (DM_ODM_SUPPORT_TYPE & ODM_WIN)
 	#if WPP_SOFTWARE_TRACE
 	#include "phydm_adc_sampling.tmh"
 	#endif
 #endif
 
-#if RTL8814B_SUPPORT
-boolean phydm_la_finish_addr_recover_8814B(void *dm_void, u32 *finish_addr)
-{
-	struct dm_struct *dm = (struct dm_struct *)dm_void;
-	struct rt_adcsmp *smp = &dm->adcsmp;
-	boolean recover_success;
 
-	if (dm->support_ic_type != ODM_RTL8814B)
-		return false;
 
-	if (smp->la_buff_mode == ADCSMP_BUFF_HALF) {
-		if (*finish_addr < 0x4000) /*0~0x4000*/
-			*finish_addr += 0x8000;
-
-		recover_success = true;
-	} else {
-		if (*finish_addr >= 0x4000 && *finish_addr < 0x8000)
-			recover_success = true;
-		else
-			recover_success = false;
-	}
-	pr_debug("[8814B] recover_success=(%d)\n", recover_success);
-
-	return recover_success;
-}
-#endif
-
-#if RTL8198F_SUPPORT
-void phydm_la_pre_run(void *dm_void)
-{
-	struct dm_struct *dm = (struct dm_struct *)dm_void;
-	struct rt_adcsmp *smp = &dm->adcsmp;
-	struct rt_adcsmp_string *buf = &smp->adc_smp_buf;
-	u8 i = 0;
-	u8 tmp = 0;
-	u8 target_polling_bit = BIT(1);
-
-	if (!(dm->support_ic_type & ODM_RTL8198F))
-		return;
-
-	if (smp->la_trig_mode == PHYDM_ADC_MAC_TRIG)
-		return;
-
-	/*pre run */
-	/*force to bb trigger*/
-	odm_set_mac_reg(dm, R_0x7c0, BIT(3), 0);
-	/*dma_trig_and(AND1) output 1*/
-	odm_set_bb_reg(dm, R_0x1ce4, 0xf0000000, 0x0);
-	/*r_dma_trigger_AND1_inv = 1*/
-	odm_set_bb_reg(dm, R_0x1ce8, BIT5, 1); /*@AND 1 val*/
-	/* polling bit for BB ADC mode */
-	odm_set_mac_reg(dm, R_0x7c0, BIT(1), 1);
-
-	pr_debug("buf[end:start]=(0x%x~0x%x)\n", buf->end_pos, buf->start_pos);
-
-	do {
-		tmp = odm_read_1byte(dm, R_0x7c0);
-		if ((tmp & target_polling_bit) == false) {
-			pr_debug("LA pre-run fail.\n");
-			phydm_la_stop(dm);
-			phydm_release_bb_dbg_port(dm);
-		} else {
-			ODM_delay_ms(100);
-			pr_debug("LA pre-run while_cnt = %d.\n", i);
-			i++;
-		}
-	} while (i < 3);
-
-	/*r_dma_trigger_AND1_inv = 0*/
-	odm_set_bb_reg(dm, R_0x1ce8, BIT5, 0); /*@AND 1 val*/
-
-	if (smp->la_trig_mode == PHYDM_ADC_MAC_TRIG)
-		odm_set_mac_reg(dm, R_0x7c0, BIT(3), 1);
-}
-#endif
-
-#if (RTL8821C_SUPPORT || RTL8195B_SUPPORT)
 void
 phydm_la_clk_en(void *dm_void, boolean enable)
 {
@@ -133,42 +53,8 @@ phydm_la_clk_en(void *dm_void, boolean enable)
 
 	odm_set_bb_reg(dm, R_0x95c, BIT(23), val);
 }
-#endif
 
-#if (RTL8723F_SUPPORT)
-void
-phydm_la_mac_clk_en(void *dm_void, boolean enable)
-{
-	struct dm_struct *dm = (struct dm_struct *)dm_void;
-	u8 val = (enable) ? 1 : 0;
 
-	if (!(dm->support_ic_type & ODM_RTL8723F))
-		return;
-
-	odm_set_mac_reg(dm, R_0x1008, BIT(1), val);
-}
-#endif
-
-#if (RTL8197F_SUPPORT)
-void
-phydm_la_stop_dma_8197f(void *dm_void, enum phydm_backup_type opt)
-{
-	struct dm_struct *dm = (struct dm_struct *)dm_void;
-	struct rt_adcsmp *smp = &dm->adcsmp;
-
-	if (dm->support_ic_type != ODM_RTL8197F)
-		return;
-
-	if (opt == PHYDM_BACKUP) {
-		/*Stop DMA*/
-		smp->backup_dma = odm_get_mac_reg(dm, R_0x300, 0xffff);
-		odm_set_mac_reg(dm, R_0x300, 0x7fff, 0x7fff);
-	} else { /*restore*/
-		/*Resume DMA*/
-		odm_set_mac_reg(dm, R_0x300, 0x7fff, smp->backup_dma);
-	}
-}
-#endif
 
 #ifdef PHYDM_COMPILE_LA_STORE_IN_IMEM
 void
@@ -187,9 +73,6 @@ phydm_la_mv_data_2_tx_buffer(void *dm_void)
 	/* 98F LA memory loccation is separate from normal
 	 * driver use, DMA is no longer required to stop
 	 */
-	#if (RTL8197F_SUPPORT)
-	phydm_la_stop_dma_8197f(dm, PHYDM_BACKUP);
-	#endif
 
 	/* @move LA mode content from IMEM to TxPktBuffer
 	 * Source : OCPBASE_IMEM 0x00000000
@@ -778,15 +661,6 @@ void phydm_la_access_tx_pkt_buf(void *dm_void, u32 addr, u32 buff_idx)
 	u32 page;
 	u32 data_l = 0, data_h = 0;
 
-	#if (RTL8192F_SUPPORT)
-	if (dm->support_ic_type & ODM_RTL8192F) {
-		odm_write_1byte(dm, R_0x0106, 0x69);
-		odm_set_mac_reg(dm, R_0x0140, MASKDWORD, addr >> 3);
-		data_l = odm_get_mac_reg(dm, R_0x0144, MASKDWORD);
-		data_h = odm_get_mac_reg(dm, R_0x0148, MASKDWORD);
-		odm_write_1byte(dm, R_0x0106, 0x0);
-	} else
-	#endif
 	{
 		/* Reg140=0x780+(addr>>12),
 		 * addr=0x30~0x3F, total 16 pages
@@ -819,9 +693,6 @@ void phydm_la_get_tx_pkt_buf(void *dm_void)
 	boolean is_round_up = false;
 	u32 addr_8byte = 0;
 	u32 round_up_point = 0;
-	#if (RTL8814B_SUPPORT)
-	boolean recover_success = true;
-	#endif
 
 	odm_memory_set(dm, buf->octet, 0, buf->length);
 	pr_debug("GetTxPktBuf\n");
@@ -842,9 +713,6 @@ void phydm_la_get_tx_pkt_buf(void *dm_void)
 			finish_addr = (value32 & 0x7FFF0000) >> 16; /*@15bit (unit: 8Byte)*/
 	}
 
-	#if (RTL8814B_SUPPORT)
-	recover_success = phydm_la_finish_addr_recover_8814B(dm, &finish_addr);
-	#endif
 
 	pr_debug("start_addr = ((0x%x)), end_addr = ((0x%x)), buffer_size = ((0x%x))\n",
 		 buf->start_pos, buf->end_pos, buf->buffer_size);
@@ -873,12 +741,6 @@ void phydm_la_get_tx_pkt_buf(void *dm_void)
 	phydm_la_mv_data_2_tx_buffer(dm);
 	#endif
 
-	#if (RTL8814B_SUPPORT)
-	if ((dm->support_ic_type & ODM_RTL8814B) && !recover_success) {
-		addr = buf->start_pos;
-		smp->smp_number = smp->smp_number_max;
-	}
-	#endif
 
 	for (i = 0; i < smp->smp_number; i++) {
 		phydm_la_access_tx_pkt_buf(dm, addr, i << 1);
@@ -888,9 +750,6 @@ void phydm_la_get_tx_pkt_buf(void *dm_void)
 			addr = buf->start_pos; /*Ring buffer*/
 	}
 
-	#if (RTL8197F_SUPPORT)
-	phydm_la_stop_dma_8197f(dm, PHYDM_RESTORE);
-	#endif
 	pr_debug("Dump_End\n");
 }
 
@@ -926,10 +785,6 @@ void phydm_la_set_mac_iq_dump(void *dm_void, boolean impossible_trig_condi)
 	/*@Enable LA mode HW block*/
 	odm_set_mac_reg(dm, reg1, BIT(0), 1);
 
-	#if (RTL8723F_SUPPORT)
-	if (dm->support_ic_type & ODM_RTL8723F)
-		phydm_la_mac_clk_en(dm, true);
-	#endif
 
 	if (smp->la_trig_mode == PHYDM_MAC_TRIG) {
 		smp->la_dump_mode = LA_MAC_DBG_DUMP;
@@ -1060,9 +915,7 @@ void phydm_la_set_bb(void *dm_void)
 		 *	(6:) '1.25MHz'
 		 *	(7:) '160MHz (for BW160 ic)'
 		 */
-		#if (RTL8821C_SUPPORT || RTL8195B_SUPPORT)
 		phydm_la_clk_en(dm, true);
-		#endif
 
 	#ifdef PHYDM_IC_JGR3_SERIES_SUPPORT
 	} else if (dm->support_ic_type & ODM_IC_JGR3_SERIES) {
@@ -1081,11 +934,6 @@ void phydm_la_set_bb(void *dm_void)
 		if (dm->support_ic_type & (ODM_RTL8197F | ODM_RTL8192F))
 			odm_set_bb_reg(dm, R_0xd00, BIT(26), 0x1); /*@update rpt every pkt*/
 
-		#if (RTL8192F_SUPPORT)
-		if ((dm->support_ic_type & ODM_RTL8192F))
-			/*@LA reset HW block enable for true-mac asic*/
-			odm_set_bb_reg(dm, R_0x9a0, BIT(15), 1);
-		#endif
 
 		odm_set_bb_reg(dm, R_0x9a0, 0xf00, dma_type);
 		/*@0: posedge, 1: negedge*/
@@ -1253,9 +1101,6 @@ void phydm_la_adc_smp_start(void *dm_void)
 			phydm_la_set_trig_src(dm, PHYDM_ADC_MAC_TRIG);
 		}
 	}
-#if RTL8198F_SUPPORT
-	phydm_la_pre_run(dm);
-#endif
 	polling_bit = (smp->la_dump_mode == LA_BB_ADC_DUMP) ? BIT(1) : BIT(2);
 	do { /*Polling time always use 100ms, when it exceed 2s, break loop*/
 		if (dm->support_ic_type & ODM_RTL8192F)
@@ -1299,13 +1144,7 @@ void phydm_la_adc_smp_start(void *dm_void)
 		pr_debug("LA Dump finished ---------->\n\n\n");
 		phydm_release_bb_dbg_port(dm);
 
-		#if (RTL8821C_SUPPORT || RTL8195B_SUPPORT)
 		phydm_la_clk_en(dm, false);
-		#endif
-		#if (RTL8723F_SUPPORT)
-		if(dm->support_ic_type & ODM_RTL8723F)
-			phydm_la_mac_clk_en(dm, (bkp_val == 1) ? true : false);
-		#endif
 	} else {
 		smp->la_count--;
 		pr_debug("LA Dump more ---------->\n\n\n");
@@ -1354,14 +1193,6 @@ void phydm_la_cmd(void *dm_void, char input[][16], u32 *_used, char *output,
 		if (dm->is_download_fw)
 			return;
 	}
-	#if RTL8198F_SUPPORT
-	if (dm->support_ic_type & ODM_RTL8198F) {
-		if (!*dm->mp_mode && !dm->priv->pmib->miscEntry.normal_LA_on) {
-			pr_debug("plz re-set normal_LA_on = 1 & DnUp.\n");
-			return;
-		}
-	}
-	#endif
 #endif
 
 	PHYDM_SSCANF(input[1], DCMD_DECIMAL, &var1[0]);

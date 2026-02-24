@@ -142,14 +142,6 @@ void phydm_primary_cca_init(void *dm_void)
 		return;
 
 	PHYDM_DBG(dm, DBG_PRI_CCA, "[PriCCA] Init ==>\n");
-#if (RTL8188E_SUPPORT == 1) || (RTL8192E_SUPPORT == 1)
-	pri_cca->dup_rts_flag = 0;
-	pri_cca->intf_flag = 0;
-	pri_cca->intf_type = 0;
-	pri_cca->monitor_flag = 0;
-	pri_cca->pri_cca_flag = 0;
-	pri_cca->ch_offset = 0;
-#endif
 	pri_cca->mf_state = 0xff;
 	pri_cca->pre_bw = (enum channel_width)0xff;
 	pri_cca->cca_th_40m_bkp = (u8)odm_get_bb_reg(dm, R_0xc84, 0xf0000000);

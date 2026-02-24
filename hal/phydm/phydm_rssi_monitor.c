@@ -85,11 +85,6 @@ void phydm_rssi_monitor_h2c(void *dm_void, u8 macid)
 	PHYDM_DBG(dm, DBG_RSSI_MNTR, "PHYDM h2c[0x42]=0x%x %x %x %x %x %x %x\n",
 		  h2c[6], h2c[5], h2c[4], h2c[3], h2c[2], h2c[1], h2c[0]);
 
-	#if (RTL8188E_SUPPORT)
-	if (dm->support_ic_type == ODM_RTL8188E)
-		odm_ra_set_rssi_8188e(dm, sta->mac_id, sta->rssi_stat.rssi);
-	else
-	#endif
 	{
 		odm_fill_h2c_cmd(dm, ODM_H2C_RSSI_REPORT, H2C_MAX_LENGTH, h2c);
 	}

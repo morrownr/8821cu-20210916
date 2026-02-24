@@ -16,7 +16,6 @@
 #include "mp_precomp.h"
 #include "../phydm_precomp.h"
 
-#if (RTL8821C_SUPPORT == 1)
 
 void odm_config_rf_reg_8821c(struct dm_struct *dm, u32 addr, u32 data,
 			     enum rf_path rf_path, u32 reg_addr)
@@ -259,4 +258,3 @@ void odm_config_bb_txpwr_lmt_8821c(struct dm_struct *dm, u8 *regulation,
 #endif
 }
 
-#endif

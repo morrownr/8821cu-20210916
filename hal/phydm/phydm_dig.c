@@ -236,33 +236,6 @@ void phydm_fa_threshold_check(void *dm_void, boolean is_dfs_band)
 
 void phydm_set_big_jump_step(void *dm_void, u8 curr_igi)
 {
-#if (RTL8822B_SUPPORT || RTL8197F_SUPPORT || RTL8192F_SUPPORT)
-	struct dm_struct *dm = (struct dm_struct *)dm_void;
-	struct phydm_dig_struct *dig_t = &dm->dm_dig_table;
-	u8 step1[8] = {24, 30, 40, 50, 60, 70, 80, 90};
-	u8 big_jump_lmt = dig_t->big_jump_lmt[dig_t->agc_table_idx];
-	u8 i;
-
-	if (dig_t->enable_adjust_big_jump == 0)
-		return;
-
-	for (i = 0; i <= dig_t->big_jump_step1; i++) {
-		if ((curr_igi + step1[i]) > big_jump_lmt) {
-			if (i != 0)
-				i = i - 1;
-			break;
-		} else if (i == dig_t->big_jump_step1) {
-			break;
-		}
-	}
-	if (dm->support_ic_type & ODM_RTL8822B)
-		odm_set_bb_reg(dm, R_0x8c8, 0xe, i);
-	else if (dm->support_ic_type & (ODM_RTL8197F | ODM_RTL8192F))
-		odm_set_bb_reg(dm, ODM_REG_BB_AGC_SET_2_11N, 0xe, i);
-
-	PHYDM_DBG(dm, DBG_DIG, "Bigjump = %d (ori = 0x%x), LMT=0x%x\n", i,
-		  dig_t->big_jump_step1, big_jump_lmt);
-#endif
 }
 
 #ifdef PHYDM_IC_JGR3_SERIES_SUPPORT
@@ -477,23 +450,6 @@ void phydm_write_dig_reg(void *dm_void, u8 igi)
 	#endif
 		phydm_write_dig_reg_c50(dm, igi);
 
-	#if (RTL8721D_SUPPORT)
-	if (dm->invalid_mode) {
-		if (igi <= 0x10)
-			rf_gain = 0xfa;
-		else if (igi <= 0x40)
-			rf_gain = 0xe3 + 0x20 - (igi >> 1);
-		else if (igi <= 0x50)
-			rf_gain = 0xcb - (igi >> 1);
-		else if (igi <= 0x5e)
-			rf_gain = 0x92 - (igi >> 1);
-		else if (igi <= 0x64)
-			rf_gain = 0x74 - (igi >> 1);
-		else
-			rf_gain = (0x3d > (igi >> 1)) ? (0x3d - (igi >> 1)) : 0;
-		odm_set_bb_reg(dm, R_0x850, 0x1fe0, rf_gain);
-	}
-	#endif
 
 	if (igi == dig_t->cur_ig_value)
 		dig_t->igi_trend = DIG_STABLE;
@@ -525,23 +481,8 @@ void odm_write_dig(void *dm_void, u8 new_igi)
 			  new_igi);
 	}
 
-	#if (RTL8192F_SUPPORT)
-	if ((dm->support_ic_type & ODM_RTL8192F) &&
-	    dm->cut_version == ODM_CUT_A &&
-	    new_igi > 0x38) {
-		new_igi = 0x38;
-		PHYDM_DBG(dm, DBG_DIG,
-			  "Force 92F Adaptivity Up-bound=((0x%x))\n", new_igi);
-	}
-	#endif
 
 	if (dig_t->cur_ig_value != new_igi) {
-		#if (RTL8822B_SUPPORT || RTL8197F_SUPPORT || RTL8192F_SUPPORT)
-		/* @Modify big jump step for 8822B and 8197F */
-		if (dm->support_ic_type &
-		    (ODM_RTL8822B | ODM_RTL8197F | ODM_RTL8192F))
-			phydm_set_big_jump_step(dm, new_igi);
-		#endif
 
 		#if (ODM_PHY_STATUS_NEW_TYPE_SUPPORT)
 		/* Set IGI value of CCK for new CCK AGC */
@@ -998,27 +939,6 @@ void phydm_dig_init(void *dm_void)
 	dig_t->rx_gain_range_max = DIG_MAX_BALANCE_MODE;
 	dig_t->rx_gain_range_min = dig_t->cur_ig_value;
 
-#if (RTL8822B_SUPPORT || RTL8197F_SUPPORT || RTL8192F_SUPPORT)
-	if (dm->support_ic_type &
-	    (ODM_RTL8822B | ODM_RTL8197F | ODM_RTL8192F)) {
-		dig_t->enable_adjust_big_jump = 1;
-
-		if (dm->support_ic_type & ODM_RTL8822B)
-			ret_value = odm_get_bb_reg(dm, R_0x8c8, MASKLWORD);
-		else if (dm->support_ic_type & (ODM_RTL8197F | ODM_RTL8192F))
-			ret_value = odm_get_bb_reg(dm, R_0xc74, MASKLWORD);
-
-		dig_t->big_jump_step1 = (u8)(ret_value & 0xe) >> 1;
-		dig_t->big_jump_step2 = (u8)(ret_value & 0x30) >> 4;
-		dig_t->big_jump_step3 = (u8)(ret_value & 0xc0) >> 6;
-
-		for (i = 0; i < sizeof(dig_t->big_jump_lmt); i++) {
-			if (dig_t->big_jump_lmt[i] == 0)
-				dig_t->big_jump_lmt[i] = 0x64;
-				/* Set -10dBm as default value */
-		}
-	}
-#endif
 
 #ifdef PHYDM_TDMA_DIG_SUPPORT
 		dm->original_dig_restore = true;
@@ -1243,11 +1163,6 @@ u8 phydm_get_new_igi(struct dm_struct *dm, u8 igi, u32 fa_cnt,
 		}
 
 		#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN | ODM_CE))
-		#if (RTL8812A_SUPPORT)
-		if (dm->support_ic_type == ODM_RTL8812)
-			odm_config_bb_with_header_file(dm,
-						       CONFIG_BB_AGC_TAB_DIFF);
-		#endif
 		#endif
 		PHYDM_DBG(dm, DBG_DIG, "First connect: foce IGI=0x%x\n", igi);
 	} else if (dm->is_linked) {
@@ -1549,17 +1464,6 @@ void phydm_false_alarm_counter_reg_reset(void *dm_void)
 
 #if (ODM_IC_11AC_SERIES_SUPPORT)
 	if (dm->support_ic_type & ODM_IC_11AC_SERIES) {
-		#if (RTL8881A_SUPPORT)
-		/* @Reset FA counter by enable/disable OFDM */
-		if ((dm->support_ic_type == ODM_RTL8881A) &&
-		    false_alm_cnt->cnt_ofdm_fail_pre >= 0x7fff) {
-			/* reset OFDM */
-			odm_set_bb_reg(dm, R_0x808, BIT(29), 0);
-			odm_set_bb_reg(dm, R_0x808, BIT(29), 1);
-			false_alm_cnt->cnt_ofdm_fail_pre = 0;
-			PHYDM_DBG(dm, DBG_FA_CNT, "Reset FA_cnt\n");
-		}
-		#endif /* @#if (RTL8881A_SUPPORT) */
 
 		/* @reset OFDM FA countner */
 		odm_set_bb_reg(dm, R_0x9a4, BIT(17), 1);
@@ -1660,22 +1564,7 @@ void phydm_fa_cnt_statistics_n(void *dm_void)
 	fa_t->cnt_vht_crc32_error = 0;
 	fa_t->cnt_vht_crc32_ok = 0;
 
-	#if (RTL8723D_SUPPORT)
-	if (dm->support_ic_type == ODM_RTL8723D) {
-		/* read HT CRC32 agg counter */
-		reg = odm_get_bb_reg(dm, R_0xfb8, MASKDWORD);
-		fa_t->cnt_ht_crc32_error_agg = (reg & 0xffff0000) >> 16;
-		fa_t->cnt_ht_crc32_ok_agg = reg & 0xffff;
-	}
-	#endif
 
-	#if (RTL8188E_SUPPORT)
-	if (dm->support_ic_type == ODM_RTL8188E) {
-		reg = odm_get_bb_reg(dm, ODM_REG_SC_CNT_11N, MASKDWORD);
-		fa_t->cnt_bw_lsc = (reg & 0xffff);
-		fa_t->cnt_bw_usc = ((reg & 0xffff0000) >> 16);
-	}
-	#endif
 
 	reg = odm_get_bb_reg(dm, ODM_REG_CCK_FA_LSB_11N, MASKBYTE0);
 	fa_t->cnt_cck_fail = reg;
@@ -1778,23 +1667,6 @@ void phydm_fa_cnt_statistics_ac(void *dm_void)
 	fa_t->cnt_vht2_crc32_ok = ret_value & 0xffff;
 	fa_t->cnt_vht2_crc32_error = (ret_value & 0xffff0000) >> 16;
 
-	#if (RTL8881A_SUPPORT)
-	if (dm->support_ic_type == ODM_RTL8881A) {
-		u32 tmp = 0;
-
-		if (fa_t->cnt_ofdm_fail >= fa_t->cnt_ofdm_fail_pre) {
-			tmp = fa_t->cnt_ofdm_fail_pre;
-			fa_t->cnt_ofdm_fail_pre = fa_t->cnt_ofdm_fail;
-			fa_t->cnt_ofdm_fail = fa_t->cnt_ofdm_fail - tmp;
-		} else {
-			fa_t->cnt_ofdm_fail_pre = fa_t->cnt_ofdm_fail;
-		}
-
-		PHYDM_DBG(dm, DBG_FA_CNT,
-			  "[8881]cnt_ofdm_fail{curr,pre}={%d,%d}\n",
-			  fa_t->cnt_ofdm_fail_pre, tmp);
-	}
-	#endif
 
 	cck_enable = odm_get_bb_reg(dm, ODM_REG_BB_RX_PATH_11AC, BIT(28));
 
@@ -2530,11 +2402,6 @@ u8 get_new_igi_bound(struct dm_struct *dm, u8 igi, u32 fa_cnt, u8 *rx_gain_max,
 
 		#if 0
 		#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN | ODM_CE))
-		#if (RTL8812A_SUPPORT)
-		if (dm->support_ic_type == ODM_RTL8812)
-			odm_config_bb_with_header_file(dm,
-						       CONFIG_BB_AGC_TAB_DIFF);
-		#endif
 		#endif
 		#endif
 		PHYDM_DBG(dm, DBG_DIG, "First connect: foce IGI=0x%x\n", igi);
@@ -3349,72 +3216,4 @@ void phydm_dig_debug(void *dm_void, char input[][16], u32 *_used, char *output,
 }
 
 #ifdef CONFIG_MCC_DM
-#if (RTL8822B_SUPPORT || RTL8822C_SUPPORT|| RTL8723F_SUPPORT)
-void phydm_mcc_igi_clr(void *dm_void, u8 clr_port)
-{
-	struct dm_struct *dm = (struct dm_struct *)dm_void;
-	struct _phydm_mcc_dm_ *mcc_dm = &dm->mcc_dm;
-
-	mcc_dm->mcc_rssi[clr_port] = 0xff;
-	mcc_dm->mcc_dm_val[0][clr_port] = 0xff; /* 0xc50 clr */
-	mcc_dm->mcc_dm_val[1][clr_port] = 0xff; /* 0xe50 clr */
-}
-
-void phydm_mcc_igi_chk(void *dm_void)
-{
-	struct dm_struct *dm = (struct dm_struct *)dm_void;
-	struct _phydm_mcc_dm_ *mcc_dm = &dm->mcc_dm;
-
-	if (mcc_dm->mcc_dm_val[0][0] == 0xff &&
-	    mcc_dm->mcc_dm_val[0][1] == 0xff) {
-		mcc_dm->mcc_dm_reg[0] = 0xffff;
-		mcc_dm->mcc_reg_id[0] = 0xff;
-	}
-	if (mcc_dm->mcc_dm_val[1][0] == 0xff &&
-	    mcc_dm->mcc_dm_val[1][1] == 0xff) {
-		mcc_dm->mcc_dm_reg[1] = 0xffff;
-		mcc_dm->mcc_reg_id[1] = 0xff;
-	}
-}
-
-void phydm_mcc_igi_cal(void *dm_void)
-{
-	struct dm_struct *dm = (struct dm_struct *)dm_void;
-	struct _phydm_mcc_dm_ *mcc_dm = &dm->mcc_dm;
-	struct phydm_dig_struct *dig_t = &dm->dm_dig_table;
-	u8	shift = 0;
-	u8	igi_val0, igi_val1;
-
-	if (mcc_dm->mcc_rssi[0] == 0xff)
-		phydm_mcc_igi_clr(dm, 0);
-	if (mcc_dm->mcc_rssi[1] == 0xff)
-		phydm_mcc_igi_clr(dm, 1);
-	phydm_mcc_igi_chk(dm);
-	igi_val0 = mcc_dm->mcc_rssi[0] - shift;
-	igi_val1 = mcc_dm->mcc_rssi[1] - shift;
-
-	if (igi_val0 < DIG_MIN_PERFORMANCE)
-		igi_val0 = DIG_MIN_PERFORMANCE;
-
-	if (igi_val1 < DIG_MIN_PERFORMANCE)
-		igi_val1 = DIG_MIN_PERFORMANCE;
-
-	switch (dm->ic_ip_series) {
-	#ifdef PHYDM_IC_JGR3_SERIES_SUPPORT
-	case PHYDM_IC_JGR3:
-		phydm_fill_mcccmd(dm, 0, R_0x1d70, igi_val0, igi_val1);
-		phydm_fill_mcccmd(dm, 1, R_0x1d70 + 1, igi_val0, igi_val1);
-		break;
-	#endif
-	default:
-		phydm_fill_mcccmd(dm, 0, R_0xc50, igi_val0, igi_val1);
-		phydm_fill_mcccmd(dm, 1, R_0xe50, igi_val0, igi_val1);
-		break;
-	}
-
-	PHYDM_DBG(dm, DBG_COMP_MCC, "RSSI_min: %d %d, MCC_igi: %d %d\n",
-		  mcc_dm->mcc_rssi[0], mcc_dm->mcc_rssi[1],
-		  mcc_dm->mcc_dm_val[0][0], mcc_dm->mcc_dm_val[0][1]);
-}
-#endif /*#if (RTL8822B_SUPPORT)*/
 #endif /*#ifdef CONFIG_MCC_DM*/

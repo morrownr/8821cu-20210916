@@ -27,7 +27,6 @@
 #include "mp_precomp.h"
 #include "../phydm_precomp.h"
 
-#if (RTL8821C_SUPPORT == 1)
 static boolean
 check_positive(struct dm_struct *dm,
 	       const u32	condition1,
@@ -317,5 +316,4 @@ odm_get_version_mp_8821c_mac_reg(void)
 		return 62;
 }
 
-#endif /* end of HWIMG_SUPPORT*/
 

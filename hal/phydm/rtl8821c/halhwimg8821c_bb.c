@@ -27,7 +27,6 @@
 #include "mp_precomp.h"
 #include "../phydm_precomp.h"
 
-#if (RTL8821C_SUPPORT == 1)
 static boolean
 check_positive(struct dm_struct *dm,
 	       const u32	condition1,
@@ -4575,5 +4574,4 @@ odm_read_and_config_mp_8821c_phy_reg_pg_type0x28(struct dm_struct *dm)
 #endif
 }
 
-#endif /* end of HWIMG_SUPPORT*/
 

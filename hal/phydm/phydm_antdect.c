@@ -865,24 +865,6 @@ void odm_single_dual_antenna_detection_psd(
 
 void odm_sw_ant_detect_init(void *dm_void)
 {
-#if (RTL8723B_SUPPORT == 1)
-
-	struct dm_struct *dm = (struct dm_struct *)dm_void;
-	struct sw_antenna_switch *dm_swat_table = &dm->dm_swat_table;
-
-	if (dm->support_ic_type != ODM_RTL8723B)
-		return;
-
-	/* @dm_swat_table->pre_antenna = MAIN_ANT; */
-	/* @dm_swat_table->cur_antenna = MAIN_ANT; */
-	dm_swat_table->swas_no_link_state = 0;
-	dm_swat_table->pre_aux_fail_detec = false;
-	dm_swat_table->swas_no_link_bk_reg948 = 0xff;
-
-#ifdef CONFIG_PSD_TOOL
-	phydm_psd_init(dm);
-#endif
-#endif
 }
 #endif
 

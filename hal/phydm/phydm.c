@@ -136,51 +136,19 @@ void phydm_cck_new_agc_chk(struct dm_struct *dm)
 		/*@1: new agc  0: old agc*/
 	dm->cck_new_agc = (boolean)odm_get_bb_reg(dm, new_agc_addr, BIT(17));
 #endif
-#if (RTL8723F_SUPPORT)
-	if (dm->support_ic_type & (ODM_RTL8723F)) 
-		dm->cck_new_agc = true;
-#endif
 }
 
 /*select 3 or 4 bit LNA */
 void phydm_cck_lna_bit_num_chk(struct dm_struct *dm)
 {
 	boolean report_type = 0;
-	#if (RTL8192E_SUPPORT)
-	u32 value_824, value_82c;
-	#endif
 
-	#if (RTL8192E_SUPPORT)
-	if (dm->support_ic_type & (ODM_RTL8192E)) {
-	/* @0x824[9] = 0x82C[9] = 0xA80[7] those registers setting
-	 * should be equal or CCK RSSI report may be incorrect
-	 */
-		value_824 = odm_get_bb_reg(dm, R_0x824, BIT(9));
-		value_82c = odm_get_bb_reg(dm, R_0x82c, BIT(9));
 
-		if (value_824 != value_82c)
-			odm_set_bb_reg(dm, R_0x82c, BIT(9), value_824);
-		odm_set_bb_reg(dm, R_0xa80, BIT(7), value_824);
-		report_type = (boolean)value_824;
-	}
-	#endif
 
-	#if (RTL8703B_SUPPORT || RTL8723D_SUPPORT || RTL8710B_SUPPORT)
-	if (dm->support_ic_type &
-	    (ODM_RTL8703B | ODM_RTL8723D | ODM_RTL8710B)) {
-		report_type = (boolean)odm_get_bb_reg(dm, R_0x950, BIT(11));
-
-		if (report_type != 1)
-			pr_debug("[Warning] CCK should be 4bit LNA\n");
-	}
-	#endif
-
-	#if (RTL8821C_SUPPORT)
 	if (dm->support_ic_type & ODM_RTL8821C) {
 		if (dm->default_rf_set_8821c == SWITCH_TO_BTG)
 			report_type = 1;
 	}
-	#endif
 
 	dm->cck_agc_report_type = report_type;
 
@@ -220,18 +188,8 @@ void phydm_init_cck_setting(struct dm_struct *dm)
 #ifdef CONFIG_RFE_BY_HW_INFO
 void phydm_init_hw_info_by_rfe(struct dm_struct *dm)
 {
-	#if (RTL8821C_SUPPORT)
 	if (dm->support_ic_type & ODM_RTL8821C)
 		phydm_init_hw_info_by_rfe_type_8821c(dm);
-	#endif
-	#if (RTL8197F_SUPPORT)
-	if (dm->support_ic_type & ODM_RTL8197F)
-		phydm_init_hw_info_by_rfe_type_8197f(dm);
-	#endif
-	#if (RTL8197G_SUPPORT)
-	if (dm->support_ic_type & ODM_RTL8197G)
-		phydm_init_hw_info_by_rfe_type_8197g(dm);
-	#endif
 }
 #endif
 
@@ -309,12 +267,6 @@ void phydm_common_info_self_init(struct dm_struct *dm)
 	dm->u8_dummy = 0xf;
 	dm->u16_dummy = 0xffff;
 	dm->u32_dummy = 0xffffffff;
-#if (RTL8814B_SUPPORT)
-/*@------------For spur detection Default Mode------------@*/
-	dm->dsde_sel = DET_CSI;
-	dm->csi_wgt = 4;
-/*@-------------------------------------------------------@*/
-#endif
 	dm->pre_is_linked = false;
 	dm->is_linked = false;
 /*dym bw thre and it can config by registry*/
@@ -512,68 +464,22 @@ phydm_get_structure(struct dm_struct *dm, u8 structure_type)
 
 void phydm_phy_info_update(struct dm_struct *dm)
 {
-#if (RTL8822B_SUPPORT)
-	if (dm->support_ic_type == ODM_RTL8822B)
-		dm->phy_dbg_info.condi_num = phydm_get_condi_num_8822b(dm);
-#endif
 }
 
 void phydm_hw_setting(struct dm_struct *dm)
 {
-#if (RTL8821A_SUPPORT)
-	if (dm->support_ic_type & ODM_RTL8821)
-		odm_hw_setting_8821a(dm);
-#endif
 
-#if (RTL8814A_SUPPORT)
-	if (dm->support_ic_type & ODM_RTL8814A)
-		phydm_hwsetting_8814a(dm);
-#endif
 
-#if (RTL8822B_SUPPORT)
-	if (dm->support_ic_type & ODM_RTL8822B)
-		phydm_hwsetting_8822b(dm);
-#endif
 
-#if (RTL8812A_SUPPORT)
-	if (dm->support_ic_type & ODM_RTL8812)
-		phydm_hwsetting_8812a(dm);
-#endif
 
-#if (RTL8197F_SUPPORT)
-	if (dm->support_ic_type & ODM_RTL8197F)
-		phydm_hwsetting_8197f(dm);
-#endif
 
-#if (RTL8192F_SUPPORT)
-	if (dm->support_ic_type & ODM_RTL8192F)
-		phydm_hwsetting_8192f(dm);
-#endif
 
-#if (RTL8822C_SUPPORT)
-	if (dm->support_ic_type & ODM_RTL8822C)
-		phydm_hwsetting_8822c(dm);
-#endif
 
-#if (RTL8197G_SUPPORT)
-	if (dm->support_ic_type & ODM_RTL8197G)
-		phydm_hwsetting_8197g(dm);
-#endif
 
-#if (RTL8723F_SUPPORT)
-	if (dm->support_ic_type & ODM_RTL8723F)
-		phydm_hwsetting_8723f(dm);
-#endif
 
-#if (RTL8821C_SUPPORT)
 	if (dm->support_ic_type & ODM_RTL8821C)
 		phydm_hwsetting_8821c(dm);
-#endif
 
-#if (RTL8812F_SUPPORT)
-	if (dm->support_ic_type & ODM_RTL8812F)
-		phydm_hwsetting_8812f(dm);
-#endif
 
 #ifdef PHYDM_CCK_RX_PATHDIV_SUPPORT
 	phydm_cck_rx_pathdiv_watchdog(dm);
@@ -586,49 +492,7 @@ boolean phydm_chk_bb_rf_pkg_set_valid(struct dm_struct *dm)
 	boolean valid = true;
 
 	if (dm->support_ic_type == ODM_RTL8822C) {
-		#if (RTL8822C_SUPPORT)
-		valid = phydm_chk_pkg_set_valid_8822c(dm,
-						      RELEASE_VERSION_8822C,
-						      RF_RELEASE_VERSION_8822C);
-		#else
 		valid = true; /*@Just for preventing compile warnings*/
-		#endif
-	#if (RTL8812F_SUPPORT)
-	} else if (dm->support_ic_type == ODM_RTL8812F) {
-		valid = phydm_chk_pkg_set_valid_8812f(dm,
-						      RELEASE_VERSION_8812F,
-						      RF_RELEASE_VERSION_8812F);
-	#endif
-	#if (RTL8197G_SUPPORT)
-	} else if (dm->support_ic_type == ODM_RTL8197G) {
-		valid = phydm_chk_pkg_set_valid_8197g(dm,
-						      RELEASE_VERSION_8197G,
-						      RF_RELEASE_VERSION_8197G);
-	#endif
-	#if (RTL8812F_SUPPORT)
-	} else if (dm->support_ic_type == ODM_RTL8812F) {
-		valid = phydm_chk_pkg_set_valid_8812f(dm,
-						      RELEASE_VERSION_8812F,
-						      RF_RELEASE_VERSION_8812F);
-	#endif
-	#if (RTL8198F_SUPPORT)
-	} else if (dm->support_ic_type == ODM_RTL8198F) {
-		valid = phydm_chk_pkg_set_valid_8198f(dm,
-						      RELEASE_VERSION_8198F,
-						      RF_RELEASE_VERSION_8198F);
-	#endif
-	#if (RTL8814B_SUPPORT)
-	} else if (dm->support_ic_type == ODM_RTL8814B) {
-		valid = phydm_chk_pkg_set_valid_8814b(dm,
-						      RELEASE_VERSION_8814B,
-						      RF_RELEASE_VERSION_8814B);
-	#endif
-	#if (RTL8723F_SUPPORT)
-	} else if (dm->support_ic_type == ODM_RTL8723F) {
-		valid = phydm_chk_pkg_set_valid_8723f(dm,
-						      RELEASE_VERSION_8723F,
-							  RF_RELEASE_VERSION_8723F);
-	#endif
 	}
 
 	return valid;
@@ -643,206 +507,19 @@ u64 phydm_supportability_init_win(
 
 	switch (dm->support_ic_type) {
 /*@---------------N Series--------------------*/
-#if (RTL8188E_SUPPORT)
-	case ODM_RTL8188E:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			/*ODM_BB_DYNAMIC_TXPWR |*/
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*ODM_BB_PWR_TRAIN |*/
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR |
-			ODM_BB_PRIMARY_CCA;
-		break;
-#endif
 
-#if (RTL8192E_SUPPORT)
-	case ODM_RTL8192E:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			/*ODM_BB_DYNAMIC_TXPWR |*/
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*ODM_BB_PWR_TRAIN |*/
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR |
-			ODM_BB_PRIMARY_CCA;
-		break;
-#endif
 
-#if (RTL8723B_SUPPORT)
-	case ODM_RTL8723B:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			/*ODM_BB_DYNAMIC_TXPWR |*/
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*ODM_BB_PWR_TRAIN |*/
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR |
-			ODM_BB_PRIMARY_CCA;
-		break;
-#endif
 
-#if (RTL8703B_SUPPORT)
-	case ODM_RTL8703B:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			/*ODM_BB_DYNAMIC_TXPWR |*/
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*ODM_BB_PWR_TRAIN |*/
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR;
-		break;
-#endif
 
-#if (RTL8723D_SUPPORT)
-	case ODM_RTL8723D:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			/*ODM_BB_DYNAMIC_TXPWR |*/
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			ODM_BB_PWR_TRAIN |
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR;
-		break;
-#endif
 
-#if (RTL8710B_SUPPORT)
-	case ODM_RTL8710B:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			/*ODM_BB_DYNAMIC_TXPWR |*/
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			ODM_BB_PWR_TRAIN |
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR;
-		break;
-#endif
 
-#if (RTL8188F_SUPPORT)
-	case ODM_RTL8188F:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			/*ODM_BB_DYNAMIC_TXPWR |*/
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*ODM_BB_PWR_TRAIN |*/
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR;
-		break;
-#endif
 
-#if (RTL8192F_SUPPORT)
-	case ODM_RTL8192F:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			ODM_BB_PWR_TRAIN	|
-			ODM_BB_RATE_ADAPTIVE |
-			/*ODM_BB_PATH_DIV |*/
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ADAPTIVE_SOML |
-			ODM_BB_ENV_MONITOR;
-			/*ODM_BB_LNA_SAT_CHK |*/
-			/*ODM_BB_PRIMARY_CCA*/
-
-		break;
-#endif
 
 /*@---------------AC Series-------------------*/
 
-#if (RTL8812A_SUPPORT || RTL8821A_SUPPORT)
-	case ODM_RTL8812:
-	case ODM_RTL8821:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			ODM_BB_DYNAMIC_TXPWR |
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*ODM_BB_PWR_TRAIN |*/
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR;
-		break;
-#endif
 
-#if (RTL8814A_SUPPORT)
-	case ODM_RTL8814A:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			ODM_BB_DYNAMIC_TXPWR |
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*ODM_BB_PWR_TRAIN |*/
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR;
-		break;
-#endif
 
-#if (RTL8822B_SUPPORT)
-	case ODM_RTL8822B:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			/*ODM_BB_DYNAMIC_TXPWR	|*/
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*ODM_BB_PWR_TRAIN |*/
-			/*ODM_BB_ADAPTIVE_SOML |*/
-			ODM_BB_RATE_ADAPTIVE |
-			/*ODM_BB_PATH_DIV |*/
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR;
-		break;
-#endif
 
-#if (RTL8821C_SUPPORT)
 	case ODM_RTL8821C:
 		support_ability |=
 			ODM_BB_DIG |
@@ -857,60 +534,11 @@ u64 phydm_supportability_init_win(
 			ODM_BB_CFO_TRACKING |
 			ODM_BB_ENV_MONITOR;
 		break;
-#endif
 
 /*@---------------JGR3 Series-------------------*/
 
-#if (RTL8822C_SUPPORT)
-	case ODM_RTL8822C:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			ODM_BB_DYNAMIC_TXPWR |
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_PATH_DIV |
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR;
-		break;
-#endif
 
-#if (RTL8814B_SUPPORT)
-	case ODM_RTL8814B:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			/*ODM_BB_DYNAMIC_TXPWR |*/
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*ODM_BB_PWR_TRAIN |*/
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING;
-			/*ODM_BB_ENV_MONITOR;*/
-		break;
-#endif
 
-#if (RTL8723F_SUPPORT)
-	case ODM_RTL8723F:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			/* ODM_BB_DYNAMIC_TXPWR |*/
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*ODM_BB_PWR_TRAIN |*/
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR;
-		break;
-#endif
 	default:
 		support_ability |=
 			ODM_BB_DIG |
@@ -941,203 +569,18 @@ u64 phydm_supportability_init_ce(void *dm_void)
 
 	switch (dm->support_ic_type) {
 /*@---------------N Series--------------------*/
-#if (RTL8188E_SUPPORT)
-	case ODM_RTL8188E:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			/*@ODM_BB_DYNAMIC_TXPWR	|*/
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*@ODM_BB_PWR_TRAIN |*/
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR |
-			ODM_BB_PRIMARY_CCA;
-		break;
-#endif
 
-#if (RTL8192E_SUPPORT)
-	case ODM_RTL8192E:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			/*@ODM_BB_DYNAMIC_TXPWR	|*/
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*@ODM_BB_PWR_TRAIN |*/
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR |
-			ODM_BB_PRIMARY_CCA;
-		break;
-#endif
 
-#if (RTL8723B_SUPPORT)
-	case ODM_RTL8723B:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			/*@ODM_BB_DYNAMIC_TXPWR	|*/
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*@ODM_BB_PWR_TRAIN |*/
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR |
-			ODM_BB_PRIMARY_CCA;
-		break;
-#endif
 
-#if (RTL8703B_SUPPORT)
-	case ODM_RTL8703B:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			/*@ODM_BB_DYNAMIC_TXPWR	|*/
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*@ODM_BB_PWR_TRAIN |*/
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR;
-		break;
-#endif
 
-#if (RTL8723D_SUPPORT)
-	case ODM_RTL8723D:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			/*@ODM_BB_DYNAMIC_TXPWR	|*/
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			ODM_BB_PWR_TRAIN	|
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR;
-		break;
-#endif
 
-#if (RTL8710B_SUPPORT)
-	case ODM_RTL8710B:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			/*@ODM_BB_DYNAMIC_TXPWR	|*/
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*@ODM_BB_PWR_TRAIN |*/
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR;
-		break;
-#endif
 
-#if (RTL8188F_SUPPORT)
-	case ODM_RTL8188F:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			/*@ODM_BB_DYNAMIC_TXPWR	|*/
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*@ODM_BB_PWR_TRAIN |*/
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR;
-		break;
-#endif
 
-#if (RTL8192F_SUPPORT)
-	case ODM_RTL8192F:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			ODM_BB_PWR_TRAIN |
-			ODM_BB_RATE_ADAPTIVE |
-			/*ODM_BB_PATH_DIV |*/
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			/*@ODM_BB_ADAPTIVE_SOML |*/
-			ODM_BB_ENV_MONITOR;
-			/*@ODM_BB_LNA_SAT_CHK |*/
-			/*@ODM_BB_PRIMARY_CCA*/
-			break;
-#endif
 /*@---------------AC Series-------------------*/
 
-#if (RTL8812A_SUPPORT || RTL8821A_SUPPORT)
-	case ODM_RTL8812:
-	case ODM_RTL8821:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			/*@ODM_BB_DYNAMIC_TXPWR	|*/
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*@ODM_BB_PWR_TRAIN |*/
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR;
-		break;
-#endif
 
-#if (RTL8814A_SUPPORT)
-	case ODM_RTL8814A:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			/*@ODM_BB_DYNAMIC_TXPWR	|*/
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*@ODM_BB_PWR_TRAIN |*/
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR;
-		break;
-#endif
 
-#if (RTL8822B_SUPPORT)
-	case ODM_RTL8822B:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			ODM_BB_DYNAMIC_TXPWR	|
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*@ODM_BB_PWR_TRAIN |*/
-			ODM_BB_RATE_ADAPTIVE |
-			/*ODM_BB_PATH_DIV |*/
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR;
-		break;
-#endif
 
-#if (RTL8821C_SUPPORT)
 	case ODM_RTL8821C:
 		support_ability |=
 			ODM_BB_DIG |
@@ -1152,59 +595,10 @@ u64 phydm_supportability_init_ce(void *dm_void)
 			ODM_BB_CFO_TRACKING |
 			ODM_BB_ENV_MONITOR;
 		break;
-#endif
 
 /*@---------------JGR3 Series-------------------*/
 
-#if (RTL8822C_SUPPORT)
-	case ODM_RTL8822C:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			ODM_BB_DYNAMIC_TXPWR	|
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			ODM_BB_RATE_ADAPTIVE |
-			/* ODM_BB_PATH_DIV | */
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR;
-		break;
-#endif
 
-#if (RTL8814B_SUPPORT)
-	case ODM_RTL8814B:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			/*@ODM_BB_DYNAMIC_TXPWR	|*/
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*@ODM_BB_PWR_TRAIN |*/
-			/*ODM_BB_RATE_ADAPTIVE |*/
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING;
-			/*ODM_BB_ENV_MONITOR;*/
-		break;
-#endif
-#if (RTL8723F_SUPPORT)
-	case ODM_RTL8723F:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			ODM_BB_DYNAMIC_TXPWR	|
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			ODM_BB_RATE_ADAPTIVE |
-			/* ODM_BB_PATH_DIV | */
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR;
-		break;
-#endif
 	default:
 		support_ability |=
 			ODM_BB_DIG |
@@ -1236,164 +630,16 @@ u64 phydm_supportability_init_ap(
 
 	switch (dm->support_ic_type) {
 /*@---------------N Series--------------------*/
-#if (RTL8188E_SUPPORT)
-	case ODM_RTL8188E:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*ODM_BB_PWR_TRAIN |*/
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR |
-			ODM_BB_PRIMARY_CCA;
-		break;
-#endif
 
-#if (RTL8192E_SUPPORT)
-	case ODM_RTL8192E:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*ODM_BB_PWR_TRAIN |*/
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR |
-			ODM_BB_PRIMARY_CCA;
-		break;
-#endif
 
-#if (RTL8723B_SUPPORT)
-	case ODM_RTL8723B:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*ODM_BB_PWR_TRAIN		|*/
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR;
-		break;
-#endif
 
-#if (RTL8198F_SUPPORT || RTL8197F_SUPPORT)
-	case ODM_RTL8198F:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*ODM_BB_PWR_TRAIN |*/
-			/*ODM_BB_RATE_ADAPTIVE |*/
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING;
-			/*ODM_BB_ADAPTIVE_SOML |*/
-			/*ODM_BB_ENV_MONITOR |*/
-			/*ODM_BB_LNA_SAT_CHK |*/
-			/*ODM_BB_PRIMARY_CCA;*/
-		break;
-	case ODM_RTL8197F:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*ODM_BB_PWR_TRAIN |*/
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ADAPTIVE_SOML |
-			ODM_BB_ENV_MONITOR |
-			ODM_BB_LNA_SAT_CHK |
-			ODM_BB_PRIMARY_CCA;
-		break;
-#endif
 
-#if (RTL8192F_SUPPORT)
-	case ODM_RTL8192F:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*ODM_BB_PWR_TRAIN |*/
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_ADAPTIVITY |
-			/*ODM_BB_CFO_TRACKING |*/
-			ODM_BB_ADAPTIVE_SOML |
-			/*ODM_BB_PATH_DIV |*/
-			ODM_BB_ENV_MONITOR |
-			/*ODM_BB_LNA_SAT_CHK |*/
-			/*ODM_BB_PRIMARY_CCA |*/
-			0;
-		break;
-#endif
 
 /*@---------------AC Series-------------------*/
 
-#if (RTL8881A_SUPPORT)
-	case ODM_RTL8881A:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*ODM_BB_PWR_TRAIN |*/
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR;
-		break;
-#endif
 
-#if (RTL8814A_SUPPORT)
-	case ODM_RTL8814A:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*ODM_BB_PWR_TRAIN |*/
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR;
-		break;
-#endif
 
-#if (RTL8822B_SUPPORT)
-	case ODM_RTL8822B:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*ODM_BB_PWR_TRAIN |*/
-			/*ODM_BB_ADAPTIVE_SOML |*/
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR;
-		break;
-#endif
 
-#if (RTL8821C_SUPPORT)
 	case ODM_RTL8821C:
 		support_ability |=
 			ODM_BB_DIG |
@@ -1408,74 +654,12 @@ u64 phydm_supportability_init_ap(
 			ODM_BB_ENV_MONITOR;
 
 		break;
-#endif
 
 /*@---------------JGR3 Series-------------------*/
 
-#if (RTL8814B_SUPPORT)
-	case ODM_RTL8814B:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*ODM_BB_PWR_TRAIN |*/
-			/*ODM_BB_RATE_ADAPTIVE |*/
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR;
-		break;
-#endif
 
-#if (RTL8197G_SUPPORT)
-	case ODM_RTL8197G:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*ODM_BB_PWR_TRAIN |*/
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR;
-		break;
-#endif
 
-#if (RTL8812F_SUPPORT)
-	case ODM_RTL8812F:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			ODM_BB_DYNAMIC_TXPWR	|
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			/*ODM_BB_CCK_PD |*/
-			/*ODM_BB_PWR_TRAIN |*/
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR;
-		break;
-#endif
 
-#if (RTL8723F_SUPPORT)
-	case ODM_RTL8723F:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*ODM_BB_PWR_TRAIN |*/
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR;
-		break;
-#endif
 	default:
 		support_ability |=
 			ODM_BB_DIG |
@@ -1505,88 +689,10 @@ u64 phydm_supportability_init_iot(
 	u64 support_ability = 0;
 
 	switch (dm->support_ic_type) {
-#if (RTL8710B_SUPPORT)
-	case ODM_RTL8710B:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			/*ODM_BB_DYNAMIC_TXPWR |*/
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*ODM_BB_PWR_TRAIN |*/
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR;
-		break;
-#endif
 
-#if (RTL8195A_SUPPORT)
-	case ODM_RTL8195A:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			/*ODM_BB_DYNAMIC_TXPWR |*/
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*ODM_BB_PWR_TRAIN |*/
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR;
-		break;
-#endif
 
-#if (RTL8195B_SUPPORT)
-	case ODM_RTL8195B:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			/*ODM_BB_DYNAMIC_TXPWR |*/
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*ODM_BB_PWR_TRAIN |*/
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR;
-		break;
-#endif
 
-#if (RTL8721D_SUPPORT)
-	case ODM_RTL8721D:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			/*ODM_BB_DYNAMIC_TXPWR |*/
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*ODM_BB_PWR_TRAIN |*/
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR;
-		break;
-#endif
 
-#if (RTL8710C_SUPPORT)
-	case ODM_RTL8710C:
-		support_ability |=
-			ODM_BB_DIG |
-			ODM_BB_RA_MASK |
-			/*ODM_BB_DYNAMIC_TXPWR |*/
-			ODM_BB_FA_CNT |
-			ODM_BB_RSSI_MONITOR |
-			ODM_BB_CCK_PD |
-			/*ODM_BB_PWR_TRAIN |*/
-			ODM_BB_RATE_ADAPTIVE |
-			ODM_BB_ADAPTIVITY |
-			ODM_BB_CFO_TRACKING |
-			ODM_BB_ENV_MONITOR;
-		break;
-#endif
 	default:
 		support_ability |=
 			ODM_BB_DIG |
@@ -1701,10 +807,6 @@ void phydm_rfe_init(void *dm_void)
 	struct dm_struct *dm = (struct dm_struct *)dm_void;
 
 	PHYDM_DBG(dm, ODM_COMP_INIT, "RFE_Init\n");
-#if (RTL8822B_SUPPORT == 1)
-	if (dm->support_ic_type == ODM_RTL8822B)
-		phydm_rfe_8822b_init(dm);
-#endif
 }
 
 #ifdef CONFIG_DYNAMIC_TXCOLLISION_TH
@@ -1713,15 +815,7 @@ void phydm_tx_collsion_th_init(void *dm_void)
 
 struct dm_struct *dm = (struct dm_struct *)dm_void;
 
-#if (RTL8197G_SUPPORT)
-	if (dm->support_ic_type & ODM_RTL8197G)
-		phydm_tx_collsion_th_init_8197g(dm);
-#endif
 
-#if (RTL8812F_SUPPORT)
-	if (dm->support_ic_type & ODM_RTL8812F)
-		phydm_tx_collsion_th_init_8812f(dm);
-#endif
 
 }
 
@@ -1729,15 +823,7 @@ void phydm_tx_collsion_th_set(void *dm_void, u8 val_r2t, u8 val_t2r)
 {
 	struct dm_struct *dm = (struct dm_struct *)dm_void;
 
-#if (RTL8197G_SUPPORT)
-	if (dm->support_ic_type & ODM_RTL8197G)
-		phydm_tx_collsion_th_set_8197g(dm, val_r2t, val_t2r);
-#endif
 
-#if (RTL8812F_SUPPORT)
-	if (dm->support_ic_type & ODM_RTL8812F)
-		phydm_tx_collsion_th_set_8812f(dm, val_r2t, val_t2r);
-#endif
 	
 }
 #endif
@@ -1804,9 +890,6 @@ enum phydm_init_result odm_dm_init(struct dm_struct *dm)
 	phydm_beamforming_init(dm);
 #endif
 
-#if (RTL8188E_SUPPORT)
-	odm_ra_info_init_all(dm);
-#endif
 #ifdef PHYDM_PRIMARY_CCA
 	phydm_primary_cca_init(dm);
 #endif
@@ -2525,11 +1608,9 @@ void odm_cmn_info_init(struct dm_struct *dm, enum odm_cmninfo cmn_info,
 		dm->fw_sub_version = (u8)value;
 		break;
 	case ODM_CMNINFO_RFE_TYPE:
-#if (RTL8821C_SUPPORT)
 		if (dm->support_ic_type & ODM_RTL8821C)
 			dm->rfe_type_expand = (u8)value;
 		else
-#endif
 			dm->rfe_type = (u8)value;
 
 #ifdef CONFIG_RFE_BY_HW_INFO
@@ -2675,17 +1756,6 @@ void odm_cmn_info_init(struct dm_struct *dm, enum odm_cmninfo cmn_info,
 	case ODM_CMNINFO_EN_AUTO_BW_TH:
 		dm->en_auto_bw_th = (u8)value;
 		break;
-#if (RTL8721D_SUPPORT)
-	case ODM_CMNINFO_POWER_VOLTAGE:
-		dm->power_voltage = (u8)value;
-		break;
-	case ODM_CMNINFO_ANTDIV_GPIO:
-		dm->antdiv_gpio = (u8)value;
-		break;
-	case ODM_CMNINFO_PEAK_DETECT_MODE:
-		dm->peak_detect_mode = (u8)value;
-		break;
-#endif
 	default:
 		break;
 	}

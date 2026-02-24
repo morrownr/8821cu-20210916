@@ -25,7 +25,6 @@
 #include "mp_precomp.h"
 #include "../phydm_precomp.h"
 
-#if (RTL8821C_SUPPORT)
 void phydm_dynamic_switch_htstf_agc_8821c(struct dm_struct *dm)
 {
 	u16 ndp_valid_cnt = 0;
@@ -54,4 +53,3 @@ void phydm_hwsetting_8821c(struct dm_struct *dm)
 {
 	/*phydm_dynamic_switch_htstf_agc_8821c(dm);*/
 }
-#endif

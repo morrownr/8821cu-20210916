@@ -137,30 +137,6 @@ void phydm_mp_set_single_tone_jgr3(void *dm_void, boolean is_single_tone,
 			}
 		}
 		
-		#if (RTL8814B_SUPPORT)
-		if (dm->support_ic_type & ODM_RTL8814B) {
-			mp->rf0_syn[RF_SYN0] = config_phydm_read_syn_reg_8814b(
-					       dm, RF_SYN0, RF_0x0, RFREG_MASK);
-			/*Lowest RF gain index: RF_0x0[4:0] = 0x0*/
-			config_phydm_write_rf_syn_8814b(dm, RF_SYN0, RF_0x0,
-							0x1f, 0x0);
-			/*RF LO enabled */
-			config_phydm_write_rf_syn_8814b(dm, RF_SYN0, RF_0x58,
-							BIT(1), 0x1);
-			/*SYN1*/
-			if (*dm->band_width == CHANNEL_WIDTH_80_80) {
-				mp->rf0_syn[RF_SYN1] = config_phydm_read_syn_reg_8814b(
-						       dm, RF_SYN1, RF_0x0,
-						       RFREG_MASK);
-				config_phydm_write_rf_syn_8814b(dm, RF_SYN1,
-								RF_0x0, 0x1f,
-								0x0);
-				config_phydm_write_rf_syn_8814b(dm, RF_SYN1,
-								RF_0x58, BIT(1),
-								0x1);
-			}
-		}
-		#endif
 	} else {
 		/*Enable CCA*/
 		if (is_2g_ch) { /*CCK RxIQ weighting = [1,1]*/
@@ -188,25 +164,6 @@ void phydm_mp_set_single_tone_jgr3(void *dm_void, boolean is_single_tone,
 				odm_set_rf_reg(dm, i, RF_0x58, BIT(1), 0x0);
 			}
 		}
-		#if (RTL8814B_SUPPORT)
-		if (dm->support_ic_type & ODM_RTL8814B) {
-			config_phydm_write_rf_syn_8814b(dm, RF_SYN0, RF_0x0,
-							RFREG_MASK,
-							mp->rf0_syn[RF_SYN0]);
-			config_phydm_write_rf_syn_8814b(dm, RF_SYN0, RF_0x58,
-							BIT(1), 0x0);
-			/*SYN1*/
-			if (*dm->band_width == CHANNEL_WIDTH_80_80) {
-				config_phydm_write_rf_syn_8814b(dm, RF_SYN1,
-								RF_0x0,
-								RFREG_MASK,
-								mp->rf0_syn[RF_SYN1]);
-				config_phydm_write_rf_syn_8814b(dm, RF_SYN1,
-								RF_0x58, BIT(1),
-								0x0);
-			}
-		}
-		#endif
 	}
 }
 

@@ -272,19 +272,6 @@ void phydm_set_cck_preamble_hdr_jgr3(void *dm_void,
 		return;
 
 	if (dm->support_ic_type & ODM_RTL8723F) {
-		#if (RTL8723F_SUPPORT)
-		odm_set_bb_reg(dm, R_0x2a04, 0x03ff0000, tx_info->packet_count);
-		odm_set_bb_reg(dm, R_0x2a08, BIT(22), tx_info->service_field_bit2);
-		odm_set_bb_reg(dm, R_0x2a08, BIT(21) | BIT(20), rate);
-		odm_set_bb_reg(dm, R_0x2a08, 0x1ffff, tx_info->packet_length);
-		/* turn on scrambler */
-		odm_set_bb_reg(dm, R_0x2a04, BIT(5), 0x0);
-
-		if (tx_info->is_short_preamble)
-			odm_set_bb_reg(dm, R_0x2a08, BIT(19), 0x1);
-		else
-			odm_set_bb_reg(dm, R_0x2a08, BIT(19), 0x0);
-		#endif
 	} else {
 		tmp = tx_info->packet_count | (tx_info->sfd << 16);
 		odm_set_bb_reg(dm, R_0x1e64, MASKDWORD, tmp);
@@ -340,11 +327,6 @@ void phydm_set_pmac_txon_jgr3(void *dm_void, struct phydm_pmac_info *tx_info)
 		}
 	} else {
 		/*mac scramble seed setting, only in 8198F */
-		#if (RTL8198F_SUPPORT)
-			if (dm->support_ic_type & ODM_RTL8198F)
-				if (!odm_get_bb_reg(dm, R_0x1d10, BIT(16)))
-					odm_set_bb_reg(dm, R_0x1d10, BIT(16), 0x1);
-		#endif
  
 		if (pmac_tx->is_cck_rate){
 			odm_set_bb_reg(dm, R_0x1e70, 0xf, 0x8); /*TX CCK ON */
@@ -392,11 +374,6 @@ void phydm_set_tmac_tx_jgr3(void *dm_void)
 		odm_set_bb_reg(dm, R_0x1d08, BIT(0), 0x0);
 
 	/* mac scramble seed setting, only in 8198F */
-	#if (RTL8198F_SUPPORT)
-		if (dm->support_ic_type & ODM_RTL8198F)
-			if (odm_get_bb_reg(dm, R_0x1d10, BIT(16)))
-				odm_set_bb_reg(dm, R_0x1d10, BIT(16), 0x0);
-	#endif
 
 	/* Turn on TMAC CCK */
 	if (!(dm->support_ic_type & ODM_RTL8723F)) {

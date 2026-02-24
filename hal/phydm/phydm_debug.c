@@ -382,36 +382,6 @@ void phydm_bb_hw_dbg_info_n(void *dm_void, u32 *_used, char *output,
 #endif
 
 #if (ODM_IC_11AC_SERIES_SUPPORT)
-#if (RTL8822B_SUPPORT)
-void phydm_bb_hw_dbg_info_8822b(void *dm_void, u32 *_used, char *output,
-				u32 *_out_len)
-{
-	struct dm_struct *dm = (struct dm_struct *)dm_void;
-	u32 used = *_used;
-	u32 out_len = *_out_len;
-	u32 condi_num = 0;
-	u8 i = 0;
-
-	if (!(dm->support_ic_type == ODM_RTL8822B))
-		return;
-
-	condi_num = phydm_get_condi_num_8822b(dm);
-	phydm_get_condi_num_acc_8822b(dm);
-
-	PDM_SNPF(out_len, used, output + used, out_len - used,
-		 "\r\n %-35s = %d.%.4d", "condi_num",
-		 condi_num >> 4, phydm_show_fraction_num(condi_num & 0xf, 4));
-
-	for (i = 0; i < CN_CNT_MAX; i++) {
-		PDM_SNPF(out_len, used, output + used, out_len - used,
-			 "\r\n Tone_num[CN>%d]%-21s = %d",
-			 i, " ", dm->phy_dbg_info.condi_num_cdf[i]);
-	}
-
-	*_used = used;
-	*_out_len = out_len;
-}
-#endif
 
 void phydm_bb_hw_dbg_info_ac(void *dm_void, u32 *_used, char *output,
 			     u32 *_out_len)
@@ -962,9 +932,6 @@ void phydm_bb_hw_dbg_info(void *dm_void, char input[][16], u32 *_used,
 	case PHYDM_IC_AC:
 		phydm_bb_hw_dbg_info_ac(dm, &used, output, &out_len);
 		phydm_reset_bb_hw_cnt(dm);
-		#if (RTL8822B_SUPPORT)
-		phydm_bb_hw_dbg_info_8822b(dm, &used, output, &out_len);
-		#endif
 		break;
 	#endif
 
@@ -1456,14 +1423,6 @@ void phydm_basic_dbg_msg_cli_win(void *dm_void, char *buf)
 		RT_PRINT(buf);
 
 		/* @Condition number */
-		#if (RTL8822B_SUPPORT)
-		if (dm->support_ic_type == ODM_RTL8822B) {
-			RT_SPRINTF(buf, DBGM_CLI_BUF_SIZE, "\r\n Condi_Num=((%d.%.4d))",
-				   dm->phy_dbg_info.condi_num >> 4,
-				   phydm_show_fraction_num(dm->phy_dbg_info.condi_num & 0xf, 4));
-			RT_PRINT(buf);
-		}
-		#endif
 
 #if (ODM_PHY_STATUS_NEW_TYPE_SUPPORT || defined(PHYSTS_3RD_TYPE_SUPPORT))
 		/*STBC or LDPC pkt*/
@@ -2406,14 +2365,6 @@ void phydm_basic_dbg_msg_linked(void *dm_void)
 	}
 
 /* @Condition number */
-#if (RTL8822B_SUPPORT)
-	if (dm->support_ic_type == ODM_RTL8822B) {
-		PHYDM_DBG(dm, DBG_CMN, "Condi_Num=((%d.%.4d)), %d\n",
-			  dbg_t->condi_num >> 4,
-			  phydm_show_fraction_num(dbg_t->condi_num & 0xf, 4),
-			  dbg_t->condi_num);
-	}
-#endif
 #ifdef PHYSTS_3RD_TYPE_SUPPORT
 	if (dm->support_ic_type & PHYSTS_3RD_TYPE_IC) {
 		PHYDM_DBG(dm, DBG_CMN, "Condi_Num=((%d.%4d dB))\n",
@@ -2430,12 +2381,6 @@ void phydm_basic_dbg_msg_linked(void *dm_void)
 			  (dbg_t->is_stbc_pkt) ? "Y" : "N");
 #endif
 
-#if (RTL8822C_SUPPORT || RTL8723F_SUPPORT)
-	/*Beamformed pkt*/
-	if (dm->support_ic_type & (ODM_RTL8822C | ODM_RTL8723F))
-		PHYDM_DBG(dm, DBG_CMN, "Beamformed=((%s))\n",
-			  (dm->is_beamformed) ? "Y" : "N");
-#endif
 }
 
 void phydm_dm_summary(void *dm_void, u8 macid)
@@ -2661,191 +2606,25 @@ void phydm_basic_profile(void *dm_void, u32 *_used, char *output, u32 *_out_len)
 		 "% Basic Profile %");
 
 	if (dm->support_ic_type == ODM_RTL8188E) {
-#if (RTL8188E_SUPPORT)
-		ic_type = "RTL8188E";
-		date = RELEASE_DATE_8188E;
-		commit_by = COMMIT_BY_8188E;
-		release_ver = RELEASE_VERSION_8188E;
-#endif
-#if (RTL8812A_SUPPORT)
-	} else if (dm->support_ic_type == ODM_RTL8812) {
-		ic_type = "RTL8812A";
-		date = RELEASE_DATE_8812A;
-		commit_by = COMMIT_BY_8812A;
-		release_ver = RELEASE_VERSION_8812A;
-#endif
-#if (RTL8821A_SUPPORT)
-	} else if (dm->support_ic_type == ODM_RTL8821) {
-		ic_type = "RTL8821A";
-		date = RELEASE_DATE_8821A;
-		commit_by = COMMIT_BY_8821A;
-		release_ver = RELEASE_VERSION_8821A;
-#endif
-#if (RTL8192E_SUPPORT)
-	} else if (dm->support_ic_type == ODM_RTL8192E) {
-		ic_type = "RTL8192E";
-		date = RELEASE_DATE_8192E;
-		commit_by = COMMIT_BY_8192E;
-		release_ver = RELEASE_VERSION_8192E;
-#endif
-#if (RTL8723B_SUPPORT)
-	} else if (dm->support_ic_type == ODM_RTL8723B) {
-		ic_type = "RTL8723B";
-		date = RELEASE_DATE_8723B;
-		commit_by = COMMIT_BY_8723B;
-		release_ver = RELEASE_VERSION_8723B;
-#endif
-#if (RTL8814A_SUPPORT)
-	} else if (dm->support_ic_type == ODM_RTL8814A) {
-		ic_type = "RTL8814A";
-		date = RELEASE_DATE_8814A;
-		commit_by = COMMIT_BY_8814A;
-		release_ver = RELEASE_VERSION_8814A;
-#endif
-#if (RTL8881A_SUPPORT)
-	} else if (dm->support_ic_type == ODM_RTL8881A) {
-		ic_type = "RTL8881A";
-#endif
-#if (RTL8822B_SUPPORT)
-	} else if (dm->support_ic_type == ODM_RTL8822B) {
-		ic_type = "RTL8822B";
-		date = RELEASE_DATE_8822B;
-		commit_by = COMMIT_BY_8822B;
-		release_ver = RELEASE_VERSION_8822B;
-#endif
-#if (RTL8197F_SUPPORT)
-	} else if (dm->support_ic_type == ODM_RTL8197F) {
-		ic_type = "RTL8197F";
-		date = RELEASE_DATE_8197F;
-		commit_by = COMMIT_BY_8197F;
-		release_ver = RELEASE_VERSION_8197F;
-#endif
-#if (RTL8703B_SUPPORT)
-	} else if (dm->support_ic_type == ODM_RTL8703B) {
-		ic_type = "RTL8703B";
-		date = RELEASE_DATE_8703B;
-		commit_by = COMMIT_BY_8703B;
-		release_ver = RELEASE_VERSION_8703B;
-#endif
-#if (RTL8195A_SUPPORT)
-	} else if (dm->support_ic_type == ODM_RTL8195A) {
-		ic_type = "RTL8195A";
-#endif
-#if (RTL8188F_SUPPORT)
-	} else if (dm->support_ic_type == ODM_RTL8188F) {
-		ic_type = "RTL8188F";
-		date = RELEASE_DATE_8188F;
-		commit_by = COMMIT_BY_8188F;
-		release_ver = RELEASE_VERSION_8188F;
-#endif
-#if (RTL8723D_SUPPORT)
-	} else if (dm->support_ic_type == ODM_RTL8723D) {
-		ic_type = "RTL8723D";
-		date = RELEASE_DATE_8723D;
-		commit_by = COMMIT_BY_8723D;
-		release_ver = RELEASE_VERSION_8723D;
-#endif
 	}
 
 /* @JJ ADD 20161014 */
-#if (RTL8710B_SUPPORT)
-	else if (dm->support_ic_type == ODM_RTL8710B) {
-		ic_type = "RTL8710B";
-		date = RELEASE_DATE_8710B;
-		commit_by = COMMIT_BY_8710B;
-		release_ver = RELEASE_VERSION_8710B;
-	}
-#endif
 
-#if (RTL8721D_SUPPORT)
-	else if (dm->support_ic_type == ODM_RTL8721D) {
-		ic_type = "RTL8721D";
-		date = RELEASE_DATE_8721D;
-		commit_by = COMMIT_BY_8721D;
-		release_ver = RELEASE_VERSION_8721D;
-	}
-#endif
 
-#if (RTL8710C_SUPPORT)
-	else if (dm->support_ic_type == ODM_RTL8710C) {
-		ic_type = "RTL8710C";
-		date = RELEASE_DATE_8710C;
-		commit_by = COMMIT_BY_8710C;
-		release_ver = RELEASE_VERSION_8710C;
-	}
-#endif
 
-#if (RTL8821C_SUPPORT)
 	else if (dm->support_ic_type == ODM_RTL8821C) {
 		ic_type = "RTL8821C";
 		date = RELEASE_DATE_8821C;
 		commit_by = COMMIT_BY_8821C;
 		release_ver = RELEASE_VERSION_8821C;
 	}
-#endif
 
 /*@jj add 20170822*/
-#if (RTL8192F_SUPPORT)
-	else if (dm->support_ic_type == ODM_RTL8192F) {
-		ic_type = "RTL8192F";
-		date = RELEASE_DATE_8192F;
-		commit_by = COMMIT_BY_8192F;
-		release_ver = RELEASE_VERSION_8192F;
-	}
-#endif
 
-#if (RTL8198F_SUPPORT)
-	else if (dm->support_ic_type == ODM_RTL8198F) {
-		ic_type = "RTL8198F";
-		date = RELEASE_DATE_8198F;
-		commit_by = COMMIT_BY_8198F;
-		release_ver = RELEASE_VERSION_8198F;
-	}
-#endif
 
-#if (RTL8822C_SUPPORT)
-	else if (dm->support_ic_type == ODM_RTL8822C) {
-		ic_type = "RTL8822C";
-		date = RELEASE_DATE_8822C;
-		commit_by = COMMIT_BY_8822C;
-		release_ver = RELEASE_VERSION_8822C;
-	}
-#endif
 
-#if (RTL8723F_SUPPORT)
-	else if (dm->support_ic_type == ODM_RTL8723F) {
-		ic_type = "RTL8723F";
-		date = RELEASE_DATE_8723F;
-		commit_by = COMMIT_BY_8723F;
-		release_ver = RELEASE_VERSION_8723F;
-	}
-#endif
-#if (RTL8812F_SUPPORT)
-	else if (dm->support_ic_type == ODM_RTL8812F) {
-		ic_type = "RTL8812F";
-		date = RELEASE_DATE_8812F;
-		commit_by = COMMIT_BY_8812F;
-		release_ver = RELEASE_VERSION_8812F;
-	}
-#endif
 
-#if (RTL8197G_SUPPORT)
-	else if (dm->support_ic_type == ODM_RTL8197G) {
-		ic_type = "RTL8197G";
-		date = RELEASE_DATE_8197G;
-		commit_by = COMMIT_BY_8197G;
-		release_ver = RELEASE_VERSION_8197G;
-	}
-#endif
 
-#if (RTL8814B_SUPPORT)
-	else if (dm->support_ic_type == ODM_RTL8814B) {
-		ic_type = "RTL8814B";
-		date = RELEASE_DATE_8814B;
-		commit_by = COMMIT_BY_8814B;
-		release_ver = RELEASE_VERSION_8814B;
-	}
-#endif
 
 	PDM_SNPF(out_len, used, output + used, out_len - used,
 		 "  %-35s: %s (MP Chip: %s)\n", "IC type", ic_type,
@@ -2949,40 +2728,9 @@ void phydm_basic_profile(void *dm_void, u32 *_used, char *output, u32 *_out_len)
 	PDM_SNPF(out_len, used, output + used, out_len - used, "  %-35s: %s\n",
 		 "DFS", DFS_VERSION);
 
-#if (RTL8822B_SUPPORT)
-	if (dm->support_ic_type & ODM_RTL8822B)
-		PDM_SNPF(out_len, used, output + used, out_len - used,
-			 "  %-35s: %s\n", "PHY config 8822B",
-			 PHY_CONFIG_VERSION_8822B);
-
-#endif
-#if (RTL8197F_SUPPORT)
-	if (dm->support_ic_type & ODM_RTL8197F)
-		PDM_SNPF(out_len, used, output + used, out_len - used,
-			 "  %-35s: %s\n", "PHY config 8197F",
-			 PHY_CONFIG_VERSION_8197F);
-#endif
 
 /*@jj add 20170822*/
-#if (RTL8192F_SUPPORT)
-	if (dm->support_ic_type & ODM_RTL8192F)
-		PDM_SNPF(out_len, used, output + used, out_len - used,
-			 "  %-35s: %s\n", "PHY config 8192F",
-			 PHY_CONFIG_VERSION_8192F);
-#endif
-#if (RTL8721D_SUPPORT)
-	if (dm->support_ic_type & ODM_RTL8721D)
-		PDM_SNPF(out_len, used, output + used, out_len - used,
-			 "  %-35s: %s\n", "PHY config 8721D",
-			 PHY_CONFIG_VERSION_8721D);
-#endif
 
-#if (RTL8710C_SUPPORT)
-	if (dm->support_ic_type & ODM_RTL8710C)
-		PDM_SNPF(out_len, used, output + used, out_len - used,
-			 "  %-35s: %s\n", "PHY config 8710C",
-			 PHY_CONFIG_VERSION_8710C);
-#endif
 
 	*_used = used;
 	*_out_len = out_len;
@@ -3103,11 +2851,6 @@ void phydm_get_txagc(void *dm_void, u32 *_used, char *output, u32 *_out_len)
 	u32 out_len = *_out_len;
 	u8 i = 0;
 
-	#if (RTL8822C_SUPPORT)
-	PDM_SNPF(out_len, used, output + used,
-		 out_len - used, "Disabled DPD rate mask: 0x%x\n",
-		 dm->dis_dpd_rate);
-	#endif
 
 	for (i = RF_PATH_A; i < dm->num_rf_path; i++) {
 		if (i == RF_PATH_A)
@@ -4100,38 +3843,6 @@ void phydm_dump_reg(void *dm_void, char input[][16], u32 *_used, char *output,
 void phydm_enable_big_jump(void *dm_void, char input[][16], u32 *_used,
 			   char *output, u32 *_out_len)
 {
-#if (RTL8822B_SUPPORT)
-	struct dm_struct *dm = (struct dm_struct *)dm_void;
-	struct phydm_dig_struct *dig_t = &dm->dm_dig_table;
-	u32 dm_value[10] = {0};
-	u8 i, input_idx = 0;
-	u32 val;
-
-	if (!(dm->support_ic_type & ODM_RTL8822B))
-		return;
-
-	for (i = 0; i < 5; i++) {
-		if (input[i + 1]) {
-			PHYDM_SSCANF(input[i + 1], DCMD_HEX, &dm_value[i]);
-			input_idx++;
-		}
-	}
-
-	if (input_idx == 0)
-		return;
-
-	if (dm_value[0] == 0) {
-		dm->dm_dig_table.enable_adjust_big_jump = false;
-
-		val = (dig_t->big_jump_step3 << 5) |
-		      (dig_t->big_jump_step2 << 3) |
-		      dig_t->big_jump_step1;
-
-		odm_set_bb_reg(dm, R_0x8c8, 0xfe, val);
-	} else {
-		dm->dm_dig_table.enable_adjust_big_jump = true;
-	}
-#endif
 }
 
 void phydm_show_rx_rate(void *dm_void, char input[][16], u32 *_used,
@@ -4969,20 +4680,6 @@ void phydm_reg_monitor(void *dm_void, char input[][16], u32 *_used,
 	*_out_len = out_len;
 }
 
-#if (RTL8822C_SUPPORT)
-u16 phydm_get_agc_rf_gain(void *dm_void, boolean is_mod, u8 tab, u8 mp_gain_i)
-{
-	struct dm_struct *dm = (struct dm_struct *)dm_void;
-	u16 rf_gain = 0x0;
-
-	if (is_mod)
-		rf_gain = dm->agc_rf_gain[tab][mp_gain_i];
-	else
-		rf_gain = dm->agc_rf_gain_ori[tab][mp_gain_i];
-
-	return rf_gain;
-}
-#endif
 
 void phydm_get_rxagc_table_dbg(void *dm_void, char input[][16], u32 *_used,
 			       char *output, u32 *_out_len)
@@ -4998,47 +4695,6 @@ void phydm_get_rxagc_table_dbg(void *dm_void, char input[][16], u32 *_used,
 	u16 rf_gain = 0;
 	u8 i = 0;
 
-#if (RTL8822C_SUPPORT)
-	if (!(dm->support_ic_type & ODM_RTL8822C))
-		return;
-
-	if ((strcmp(input[1], help) == 0)) {
-		PDM_SNPF(out_len, used, output + used, out_len - used,
-			 "get rxagc table : {0:ori, 1:modified} {table:0~15} {mp_gain_idx:0~63, all:0xff}\n");
-	} else {
-		for (i = 0; i < 3; i++) {
-			PHYDM_SSCANF(input[i + 1], DCMD_HEX, &var1[i]);
-		}
-
-		is_modified = (boolean)var1[0];
-		tab = (u8)var1[1];
-		mp_gain = (u8)var1[2];
-
-		PDM_SNPF(out_len, used, output + used, out_len - used,
-			 "agc_table_cnt:%d, is_agc_tab_pos_shift:%d, agc_table_shift:%d\n",
-			 dm->agc_table_cnt, dm->is_agc_tab_pos_shift,
-			 dm->agc_table_shift);
-
-		if (mp_gain == 0xff) {
-			for (i = 0; i < 64; i++) {
-				rf_gain = phydm_get_agc_rf_gain(dm, is_modified,
-								tab, i);
-
-				PDM_SNPF(out_len, used, output + used,
-					 out_len - used,
-					 "agc_table:%d, mp_gain_idx:0x%x, rf_gain_idx:0x%x\n",
-					 tab, i, rf_gain);
-			}
-		} else {
-			rf_gain = phydm_get_agc_rf_gain(dm, is_modified, tab,
-							mp_gain);
-
-			PDM_SNPF(out_len, used, output + used, out_len - used,
-				 "agc_table:%d, mp_gain_idx:0x%x, rf_gain_idx:0x%x\n",
-				 tab, mp_gain, rf_gain);
-		}
-	}
-#endif
 	*_used = used;
 	*_out_len = out_len;
 }
@@ -5054,117 +4710,8 @@ void phydm_shift_rxagc_table_dbg(void *dm_void, char input[][16], u32 *_used,
 	u8 i = 0;
 	u16 value_db = 0;
 
-#if (RTL8822C_SUPPORT)
-	if (!(dm->support_ic_type & ODM_RTL8822C))
-		return;
-
-	if ((strcmp(input[1], help) == 0)) {
-		PDM_SNPF(out_len, used, output + used, out_len - used,
-			 "shift rxagc table : {0:-, 1:+} {value(0~63, unit:2dB)}\n");
-	} else {
-		for (i = 0; i < 3; i++) {
-			PHYDM_SSCANF(input[i + 1], DCMD_DECIMAL,
-				     &var1[i]);
-		}
-
-		if ((u8)var1[1] > 63) {
-			PDM_SNPF(out_len, used, output + used, out_len - used,
-				 "Do not enter the value larger than 63!\n");
-		} else {
-			phydm_shift_rxagc_table(dm, (boolean)var1[0],
-						(u8)var1[1]);
-
-			value_db = (u8)var1[1] << 1;
-			PDM_SNPF(out_len, used, output + used, out_len - used,
-				 "shift %s%d dB gain\n",
-				 (((boolean)var1[0]) ? "+" : "-"), value_db);
-		}
-	}
-#endif
 }
 
-#if (RTL8814B_SUPPORT || RTL8198F_SUPPORT)
-void phydm_spur_detect_dbg(void *dm_void, char input[][16], u32 *_used,
-			   char *output, u32 *_out_len)
-{
-	struct dm_struct *dm = (struct dm_struct *)dm_void;
-	char help[] = "-h";
-	u32 var1[10] = {0};
-	u32 used = *_used;
-	u32 out_len = *_out_len;
-	u32 i;
-
-	if ((strcmp(input[1], help) == 0)) {
-		PDM_SNPF(out_len, used, output + used, out_len - used,
-			 "{0: Auto spur detect(NBI+CSI), 1:NBI always ON/ CSI Auto,");
-		PDM_SNPF(out_len, used, output + used, out_len - used,
-			 "2: CSI always On/ NBI Auto, 3: Disable, 4: CSI & NBI ON}\n");
-		PDM_SNPF(out_len, used, output + used, out_len - used,
-			 "{If CSI always ON (Mode 2 or 4) -> CSI wgt manual(0~7)}\n");
-		PDM_SNPF(out_len, used, output + used, out_len - used,
-			 "{5: Adjust CSI weight threshold} {0:-,1:+} {th offset}\n");
-	} else {
-		for (i = 0; i < 10; i++) {
-			if (input[i + 1])
-				PHYDM_SSCANF(input[i + 1], DCMD_DECIMAL,
-					     &var1[i]);
-		}
-
-		if (var1[0] == 1) {
-			dm->dsde_sel = DET_NBI;
-		} else if (var1[0] == 2) {
-			dm->dsde_sel = DET_CSI;
-		} else if (var1[0] == 3) {
-			dm->dsde_sel = DET_DISABLE;
-		} else if (var1[0] == 4) {
-			dm->dsde_sel = DET_CSI_NBI_EN;
-		} else if (var1[0] == 0) {
-			dm->dsde_sel = DET_AUTO;
-		} else if (var1[0] == 5) {
-			if (var1[1] == 0)
-				for (i = 0; i < 5; i++)
-					dm->csi_wgt_th_db[i] -= (u8)var1[2];
-			else if (var1[1] == 1)
-				for (i = 0; i < 5; i++)
-					dm->csi_wgt_th_db[i] += (u8)var1[2];
-			PDM_SNPF(out_len, used, output + used, out_len - used, "current csi weight threshold:\n");
-			for (i = 0; i < 5; i++)
-				PDM_SNPF(out_len, used, output + used,
-					 out_len - used, "----%2d",
-					 dm->csi_wgt_th_db[i]);
-			PDM_SNPF(out_len, used, output + used, out_len - used, "\n");
-			for (i = 0; i < 5; i++)
-				PDM_SNPF(out_len, used, output + used,
-					 out_len - used, "--%d--|", i);
-			PDM_SNPF(out_len, used, output + used, out_len - used, "\n");
-		} else {
-			PDM_SNPF(out_len, used, output + used, out_len - used,
-				 "Spur detection mode invalid!\n");
-			return;
-		}
-		if (var1[0] < 5)
-			PDM_SNPF(out_len, used, output + used, out_len - used,
-				 "spur detect mode = %d\n", dm->dsde_sel);
-
-		if (dm->dsde_sel == DET_CSI_NBI_EN) {
-			if (var1[1] < 8) {
-				dm->csi_wgt = (u8)var1[1];
-				PDM_SNPF(out_len, used, output + used,
-					 out_len - used, "CSI wgt %d\n",
-					 dm->csi_wgt);
-			} else {
-				PDM_SNPF(out_len, used, output + used,
-					 out_len - used,
-					 "CSI wgt setting invalid. Please set the correct wgt!\n");
-				return;
-			}
-		}
-	}
-
-	*_used = used;
-	*_out_len = out_len;
-}
-#endif
 
 struct phydm_command {
 	char name[16];
@@ -5224,9 +4771,6 @@ enum PHYDM_CMD_ID {
 	PHYDM_CCK_RX_PATHDIV,
 	PHYDM_BEAM_FORMING,
 	PHYDM_REG_MONITOR,
-#if RTL8814B_SUPPORT
-	PHYDM_SPUR_DETECT,
-#endif
 	PHYDM_PHY_STATUS,
 	PHYDM_CRC32_CNT,
 	PHYDM_DCC,
@@ -5297,9 +4841,6 @@ struct phydm_command phy_dm_ary[] = {
 	{"cck_rx_pathdiv", PHYDM_CCK_RX_PATHDIV},
 	{"bf", PHYDM_BEAM_FORMING},
 	{"reg_mntr", PHYDM_REG_MONITOR},
-#if RTL8814B_SUPPORT
-	{"spur_detect", PHYDM_SPUR_DETECT},
-#endif
 	{"physts", PHYDM_PHY_STATUS},
 	{"crc32_cnt", PHYDM_CRC32_CNT},
 #ifdef PHYDM_PMAC_TX_SETTING_SUPPORT
@@ -5666,11 +5207,6 @@ void phydm_cmd_parser(struct dm_struct *dm, char input[][MAX_ARGV],
 		phydm_reg_monitor(dm, input, &used, output, &out_len);
 		break;
 
-#if RTL8814B_SUPPORT
-	case PHYDM_SPUR_DETECT:
-		phydm_spur_detect_dbg(dm, input, &used, output, &out_len);
-		break;
-#endif
 	case PHYDM_CRC32_CNT:
 		phydm_crc32_cnt_dbg(dm, input, &used, output, &out_len);
 		break;

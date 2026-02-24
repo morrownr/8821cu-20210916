@@ -37,36 +37,6 @@ void phydm_dynamicsoftmletting(void *dm_void)
 	struct dm_struct *dm = (struct dm_struct *)dm_void;
 	u32 ret_val;
 
-#if (RTL8822B_SUPPORT == 1)
-	if (!*dm->mp_mode) {
-		if (dm->support_ic_type & ODM_RTL8822B) {
-			if (!dm->is_linked | dm->iot_table.is_linked_cmw500)
-				return;
-
-			if (dm->bsomlenabled) {
-				PHYDM_DBG(dm, ODM_COMP_API,
-					  "PHYDM_DynamicSoftMLSetting(): SoML has been enable, skip dynamic SoML switch\n");
-				return;
-			}
-
-			ret_val = odm_get_bb_reg(dm, R_0xf8c, MASKBYTE0);
-			PHYDM_DBG(dm, ODM_COMP_API,
-				  "PHYDM_DynamicSoftMLSetting(): Read 0xF8C = 0x%08X\n",
-				  ret_val);
-
-			if (ret_val < 0x16) {
-				PHYDM_DBG(dm, ODM_COMP_API,
-					  "PHYDM_DynamicSoftMLSetting(): 0xF8C(== 0x%08X) < 0x16, enable SoML\n",
-					  ret_val);
-				phydm_somlrxhp_setting(dm, true);
-#if 0
-			/*odm_set_bb_reg(dm, R_0x19a8, MASKDWORD, 0xc10a0000);*/
-#endif
-				dm->bsomlenabled = true;
-			}
-		}
-	}
-#endif
 }
 
 void phydm_soml_on_off(void *dm_void, u8 swch)
@@ -79,20 +49,12 @@ void phydm_soml_on_off(void *dm_void, u8 swch)
 
 		if (dm->support_ic_type & (ODM_RTL8197F | ODM_RTL8192F))
 			odm_set_bb_reg(dm, R_0x998, BIT(6), swch);
-#if (RTL8822B_SUPPORT == 1)
-		else if (dm->support_ic_type == ODM_RTL8822B)
-			phydm_somlrxhp_setting(dm, true);
-#endif
 
 	} else if (swch == SOML_OFF) {
 		PHYDM_DBG(dm, DBG_ADPTV_SOML, "(( Turn off )) SOML\n");
 
 		if (dm->support_ic_type & (ODM_RTL8197F | ODM_RTL8192F))
 			odm_set_bb_reg(dm, R_0x998, BIT(6), swch);
-#if (RTL8822B_SUPPORT == 1)
-		else if (dm->support_ic_type == ODM_RTL8822B)
-			phydm_somlrxhp_setting(dm, false);
-#endif
 	}
 	soml_tab->soml_on_off = swch;
 }
@@ -1276,27 +1238,8 @@ void phydm_init_soft_ml_setting(void *dm_void)
 	struct dm_struct *dm = (struct dm_struct *)dm_void;
 	u32 soml_mask = BIT(31) | BIT(30) | BIT(29) | BIT(28);
 
-#if (RTL8822B_SUPPORT == 1)
-	if (!*dm->mp_mode) {
-		if (dm->support_ic_type & ODM_RTL8822B) {
-#if 0
-			/*odm_set_bb_reg(dm, R_0x19a8, MASKDWORD, 0xd10a0000);*/
-#endif
-			phydm_somlrxhp_setting(dm, true);
-			dm->bsomlenabled = true;
-		}
-	}
-#endif
-#if (RTL8821C_SUPPORT == 1)
 	if (!*dm->mp_mode) {
 		if (dm->support_ic_type & ODM_RTL8821C)
 			odm_set_bb_reg(dm, R_0x19a8, soml_mask, 0xd);
 	}
-#endif
-#if (RTL8195B_SUPPORT == 1)
-	if (!*dm->mp_mode) {
-		if (dm->support_ic_type & ODM_RTL8195B)
-			odm_set_bb_reg(dm, R_0x19a8, soml_mask, 0xd);
-	}
-#endif
 }

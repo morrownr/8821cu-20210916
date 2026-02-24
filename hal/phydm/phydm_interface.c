@@ -325,31 +325,16 @@ u8 phydm_trans_h2c_id(struct dm_struct *dm, u8 phydm_h2c_id)
 
 	/* @1 [3] */
 	case ODM_H2C_WIFI_CALIBRATION:
-#if (RTL8723B_SUPPORT == 1)
-		platform_h2c_id = H2C_8723B_BT_WLAN_CALIBRATION;
-#endif
 
 		break;
 
 	/* @1 [4] */
 	case ODM_H2C_IQ_CALIBRATION:
-#if ((RTL8812A_SUPPORT == 1) || (RTL8821A_SUPPORT == 1))
-		platform_h2c_id = H2C_8812_IQ_CALIBRATION;
-#endif
 
 		break;
 	/* @1 [5] */
 	case ODM_H2C_RA_PARA_ADJUST:
 
-#if ((RTL8812A_SUPPORT == 1) || (RTL8821A_SUPPORT == 1))
-		platform_h2c_id = H2C_8812_RA_PARA_ADJUST;
-#elif ((RTL8814A_SUPPORT == 1) || (RTL8822B_SUPPORT == 1))
-		platform_h2c_id = H2C_RA_PARA_ADJUST;
-#elif (RTL8192E_SUPPORT == 1)
-		platform_h2c_id = H2C_8192E_RA_PARA_ADJUST;
-#elif (RTL8723B_SUPPORT == 1)
-		platform_h2c_id = H2C_8723B_RA_PARA_ADJUST;
-#endif
 
 
 		break;
@@ -357,10 +342,6 @@ u8 phydm_trans_h2c_id(struct dm_struct *dm, u8 phydm_h2c_id)
 	/* @1 [6] */
 	case PHYDM_H2C_DYNAMIC_TX_PATH:
 
-#if (RTL8814A_SUPPORT == 1)
-		if (dm->support_ic_type == ODM_RTL8814A)
-			platform_h2c_id = H2C_DYNAMIC_TX_PATH;
-#endif
 
 		break;
 
@@ -374,16 +355,9 @@ u8 phydm_trans_h2c_id(struct dm_struct *dm, u8 phydm_h2c_id)
 		break;
 
 	case PHYDM_H2C_TXBF:
-#if ((RTL8192E_SUPPORT == 1) || (RTL8812A_SUPPORT == 1))
-		if (dm->support_ic_type & (ODM_RTL8192E | ODM_RTL8812))
-			platform_h2c_id = 0x41; /*@H2C_TxBF*/
-#endif
 		break;
 
 	case PHYDM_H2C_MU:
-#if (RTL8822B_SUPPORT == 1)
-		platform_h2c_id = 0x4a; /*@H2C_MU*/
-#endif
 		break;
 
 	default:

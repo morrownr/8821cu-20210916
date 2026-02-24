@@ -592,15 +592,7 @@ void phydm_gen_ramask_h2c_AP(
 	struct dm_struct *dm = (struct dm_struct *)dm_void;
 
 	if (dm->support_ic_type == ODM_RTL8812) {
-		#if (RTL8812A_SUPPORT == 1)
-		UpdateHalRAMask8812(priv, entry, rssi_level);
-		#endif
 	} else if (dm->support_ic_type == ODM_RTL8188E) {
-		#if (RTL8188E_SUPPORT == 1)
-		#ifdef TXREPORT
-		add_RATid(priv, entry);
-		#endif
-		#endif
 	} else {
 		#ifdef CONFIG_WLAN_HAL
 		GET_HAL_INTERFACE(priv)->UpdateHalRAMaskHandler(priv, entry, rssi_level);
@@ -1454,25 +1446,6 @@ void phydm_ra_mask_watchdog(void *dm_void)
 		rssi = (u8)(sta->rssi_stat.rssi);
 
 		/*@to be modified*/
-		#if ((RTL8812A_SUPPORT == 1) || (RTL8821A_SUPPORT == 1))
-		if (dm->support_ic_type == ODM_RTL8812 ||
-			(dm->support_ic_type == ODM_RTL8821 &&
-			 dm->cut_version == ODM_CUT_A)
-			) {
-			if (rssi < ra_t->ldpc_thres) {
-				/*@LDPC TX enable*/
-				set_ra_ldpc_8812(sta, true);
-				PHYDM_DBG(dm, DBG_RA_MASK,
-					  "RSSI=%d, ldpc_en =TRUE\n", rssi);
-
-			} else if (rssi > (ra_t->ldpc_thres + 3)) {
-				/*@LDPC TX disable*/
-				set_ra_ldpc_8812(sta, false);
-				PHYDM_DBG(dm, DBG_RA_MASK,
-					  "RSSI=%d, ldpc_en =FALSE\n", rssi);
-			}
-		}
-		#endif
 
 		rssi_lv_new = phydm_rssi_lv_dec(dm, (u32)rssi, ra->rssi_level);
 
@@ -2000,14 +1973,6 @@ void phydm_ra_info_init(void *dm_void)
 	ra_tab->dynamic_rrsr_en = false;
 	ra_tab->ra_trigger_mode = 1; // default TBTT RA
 	ra_tab->ra_tx_cls_th = 255;
-#if (RTL8822B_SUPPORT == 1)
-	if (dm->support_ic_type == ODM_RTL8822B) {
-		u32 ret_value;
-
-		ret_value = odm_get_mac_reg(dm, R_0x4c8, MASKBYTE2);
-		odm_set_mac_reg(dm, R_0x4cc, MASKBYTE3, (ret_value - 1));
-	}
-#endif
 
 	#if 0 /*@CONFIG_RA_DYNAMIC_RTY_LIMIT*/
 	phydm_ra_dynamic_retry_limit_init(dm);

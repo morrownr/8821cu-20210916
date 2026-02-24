@@ -222,17 +222,7 @@ phydm_set_crystal_cap_reg(void *dm_void, u8 crystal_cap)
 	cfo_track->crystal_cap = crystal_cap;
 
 	if (dm->support_ic_type & (ODM_RTL8188E | ODM_RTL8188F)) {
-		#if (RTL8188E_SUPPORT || RTL8188F_SUPPORT)
-		/* write 0x24[22:17] = 0x24[16:11] = crystal_cap */
-		odm_set_mac_reg(dm, R_0x24, 0x7ff800, reg_val);
-		#endif
 	}
-	#if (RTL8812A_SUPPORT)
-	else if (dm->support_ic_type & ODM_RTL8812) {
-		/* write 0x2C[30:25] = 0x2C[24:19] = crystal_cap */
-		odm_set_mac_reg(dm, R_0x2c, 0x7FF80000, reg_val);
-	}
-	#endif
 	#if (RTL8703B_SUPPORT || RTL8723B_SUPPORT || RTL8192E_SUPPORT ||\
 	     RTL8821A_SUPPORT || RTL8723D_SUPPORT)
 	else if ((dm->support_ic_type &
@@ -240,12 +230,6 @@ phydm_set_crystal_cap_reg(void *dm_void, u8 crystal_cap)
 		 ODM_RTL8723D))) {
 		/* @0x2C[23:18] = 0x2C[17:12] = crystal_cap */
 		odm_set_mac_reg(dm, R_0x2c, 0x00FFF000, reg_val);
-	}
-	#endif
-	#if (RTL8814A_SUPPORT)
-	else if (dm->support_ic_type & ODM_RTL8814A) {
-		/* write 0x2C[26:21] = 0x2C[20:15] = crystal_cap */
-		odm_set_mac_reg(dm, R_0x2c, 0x07FF8000, reg_val);
 	}
 	#endif
 	#if (RTL8822B_SUPPORT || RTL8821C_SUPPORT || RTL8197F_SUPPORT ||\
@@ -257,51 +241,6 @@ phydm_set_crystal_cap_reg(void *dm_void, u8 crystal_cap)
 		odm_set_mac_reg(dm, R_0x28, 0x7e, crystal_cap);
 	}
 	#endif
-	#if (RTL8710B_SUPPORT)
-	else if (dm->support_ic_type & (ODM_RTL8710B)) {
-		/* write 0x60[29:24] = 0x60[23:18] = crystal_cap */
-		HAL_SetSYSOnReg(dm->adapter, R_0x60, 0x3FFC0000, reg_val);
-	}
-	#endif
-	#if (RTL8195B_SUPPORT)
-	else if (dm->support_ic_type & ODM_RTL8195B) {
-		phydm_set_crystalcap(dm, (u8)(reg_val & 0x7f));
-	}
-	#endif
-	#if (RTL8721D_SUPPORT)
-	else if (dm->support_ic_type & (ODM_RTL8721D)) {
-		/* write 0x4800_0228[30:24] crystal_cap */
-		/*HAL_SetSYSOnReg(dm->adapter, */
-		/*REG_SYS_XTAL_8721d, 0x7F000000, crystal_cap);*/
-		u32 temp_val = HAL_READ32(SYSTEM_CTRL_BASE_LP,
-					   REG_SYS_EFUSE_SYSCFG2);
-		temp_val = ((crystal_cap << 24) & 0x7F000000)
-						| (temp_val & (~0x7F000000));
-		HAL_WRITE32(SYSTEM_CTRL_BASE_LP, REG_SYS_EFUSE_SYSCFG2,
-			    temp_val);
-	}
-	#endif
-	#if (RTL8710C_SUPPORT)
-	else if (dm->support_ic_type & (ODM_RTL8710C)) {
-		/* write MAC reg 0x28[13:7][6:0] crystal_cap */
-		phydm_set_crystalcap(dm, (u8)(reg_val & 0x7f));
-	}
-	#endif
-	#if (RTL8723F_SUPPORT)
-	else if (dm->support_ic_type & ODM_RTL8723F) {
-		/* write 0x103c[23:17] = 0x103c[16:10] = crystal_cap */
-		odm_set_mac_reg(dm, R_0x103c, 0x00FFFC00, reg_val);
-	}
-	#endif
-#if (RTL8822C_SUPPORT || RTL8814B_SUPPORT || RTL8812F_SUPPORT)
-	else if (dm->support_ic_type & (ODM_RTL8822C | ODM_RTL8814B |
-		 ODM_RTL8812F)) {
-		/* write 0x1040[23:17] = 0x1040[16:10] = crystal_cap */
-		odm_set_mac_reg(dm, R_0x1040, 0x00FFFC00, reg_val);
-	} else {
-		return false;
-	}
-#endif
 	return true;
 }
 
@@ -374,11 +313,9 @@ void phydm_cfo_tracking_init(void *dm_void)
 	cfo_track->is_adjust = true;
 	PHYDM_DBG(dm, DBG_CFO_TRK, "crystal_cap=0x%x\n", cfo_track->def_x_cap);
 
-#if (RTL8822B_SUPPORT || RTL8821C_SUPPORT)
 	/* @Crystal cap. control by WiFi */
 	if (dm->support_ic_type & (ODM_RTL8822B | ODM_RTL8821C))
 		odm_set_mac_reg(dm, R_0x10, 0x40, 0x1);
-#endif
 }
 
 void phydm_cfo_tracking(void *dm_void)

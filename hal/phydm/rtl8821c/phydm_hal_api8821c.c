@@ -16,7 +16,6 @@
 #include "mp_precomp.h"
 #include "../phydm_precomp.h"
 
-#if (RTL8821C_SUPPORT == 1)
 #if (PHYDM_FW_API_ENABLE_8821C == 1)
 /* ======================================================================== */
 /* These following functions can be used for PHY DM only*/
@@ -1524,4 +1523,3 @@ u8 query_phydm_ant_num_map_8821c(struct dm_struct *dm)
 
 /* ======================================================================== */
 #endif /*PHYDM_FW_API_ENABLE_8821C == 1*/
-#endif /* RTL8821C_SUPPORT == 1 */
