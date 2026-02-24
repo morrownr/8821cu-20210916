@@ -3446,15 +3446,6 @@ void phydm_get_thermal_trim_offset(void *dm_void)
 {
 	struct dm_struct *dm = (struct dm_struct *)dm_void;
 
-#if (DM_ODM_SUPPORT_TYPE & ODM_WIN)
-	void *adapter = dm->adapter;
-	HAL_DATA_TYPE *hal_data = GET_HAL_DATA(((PADAPTER)adapter));
-	PEFUSE_HAL pEfuseHal = &hal_data->EfuseHal;
-	u1Byte eFuseContent[DCMD_EFUSE_MAX_SECTION_NUM * EFUSE_MAX_WORD_UNIT * 2];
-
-	if (HAL_MAC_Dump_EFUSE(&GET_HAL_MAC_INFO((PADAPTER)adapter), EFUSE_WIFI, eFuseContent, pEfuseHal->PhysicalLen_WiFi, HAL_MAC_EFUSE_PHYSICAL, HAL_MAC_EFUSE_PARSE_DRV) != RT_STATUS_SUCCESS)
-		RF_DBG(dm, DBG_RF_MP, "[kfree] dump efuse fail !!!\n");
-#endif
 
 	if (dm->support_ic_type & ODM_RTL8821C)
 		phydm_get_thermal_trim_offset_8821c(dm_void);
@@ -3472,15 +3463,6 @@ void phydm_get_power_trim_offset(void *dm_void)
 {
 	struct dm_struct *dm = (struct dm_struct *)dm_void;
 
-#if 0 //(DM_ODM_SUPPORT_TYPE & ODM_WIN)	// 2017 MH DM Should use the same code.s
-	void		*adapter = dm->adapter;
-	HAL_DATA_TYPE	*hal_data = GET_HAL_DATA(((PADAPTER)adapter));
-	PEFUSE_HAL		pEfuseHal = &hal_data->EfuseHal;
-	u1Byte			eFuseContent[DCMD_EFUSE_MAX_SECTION_NUM * EFUSE_MAX_WORD_UNIT * 2];
-
-	if (HAL_MAC_Dump_EFUSE(&GET_HAL_MAC_INFO(adapter), EFUSE_WIFI, eFuseContent, pEfuseHal->PhysicalLen_WiFi, HAL_MAC_EFUSE_PHYSICAL, HAL_MAC_EFUSE_PARSE_DRV) != RT_STATUS_SUCCESS)
-		RF_DBG(dm, DBG_RF_MP, "[kfree] dump efuse fail !!!\n");
-#endif
 
 	if (dm->support_ic_type & ODM_RTL8821C)
 		phydm_get_power_trim_offset_8821c(dm_void);
@@ -3498,15 +3480,6 @@ void phydm_get_pa_bias_offset(void *dm_void)
 {
 	struct dm_struct *dm = (struct dm_struct *)dm_void;
 
-#if (DM_ODM_SUPPORT_TYPE & ODM_WIN)
-	void *adapter = dm->adapter;
-	HAL_DATA_TYPE *hal_data = GET_HAL_DATA(((PADAPTER)adapter));
-	PEFUSE_HAL pEfuseHal = &hal_data->EfuseHal;
-	u1Byte eFuseContent[DCMD_EFUSE_MAX_SECTION_NUM * EFUSE_MAX_WORD_UNIT * 2];
-
-	if (HAL_MAC_Dump_EFUSE(&GET_HAL_MAC_INFO((PADAPTER)adapter), EFUSE_WIFI, eFuseContent, pEfuseHal->PhysicalLen_WiFi, HAL_MAC_EFUSE_PHYSICAL, HAL_MAC_EFUSE_PARSE_DRV) != RT_STATUS_SUCCESS)
-		RF_DBG(dm, DBG_RF_MP, "[kfree] dump efuse fail !!!\n");
-#endif
 
 	if (dm->support_ic_type & ODM_RTL8822B)
 		phydm_get_pa_bias_offset_8822b(dm_void);

@@ -88,9 +88,6 @@ void hal_txbf_jaguar_download_ndpa(
 	struct _RT_BEAMFORMING_INFO *beam_info = &dm->beamforming_info;
 	struct _RT_BEAMFORMEE_ENTRY *p_beam_entry = beam_info->beamformee_entry + idx;
 	void *adapter = dm->adapter;
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	*dm->is_fw_dw_rsvd_page_in_progress = true;
-#endif
 	PHYDM_DBG(dm, DBG_TXBF, "[%s] Start!\n", __func__);
 
 	/* if (idx == 0) head_page = 0xFE; */
@@ -159,9 +156,6 @@ void hal_txbf_jaguar_download_ndpa(
 	odm_write_1byte(dm, REG_CR_8812A + 1, (u1b_tmp & (~BIT(0))));
 
 	p_beam_entry->beamform_entry_state = BEAMFORMING_ENTRY_STATE_PROGRESSED;
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	*dm->is_fw_dw_rsvd_page_in_progress = false;
-#endif
 }
 
 void hal_txbf_jaguar_fw_txbf_cmd(
@@ -410,12 +404,6 @@ void hal_txbf_jaguar_patch(
 
 	if (beam_info->beamform_cap == BEAMFORMING_CAP_NONE)
 		return;
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	if (operation == SCAN_OPT_BACKUP_BAND0)
-		odm_write_1byte(dm, REG_SND_PTCL_CTRL_8812A, 0xC8);
-	else if (operation == SCAN_OPT_RESTORE)
-		odm_write_1byte(dm, REG_SND_PTCL_CTRL_8812A, 0xCB);
-#endif
 }
 
 void hal_txbf_jaguar_clk_8812a(
@@ -439,12 +427,7 @@ void hal_txbf_jaguar_clk_8812a(
 #endif
 
 /*Stop Usb TxDMA*/
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	RT_DISABLE_FUNC((PADAPTER)adapter, DF_TX_BIT);
-	PlatformReturnAllPendingTxPackets(adapter);
-#else
 	rtw_write_port_cancel(adapter);
-#endif
 
 	/*Wait TXFF empty*/
 	for (count = 0; count < 100; count++) {

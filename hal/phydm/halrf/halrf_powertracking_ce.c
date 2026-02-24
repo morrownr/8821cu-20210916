@@ -575,15 +575,6 @@ u32 tx_scaling_table_jaguar[TXSCALE_TABLE_SIZE] = {
 	0x3FE /* 36, +6.0dB	*/
 };
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE) && defined(DM_ODM_CE_MAC80211)
-#else
-u8 delta_swing_table_idx_2ga_p_8188e[] = {0, 0, 0, 0, 1, 1, 2, 2, 3, 3,
-					  4, 4, 4, 4, 4, 4, 4, 4, 5, 5,
-					  7, 7, 8, 8, 8, 9, 9, 9, 9, 9};
-u8 delta_swing_table_idx_2ga_n_8188e[] = {0, 0, 0, 2, 2, 3, 3, 4, 4, 4,
-					  4, 5, 5, 6, 6, 7, 7, 7, 7, 8,
-					  8, 9, 9, 10, 10, 10, 11, 11, 11, 11};
-#endif
 
 void odm_txpowertracking_init(void *dm_void)
 {
@@ -821,7 +812,6 @@ void odm_txpowertracking_check_ce(void *dm_void)
 	struct _hal_rf_ *rf = &dm->rf_table;
 	struct _halrf_tssi_data *tssi = &rf->halrf_tssi_data;
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	if (!(rf->rf_supportability & HAL_RF_TX_PWR_TRACK))
 		return;
 
@@ -879,7 +869,6 @@ void odm_txpowertracking_check_ce(void *dm_void)
 	} else
 		odm_txpowertracking_callback_thermal_meter(dm);
 	dm->rf_calibrate_info.tm_trigger = 0;
-#endif
 }
 
 void
@@ -887,7 +876,6 @@ odm_txpowertracking_direct_ce(void *dm_void)
 {
 	struct dm_struct *dm = (struct dm_struct *)dm_void;
 	struct _hal_rf_ *rf = &dm->rf_table;
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 
 	if (!(rf->rf_supportability & HAL_RF_TX_PWR_TRACK))
 		return;
@@ -922,34 +910,14 @@ odm_txpowertracking_direct_ce(void *dm_void)
 #endif
 	} else
 		odm_txpowertracking_callback_thermal_meter(dm);
-#endif
 
 }
 
 
 void odm_txpowertracking_check_mp(void *dm_void)
 {
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	struct dm_struct *dm = (struct dm_struct *)dm_void;
-	void *adapter = dm->adapter;
-
-	if (odm_check_power_status(adapter) == false) {
-		RT_TRACE(COMP_POWER_TRACKING, DBG_LOUD,
-			 ("check_pow_status, return false\n"));
-		return;
-	}
-
-	odm_txpowertracking_thermal_meter_check(adapter);
-#endif
 }
 
 void odm_txpowertracking_check_ap(void *dm_void)
 {
-#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-	struct dm_struct *dm = (struct dm_struct *)dm_void;
-	struct rtl8192cd_priv *priv = dm->priv;
-
-	return;
-
-#endif
 }

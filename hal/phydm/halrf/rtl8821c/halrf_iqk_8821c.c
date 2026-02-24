@@ -14,15 +14,7 @@
  *****************************************************************************/
 
 #include "mp_precomp.h"
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-#if RT_PLATFORM == PLATFORM_MACOSX
-#include "phydm_precomp.h"
-#else
-#include "../phydm_precomp.h"
-#endif
-#else
 #include "../../phydm_precomp.h"
-#endif
 
 #if (RTL8821C_SUPPORT == 1)
 /*---------------------------Define Local Constant---------------------------*/
@@ -35,17 +27,6 @@ static boolean overflowflag;
 #define txgap_k_number 0x7
 
 /*---------------------------Define Local Constant---------------------------*/
-#if !(DM_ODM_SUPPORT_TYPE & ODM_AP)
-void do_iqk_8821c(void *dm_void, u8 delta_thermal_index, u8 thermal_value,
-		  u8 threshold)
-{
-	struct dm_struct *dm = (struct dm_struct *)dm_void;
-	struct dm_iqk_info *iqk_info = &dm->IQK_info;
-
-	dm->rf_calibrate_info.thermal_value_iqk = thermal_value;
-	halrf_segment_iqk_trigger(dm, true, iqk_info->segment_iqk);
-}
-#else
 /*Originally config->do_iqk is hooked phy_iq_calibrate_8821c, but do_iqk_8821c and phy_iq_calibrate_8821c have different arguments*/
 void do_iqk_8821c(void *dm_void, u8 delta_thermal_index, u8 thermal_value,
 		  u8 threshold)
@@ -55,7 +36,6 @@ void do_iqk_8821c(void *dm_void, u8 delta_thermal_index, u8 thermal_value,
 	/*boolean		is_recovery = (boolean) delta_thermal_index;*/
 	halrf_segment_iqk_trigger(dm, true, iqk_info->segment_iqk);
 }
-#endif
 void do_dpk_8821c(void *dm_void, u8 delta_thermal_index, u8 thermal_value,
 		  u8 threshold)
 {
@@ -336,19 +316,11 @@ void _iqk_iqk_fail_report_8821c(struct dm_struct *dm)
 
 	for (i = 0; i < 4; i++) {
 		if (tmp1bf0 & (0x1 << i))
-#if !(DM_ODM_SUPPORT_TYPE & ODM_AP)
 			RF_DBG(dm, DBG_RF_IQK, "[IQK] please check S%d TXIQK\n",
 			       i);
-#else
-			panic_printk("[IQK] please check S%d TXIQK\n", i);
-#endif
 		if (tmp1bf0 & (0x1 << (i + 12)))
-#if !(DM_ODM_SUPPORT_TYPE & ODM_AP)
 			RF_DBG(dm, DBG_RF_IQK, "[IQK] please check S%d RXIQK\n",
 			       i);
-#else
-			panic_printk("[IQK] please check S%d RXIQK\n", i);
-#endif
 	}
 }
 
@@ -3536,9 +3508,6 @@ void phy_iq_calibrate_8821c(void *dm_void, boolean clear, boolean segment_iqk)
 
 	if (*dm->mp_mode)
 		halrf_iqk_hwtx_check(dm, false);
-#if (DM_ODM_SUPPORT_TYPE & ODM_AP)
-	_iqk_iqk_fail_report_8821c(dm);
-#endif
 	halrf_iqk_dbg(dm);
 
 	if (!(*dm->mp_mode))
@@ -3552,10 +3521,6 @@ void phy_dp_calibrate_8821c(void *dm_void, boolean clear)
 	struct dm_struct *dm = (struct dm_struct *)dm_void;
 	struct _hal_rf_ *rf = &dm->rf_table;
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN))
-	if (odm_check_power_status(dm) == false)
-		return;
-#endif
 
 #if (MP_DRIVER)
 	if ((dm->mp_mode != NULL) && (rf->is_con_tx != NULL) && (rf->is_single_tone != NULL) && (rf->is_carrier_suppresion != NULL))
@@ -3563,10 +3528,8 @@ void phy_dp_calibrate_8821c(void *dm_void, boolean clear)
 			return;
 #endif
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	if (!(rf->rf_supportability & HAL_RF_DPK))
 		return;
-#endif
 
 #if DISABLE_BB_RF
 	return;
@@ -3616,41 +3579,23 @@ void phy_txtap_calibrate_8821c(void *dm_void, boolean clear)
 	struct dm_struct *dm = (struct dm_struct *)dm_void;
 	struct dm_iqk_info *iqk_info = &dm->IQK_info;
 
-#if !(DM_ODM_SUPPORT_TYPE & ODM_AP)
 	struct _ADAPTER *adapter = dm->adapter;
 
 #if (MP_DRIVER == 1)
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	PMPT_CONTEXT p_mpt_ctx = &(adapter->MptCtx);
-#else
 #ifdef CONFIG_MP_INCLUDED
 	PMPT_CONTEXT p_mpt_ctx = &(adapter->mppriv.mpt_ctx);
-#endif
 #endif
 #endif
 
 	struct _hal_rf_ *rf = &dm->rf_table;
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	if (!(rf->rf_supportability & HAL_RF_IQK))
 		return;
-#endif
-
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN))
-	if (odm_check_power_status(adapter) == false)
-		return;
-#endif
 
 #if MP_DRIVER == 1
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	if (p_mpt_ctx->bSingleTone || p_mpt_ctx->bCarrierSuppression)
-		return;
-#else
 #ifdef CONFIG_MP_INCLUDED
 	if (p_mpt_ctx->is_single_tone || p_mpt_ctx->is_carrier_suppression)
 		return;
-#endif
-#endif
 #endif
 #endif
 
@@ -3682,15 +3627,10 @@ void dpk_temperature_compensate_8821c(void *dm_void)
 {
 	struct dm_struct *dm = (struct dm_struct *)dm_void;
 	struct _hal_rf_ *rf = &dm->rf_table;
-#if !(DM_ODM_SUPPORT_TYPE & ODM_AP)
 	void *adapter = dm->adapter;
 	HAL_DATA_TYPE *hal_data = GET_HAL_DATA(((PADAPTER)adapter));
 	u8 pgthermal = hal_data->eeprom_thermal_meter;
-#else
-	struct rtl8192cd_priv *priv = dm->priv;
-	u8 pgthermal = (u8)priv->pmib->dot11RFEntry.ther;
 
-#endif
 	static u8 dpk_tm_trigger;
 	u8 thermal_value = 0, delta_dpk, i = 0;
 	u8 thermal_value_avg_count = 0;
@@ -3700,9 +3640,6 @@ void dpk_temperature_compensate_8821c(void *dm_void)
 
 	/*if dpk is not enable*/
 	if (rf->dpk_en == 0x0)
-		return;
-	/*if ap mode, disable dpk*/
-	if (DM_ODM_SUPPORT_TYPE & ODM_AP)
 		return;
 	if (!dpk_tm_trigger) {
 		odm_set_rf_reg(dm, RF_PATH_A, RF_0x42, BIT(17) | BIT(16), 0x03);
