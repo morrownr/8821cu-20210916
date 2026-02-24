@@ -447,13 +447,7 @@ void phydm_dynamic_tx_path_init(
 	u8 search_space_2[NUM_CHOOSE2_FROM4] = {BB_PATH_AB, BB_PATH_AC, BB_PATH_AD, BB_PATH_BC, BB_PATH_BD, BB_PATH_CD};
 	u8 search_space_3[NUM_CHOOSE3_FROM4] = {BB_PATH_BCD, BB_PATH_ACD, BB_PATH_ABD, BB_PATH_ABC};
 
-#if ((DM_ODM_SUPPORT_TYPE == ODM_WIN) && USB_SWITCH_SUPPORT)
-	p_div->is_u3_mode = (*dm->hub_usb_mode == 2) ? 1 : 0;
-	PHYDM_DBG(dm, DBG_PATH_DIV, "[WIN USB] is_u3_mode = (( %d ))\n",
-		  p_div->is_u3_mode);
-#else
 	p_div->is_u3_mode = 1;
-#endif
 	PHYDM_DBG(dm, DBG_PATH_DIV, "Dynamic TX path Init 8814\n");
 
 	memcpy(&p_div->search_space_2[0], &search_space_2[0],

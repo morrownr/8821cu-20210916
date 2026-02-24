@@ -2550,9 +2550,6 @@ phydm_api_set_txagc(void *dm_void, u32 pwr_idx, enum rf_path path,
 	s8 pw_by_rate_tmp = 0;
 	s8 pw_by_rate_new = 0;
 	#endif
-	#if (DM_ODM_SUPPORT_TYPE & ODM_AP)
-	u8 i = 0;
-	#endif
 
 #if (RTL8822B_SUPPORT || RTL8821C_SUPPORT || RTL8195B_SUPPORT)
 	if (dm->support_ic_type &
@@ -2576,9 +2573,6 @@ phydm_api_set_txagc(void *dm_void, u32 pwr_idx, enum rf_path path,
 								    path, rate);
 			#endif
 
-			#if (DM_ODM_SUPPORT_TYPE & ODM_AP)
-			set_current_tx_agc(dm->priv, path, rate, (u8)pwr_idx);
-			#endif
 
 		} else {
 			#if (RTL8822B_SUPPORT)
@@ -2605,11 +2599,6 @@ phydm_api_set_txagc(void *dm_void, u32 pwr_idx, enum rf_path path,
 								     rate);
 			#endif
 
-			#if (DM_ODM_SUPPORT_TYPE & ODM_AP)
-			for (i = 0; i < 4; i++)
-				set_current_tx_agc(dm->priv, path, (rate + i),
-						   (u8)pwr_idx);
-			#endif
 		}
 	}
 #endif

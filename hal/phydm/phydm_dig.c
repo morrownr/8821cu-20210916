@@ -670,9 +670,6 @@ boolean
 phydm_dig_abort(void *dm_void)
 {
 	struct dm_struct *dm = (struct dm_struct *)dm_void;
-#if (DM_ODM_SUPPORT_TYPE & ODM_WIN)
-	void *adapter = dm->adapter;
-#endif
 
 	/* support_ability */
 	if ((!(dm->support_ability & ODM_BB_FA_CNT)) ||
@@ -981,9 +978,6 @@ void phydm_dig_init(void *dm_void)
 {
 	struct dm_struct *dm = (struct dm_struct *)dm_void;
 	struct phydm_dig_struct *dig_t = &dm->dm_dig_table;
-#if (DM_ODM_SUPPORT_TYPE & (ODM_AP))
-	struct phydm_fa_struct *false_alm_cnt = &dm->false_alm_cnt;
-#endif
 	u32 ret_value = 0;
 	u8 i;
 
@@ -1000,10 +994,6 @@ void phydm_dig_init(void *dm_void)
 	dig_t->igi_dyn_up_hit = false;
 	dig_t->fw_dig_enable = false;
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_AP))
-	/* @For RTL8881A */
-	false_alm_cnt->cnt_ofdm_fail_pre = 0;
-#endif
 
 	dig_t->rx_gain_range_max = DIG_MAX_BALANCE_MODE;
 	dig_t->rx_gain_range_min = dig_t->cur_ig_value;
@@ -1031,11 +1021,9 @@ void phydm_dig_init(void *dm_void)
 #endif
 
 #ifdef PHYDM_TDMA_DIG_SUPPORT
-	#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN | ODM_CE))
 		dm->original_dig_restore = true;
 		dm->tdma_dig_state_number = DIG_NUM_OF_TDMA_STATES;
 		dm->tdma_dig_timer_ms = DIG_TIMER_MS;
-	#endif
 	dig_t->tdma_force_l_igi = 0xff;
 	dig_t->tdma_force_h_igi = 0xff;
 #endif
@@ -1265,7 +1253,6 @@ u8 phydm_get_new_igi(struct dm_struct *dm, u8 igi, u32 fa_cnt,
 	} else if (dm->is_linked) {
 		PHYDM_DBG(dm, DBG_DIG, "Adjust IGI @ linked\n");
 		/* @4 Abnormal # beacon case */
-		#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN | ODM_CE))
 		if (dm->phy_dbg_info.num_qry_beacon_pkt < 5 &&
 		    fa_cnt < DM_DIG_FA_TH1 && dm->bsta_state &&
 		    dm->support_ic_type != ODM_RTL8723D &&
@@ -1277,9 +1264,6 @@ u8 phydm_get_new_igi(struct dm_struct *dm, u8 igi, u32 fa_cnt,
 		} else {
 			igi = phydm_new_igi_by_fa(dm, igi, fa_cnt, step);
 		}
-		#else
-		igi = phydm_new_igi_by_fa(dm, igi, fa_cnt, step);
-		#endif
 	} else {
 		/* @2 Before link */
 		PHYDM_DBG(dm, DBG_DIG, "Adjust IGI before link\n");
@@ -1322,12 +1306,8 @@ boolean phydm_dig_dfs_mode_en(void *dm_void)
 
 	/* @Modify lower bound for DFS band */
 	if (dm->is_dfs_band) {
-		#if (DM_ODM_SUPPORT_TYPE & (ODM_AP))
-		dfs_mode_en = true;
-		#else
 		if (phydm_dfs_master_enabled(dm))
 			dfs_mode_en = true;
-		#endif
 		PHYDM_DBG(dm, DBG_DIG, "In DFS band\n");
 	}
 	return dfs_mode_en;
@@ -1424,7 +1404,6 @@ void phydm_dig_lps_32k(void *dm_void)
 
 void phydm_dig_by_rssi_lps(void *dm_void)
 {
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN | ODM_CE | ODM_IOT))
 	struct dm_struct *dm = (struct dm_struct *)dm_void;
 	struct phydm_fa_struct *falm_cnt;
 
@@ -1464,7 +1443,6 @@ void phydm_dig_by_rssi_lps(void *dm_void)
 	PHYDM_DBG(dm, DBG_DIG, "fa_cnt_all=%d, rssi_min=%d, curr_igi=0x%x\n",
 		  falm_cnt->cnt_all, dm->rssi_min, current_igi);
 	odm_write_dig(dm, current_igi);
-#endif
 }
 
 void phydm_get_dig_coverage(void *dm_void, u8 *max, u8 *min)
@@ -2198,14 +2176,6 @@ void phydm_tdma_dig_add_interrupt_mask_handler(void *dm_void)
 {
 	struct dm_struct *dm = (struct dm_struct *)dm_void;
 
-#if (DM_ODM_SUPPORT_TYPE == (ODM_AP))
-	if (dm->support_ic_type & ODM_RTL8197F) {
-		/*@HAL_INT_TYPE_PSTIMEOUT2*/
-		phydm_add_interrupt_mask_handler(dm, HAL_INT_TYPE_PSTIMEOUT2);
-	}
-#elif (DM_ODM_SUPPORT_TYPE == (ODM_WIN))
-#elif (DM_ODM_SUPPORT_TYPE == (ODM_CE))
-#endif
 }
 
 /* will be triggered by HW timer*/
@@ -2658,34 +2628,6 @@ void phydm_tdma_dig_new(void *dm_void)
 }
 
 /*@callback function triggered by SW timer*/
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-void phydm_tdma_dig_cbk(struct phydm_timer_list *timer)
-{
-	void *adapter = (void *)timer->Adapter;
-	HAL_DATA_TYPE *hal_data = GET_HAL_DATA(((PADAPTER)adapter));
-	struct dm_struct *dm = &hal_data->DM_OutSrcs;
-
-	#if DEV_BUS_TYPE == RT_PCI_INTERFACE
-	#if USE_WORKITEM
-	odm_schedule_work_item(&dm->phydm_tdma_dig_workitem);
-	#else
-	phydm_tdma_dig_new(dm);
-	#endif
-	#else
-	odm_schedule_work_item(&dm->phydm_tdma_dig_workitem);
-	#endif
-}
-
-void phydm_tdma_dig_workitem_callback(void *context)
-{
-	void *adapter = (void *)context;
-	HAL_DATA_TYPE *hal_data = GET_HAL_DATA(((PADAPTER)adapter));
-	struct dm_struct *dm = &hal_data->DM_OutSrc;
-
-	phydm_tdma_dig_new(dm);
-}
-
-#elif (DM_ODM_SUPPORT_TYPE == ODM_CE)
 void phydm_tdma_dig_cbk(void *dm_void)
 {
 	struct dm_struct *dm = (struct dm_struct *)dm_void;
@@ -2735,44 +2677,6 @@ void phydm_tdma_dig_workitem_callback(void *dm_void)
 
 	odm_set_timer(dm, &dm->tdma_dig_timer, dm->tdma_dig_timer_ms);
 }
-#else
-void phydm_tdma_dig_cbk(void *dm_void)
-{
-	struct dm_struct *dm = (struct dm_struct *)dm_void;
-	struct phydm_dig_struct *dig_t = &dm->dm_dig_table;
-
-	if (phydm_dig_abort(dm) || dm->original_dig_restore)
-		return;
-	/*@
-	 *PHYDM_DBG(dm, DBG_DIG, "timer callback =======> tdma_dig_state=%d\n");
-	 *	  dig_t->tdma_dig_state);
-	 *PHYDM_DBG(dm, DBG_DIG, "tdma_h_igi=0x%x, tdma_l_igi=0x%x\n",
-	 *	  dig_t->cur_ig_value_tdma,
-	 *	  dig_t->low_ig_value);
-	 */
-	phydm_tdma_fa_cnt_chk(dm);
-
-	/*@prevent dumb*/
-	if (dm->tdma_dig_state_number < 2)
-		dm->tdma_dig_state_number = 2;
-
-	/*@update state*/
-	dig_t->tdma_dig_cnt++;
-	dig_t->tdma_dig_state = dig_t->tdma_dig_cnt % dm->tdma_dig_state_number;
-
-	/*@
-	 *PHYDM_DBG(dm, DBG_DIG, "enter state %d, dig count %d\n",
-	 *	  dig_t->tdma_dig_state, dig_t->tdma_dig_cnt);
-	 */
-
-	if (dig_t->tdma_dig_state == TDMA_DIG_LOW_STATE)
-		phydm_write_tdma_dig(dm, dig_t->low_ig_value);
-	else if (dig_t->tdma_dig_state >= TDMA_DIG_HIGH_STATE)
-		phydm_write_tdma_dig(dm, dig_t->cur_ig_value_tdma);
-
-	odm_set_timer(dm, &dm->tdma_dig_timer, dm->tdma_dig_timer_ms);
-}
-#endif
 /*@============================================================*/
 /*@FASLE ALARM CHECK*/
 /*@============================================================*/

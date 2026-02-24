@@ -97,45 +97,6 @@ void phydm_soml_on_off(void *dm_void, u8 swch)
 	soml_tab->soml_on_off = swch;
 }
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-void phydm_adaptive_soml_callback(struct phydm_timer_list *timer)
-{
-	void *adapter = (void *)timer->Adapter;
-	HAL_DATA_TYPE *hal_data = GET_HAL_DATA(((PADAPTER)adapter));
-	struct dm_struct *dm = &hal_data->DM_OutSrc;
-	struct adaptive_soml *soml_tab = &dm->dm_soml_table;
-
-	#if DEV_BUS_TYPE == RT_PCI_INTERFACE
-	#if USE_WORKITEM
-	odm_schedule_work_item(&soml_tab->phydm_adaptive_soml_workitem);
-	#else
-	{
-#if 0
-		/*@dbg_print("%s\n",__func__);*/
-#endif
-		phydm_adsl(dm);
-	}
-	#endif
-	#else
-	odm_schedule_work_item(&soml_tab->phydm_adaptive_soml_workitem);
-	#endif
-}
-
-void phydm_adaptive_soml_workitem_callback(void *context)
-{
-#ifdef CONFIG_ADAPTIVE_SOML
-	void *adapter = (void *)context;
-	HAL_DATA_TYPE *hal_data = GET_HAL_DATA(((PADAPTER)adapter));
-	struct dm_struct *dm = &hal_data->DM_OutSrc;
-
-#if 0
-	/*@dbg_print("%s\n",__func__);*/
-#endif
-	phydm_adsl(dm);
-#endif
-}
-
-#elif (DM_ODM_SUPPORT_TYPE == ODM_CE)
 void phydm_adaptive_soml_callback(void *dm_void)
 {
 	struct dm_struct *dm = (struct dm_struct *)dm_void;
@@ -163,15 +124,6 @@ void phydm_adaptive_soml_workitem_callback(void *context)
 	phydm_adsl(dm);
 }
 
-#else
-void phydm_adaptive_soml_callback(void *dm_void)
-{
-	struct dm_struct *dm = (struct dm_struct *)dm_void;
-
-	PHYDM_DBG(dm, DBG_ADPTV_SOML, "******SOML_Callback******\n");
-	phydm_adsl(dm);
-}
-#endif
 
 void phydm_rx_rate_for_soml(void *dm_void, void *pkt_info_void)
 {
@@ -794,49 +746,6 @@ void phydm_adsl_decision_state(void *dm_void)
 				  (total_ht_rate_on / ht_total_cnt_on) : 0;
 		rate_per_pkt_off = (ht_total_cnt_off != 0) ?
 				   (total_ht_rate_off / ht_total_cnt_off) : 0;
-		#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-		ht_ok_max_on = soml_tab->ht_crc_ok_cnt_on[max_idx_on];
-		ht_fail_max_on = soml_tab->ht_crc_fail_cnt_on[max_idx_on];
-		ht_ok_max_off = soml_tab->ht_crc_ok_cnt_off[max_idx_off];
-		ht_fail_max_off = soml_tab->ht_crc_fail_cnt_off[max_idx_off];
-
-		if (ht_fail_max_on == 0)
-			ht_fail_max_on = 1;
-
-		if (ht_fail_max_off == 0)
-			ht_fail_max_off = 1;
-
-		if (ht_ok_max_on > ht_fail_max_on)
-			on_above = true;
-
-		if (ht_ok_max_off > ht_fail_max_off)
-			off_above = true;
-
-		if (on_above && !off_above) {
-			crc_taget = SOML_ON;
-		} else if (!on_above && off_above) {
-			crc_taget = SOML_OFF;
-		} else if (on_above && off_above) {
-			utility_on = (ht_ok_max_on << 7) / ht_fail_max_on;
-			utility_off = (ht_ok_max_off << 7) / ht_fail_max_off;
-			crc_taget = (utility_on == utility_off) ?
-				    (soml_tab->soml_last_state) :
-				    ((utility_on > utility_off) ? SOML_ON :
-				    SOML_OFF);
-
-		} else if (!on_above && !off_above) {
-			if (ht_ok_max_on == 0)
-				ht_ok_max_on = 1;
-			if (ht_ok_max_off == 0)
-				ht_ok_max_off = 1;
-			utility_on = (ht_fail_max_on << 7) / ht_ok_max_on;
-			utility_off = (ht_fail_max_off << 7) / ht_ok_max_off;
-			crc_taget = (utility_on == utility_off) ?
-				    (soml_tab->soml_last_state) :
-				    ((utility_on < utility_off) ? SOML_ON :
-				    SOML_OFF);
-		}
-		#endif
 	} else if (dm->support_ic_type == ODM_RTL8822B) {
 		cfo_diff_avg_a = soml_tab->cfo_diff_sum_a / soml_tab->cfo_cnt;
 		cfo_diff_avg_b = soml_tab->cfo_diff_sum_b / soml_tab->cfo_cnt;
@@ -1027,49 +936,6 @@ void phydm_adsl_decision_state(void *dm_void)
 				  (total_vht_rate_on / vht_total_cnt_on) : 0;
 		rate_per_pkt_off = (vht_total_cnt_off != 0) ?
 				   (total_vht_rate_off / vht_total_cnt_off) : 0;
-		#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-		vht_ok_max_on = soml_tab->vht_crc_ok_cnt_on[max_idx_on];
-		vht_fail_max_on = soml_tab->vht_crc_fail_cnt_on[max_idx_on];
-		vht_ok_max_off = soml_tab->vht_crc_ok_cnt_off[max_idx_off];
-		vht_fail_max_off = soml_tab->vht_crc_fail_cnt_off[max_idx_off];
-
-		if (vht_fail_max_on == 0)
-			vht_fail_max_on = 1;
-
-		if (vht_fail_max_off == 0)
-			vht_fail_max_off = 1;
-
-		if (vht_ok_max_on > vht_fail_max_on)
-			on_above = true;
-
-		if (vht_ok_max_off > vht_fail_max_off)
-			off_above = true;
-
-		if (on_above && !off_above) {
-			crc_taget = SOML_ON;
-		} else if (!on_above && off_above) {
-			crc_taget = SOML_OFF;
-		} else if (on_above && off_above) {
-			utility_on = (vht_ok_max_on << 7) / vht_fail_max_on;
-			utility_off = (vht_ok_max_off << 7) / vht_fail_max_off;
-			crc_taget = (utility_on == utility_off) ?
-				    (soml_tab->soml_last_state) :
-				    ((utility_on > utility_off) ? SOML_ON :
-				    SOML_OFF);
-
-		} else if (!on_above && !off_above) {
-			if (vht_ok_max_on == 0)
-				vht_ok_max_on = 1;
-			if (vht_ok_max_off == 0)
-				vht_ok_max_off = 1;
-			utility_on = (vht_fail_max_on << 7) / vht_ok_max_on;
-			utility_off = (vht_fail_max_off << 7) / vht_ok_max_off;
-			crc_taget = (utility_on == utility_off) ?
-				    (soml_tab->soml_last_state) :
-				    ((utility_on < utility_off) ? SOML_ON :
-				    SOML_OFF);
-		}
-		#endif
 
 	}
 
@@ -1077,17 +943,6 @@ void phydm_adsl_decision_state(void *dm_void)
 	PHYDM_DBG(dm, DBG_ADPTV_SOML,
 		  "[  rate_per_pkt_on = %d ; rate_per_pkt_off = %d ]\n",
 		  rate_per_pkt_on, rate_per_pkt_off);
-	#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-	if (max_idx_on == max_idx_off && max_idx_on != 0) {
-		PHYDM_DBG(dm, DBG_ADPTV_SOML,
-			  "[ max_idx_on == max_idx_off ]\n");
-		PHYDM_DBG(dm, DBG_ADPTV_SOML,
-			  "[ max_idx = %d, crc_utility_on = %d, crc_utility_off = %d, crc_target = %d]\n",
-			  max_idx_on, utility_on, utility_off,
-			  crc_taget);
-		next_on_off = crc_taget;
-	} else
-	#endif
 	if (rate_per_pkt_on > rate_per_pkt_off) {
 		next_on_off = SOML_ON;
 		PHYDM_DBG(dm, DBG_ADPTV_SOML,
@@ -1319,11 +1174,7 @@ void phydm_adaptive_soml_init(void *dm_void)
 	soml_tab->soml_train_num = 4;
 	soml_tab->is_soml_method_enable = 0;
 	soml_tab->soml_counter = 0;
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN | ODM_CE))
 	soml_tab->soml_period = 1;
-#else
-	soml_tab->soml_period = 4;
-#endif
 	soml_tab->soml_select = 0;
 	soml_tab->cfo_cnt = 0;
 	soml_tab->cfo_diff_sum_a = 0;

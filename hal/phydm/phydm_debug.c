@@ -2572,27 +2572,12 @@ void phydm_basic_dbg_message(void *dm_void)
 	struct dm_struct *dm = (struct dm_struct *)dm_void;
 	struct phydm_fa_struct *fa_t = &dm->false_alm_cnt;
 	struct odm_phy_dbg_info *dbg = &dm->phy_dbg_info;
-	#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	struct odm_phy_dbg_info *dbg_b = &dm->phy_dbg_info_win_bkp;
-	#endif
 	#ifdef NHM_SUPPORT
 	struct ccx_info *ccx = &dm->dm_ccx_info;
 	#endif
 
-	#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	/* backup memory*/
-	odm_move_memory(dm, dbg_b, dbg, sizeof(struct odm_phy_dbg_info));
-	#endif
 
 	if (!(dm->debug_components & DBG_CMN)) {
-		#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-		/* reset rx rate distribution*/
-		phydm_reset_rx_rate_distribution(dm);
-		/* cal & reset avg of rssi/snr/evm*/
-		phydm_get_avg_phystatus_val(dm);
-		/* reset sum of rssi/snr/evm*/
-		phydm_reset_phystatus_statistic(dm);
-		#endif
 		return;
 	}
 
@@ -2945,10 +2930,6 @@ void phydm_basic_profile(void *dm_void, u32 *_used, char *output, u32 *_out_len)
 #endif
 	PDM_SNPF(out_len, used, output + used, out_len - used, "  %-35s: %s\n",
 		 "RA Info", RAINFO_VERSION);
-#if (DM_ODM_SUPPORT_TYPE & ODM_WIN)
-	PDM_SNPF(out_len, used, output + used, out_len - used, "  %-35s: %s\n",
-		 "AntDetect", ANTDECT_VERSION);
-#endif
 #ifdef CONFIG_PATH_DIVERSITY
 	PDM_SNPF(out_len, used, output + used, out_len - used, "  %-35s: %s\n",
 		 "PathDiv", PATHDIV_VERSION);
@@ -4277,9 +4258,6 @@ void phydm_per_tone_evm(void *dm_void, char input[][16], u32 *_used,
 	pr_debug("ID=((%d)), BW=((%d)), fc=((CH-%d))\n", dm->curr_station_id,
 		 20 << *dm->band_width, *dm->channel);
 	pr_debug("avg_num =((%d)), round =((%d))\n", avg_num, round);
-#if (DM_ODM_SUPPORT_TYPE & ODM_AP)
-	watchdog_stop(dm->priv);
-#endif
 	for (j = 0; j < round; j++) {
 		pr_debug("\nround((%d))\n", (j + 1));
 		if (*dm->band_width == CHANNEL_WIDTH_20) {
@@ -5389,11 +5367,7 @@ void phydm_cmd_parser(struct dm_struct *dm, char input[][MAX_ARGV],
 	case PHYDM_DEMO: { /*@echo demo 10 0x3a z abcde >cmd*/
 		u32 directory = 0;
 
-		#if (DM_ODM_SUPPORT_TYPE & (ODM_CE | ODM_AP))
 		char char_temp;
-		#else
-		u32 char_temp = ' ';
-		#endif
 
 		PHYDM_SSCANF(input[1], DCMD_DECIMAL, &directory);
 		PDM_SNPF(out_len, used, output + used, out_len - used,
@@ -5767,7 +5741,6 @@ char *strsep(char **s, const char *ct)
 #endif
 #endif
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE | ODM_AP | ODM_IOT))
 s32 phydm_cmd(struct dm_struct *dm, char *input, u32 in_len, u8 flag,
 	      char *output, u32 out_len)
 {
@@ -5794,7 +5767,6 @@ s32 phydm_cmd(struct dm_struct *dm, char *input, u32 in_len, u8 flag,
 
 	return 0;
 }
-#endif
 
 void phydm_fw_trace_handler(void *dm_void, u8 *cmd_buf, u8 cmd_len)
 {
@@ -6121,21 +6093,12 @@ void phydm_fw_trace_handler_8051(void *dm_void, u8 *buffer, u8 cmd_len)
 	extend_c2h_dbg_len = buffer[1];
 	extend_c2h_dbg_content = buffer + 2; /*@DbgSeq+DbgContent for show HEX*/
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	RT_DISP(FC2H, C2H_Summary, ("[Extend C2H packet], Extend_c2hSubId=0x%x, extend_c2h_dbg_len=%d\n",
-				    extend_c2h_sub_id, extend_c2h_dbg_len));
-
-	RT_DISP_DATA(FC2H, C2H_Summary, "[Extend C2H packet], Content Hex:", extend_c2h_dbg_content, cmd_len - 2);
-#endif
 
 go_backfor_aggre_dbg_pkt:
 	i = 0;
 	extend_c2h_dbg_seq = buffer[2];
 	extend_c2h_dbg_content = buffer + 3;
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	RT_DISP(FC2H, C2H_Summary, ("[RTKFW, SEQ= %d] :", extend_c2h_dbg_seq));
-#endif
 
 	for (;; i++) {
 		fw_debug_trace[i] = extend_c2h_dbg_content[i];

@@ -1385,12 +1385,8 @@ void phydm_switch_sat_agc_by_band(void *dm_void)
 	if (dm->support_ic_type & ODM_RTL8814B)
 		odm_config_mp_8814b_extra_agc_tab(dm, lna_sat->cur_rf_band);
 #endif
-#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-	pr_debug("%s ==> switch to band%d\n", __func__, lna_sat->cur_rf_band);
-#else
 	PHYDM_DBG(dm, DBG_LNA_SAT_CHK, "%s ==> switch to band%d\n",
 		  __func__, lna_sat->cur_rf_band);
-#endif
 }
 
 void phydm_auto_agc_tab_init(void *dm_void)

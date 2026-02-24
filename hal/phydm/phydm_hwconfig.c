@@ -59,10 +59,6 @@ odm_config_rf_with_header_file(struct dm_struct *dm,
 			       enum odm_rf_config_type config_type,
 			       u8 e_rf_path)
 {
-#if (DM_ODM_SUPPORT_TYPE & ODM_WIN)
-	void *adapter = dm->adapter;
-	PMGNT_INFO mgnt_info = &((PADAPTER)adapter)->MgntInfo;
-#endif
 	enum hal_status result = HAL_STATUS_SUCCESS;
 
 	PHYDM_DBG(dm, ODM_COMP_INIT, "===>%s (%s)\n", __func__,
@@ -81,14 +77,6 @@ odm_config_rf_with_header_file(struct dm_struct *dm,
 			else if (e_rf_path == RF_PATH_B)
 				READ_AND_CONFIG_MP(8812a, _radiob);
 		} else if (config_type == CONFIG_RF_TXPWR_LMT) {
-#if (DM_ODM_SUPPORT_TYPE & ODM_WIN) && (DEV_BUS_TYPE == RT_PCI_INTERFACE)
-			HAL_DATA_TYPE * hal_data = GET_HAL_DATA(((PADAPTER)adapter));
-			if ((hal_data->EEPROMSVID == 0x17AA && hal_data->EEPROMSMID == 0xA811) ||
-			    (hal_data->EEPROMSVID == 0x10EC && hal_data->EEPROMSMID == 0xA812) ||
-			    (hal_data->EEPROMSVID == 0x10EC && hal_data->EEPROMSMID == 0x8812))
-				READ_AND_CONFIG_MP(8812a, _txpwr_lmt_hm812a03);
-			else
-#endif
 				READ_AND_CONFIG_MP(8812a, _txpwr_lmt);
 		}
 	}
@@ -105,13 +93,6 @@ odm_config_rf_with_header_file(struct dm_struct *dm,
 				else
 					READ_AND_CONFIG_MP(8821a, _txpwr_lmt_8811a_u_ipa);
 			} else {
-#if (DM_ODM_SUPPORT_TYPE & ODM_WIN)
-				if (mgnt_info->CustomerID == RT_CID_8821AE_ASUS_MB)
-					READ_AND_CONFIG_MP(8821a, _txpwr_lmt_8821a_sar_8mm);
-				else if (mgnt_info->CustomerID == RT_CID_ASUS_NB)
-					READ_AND_CONFIG_MP(8821a, _txpwr_lmt_8821a_sar_5mm);
-				else
-#endif
 					READ_AND_CONFIG_MP(8821a, _txpwr_lmt_8821a);
 			}
 		}
@@ -125,14 +106,6 @@ odm_config_rf_with_header_file(struct dm_struct *dm,
 			else if (e_rf_path == RF_PATH_B)
 				READ_AND_CONFIG_MP(8192e, _radiob);
 		} else if (config_type == CONFIG_RF_TXPWR_LMT) {
-#if (DM_ODM_SUPPORT_TYPE & ODM_WIN) && (DEV_BUS_TYPE == RT_PCI_INTERFACE) /*Refine by Vincent Lan for 5mm SAR pwr limit*/
-			HAL_DATA_TYPE * hal_data = GET_HAL_DATA(((PADAPTER)adapter));
-
-			if ((hal_data->EEPROMSVID == 0x11AD && hal_data->EEPROMSMID == 0x8192) ||
-			    (hal_data->EEPROMSVID == 0x11AD && hal_data->EEPROMSMID == 0x8193))
-				READ_AND_CONFIG_MP(8192e, _txpwr_lmt_8192e_sar_5mm);
-			else
-#endif
 				READ_AND_CONFIG_MP(8192e, _txpwr_lmt);
 		}
 	}
@@ -893,10 +866,6 @@ enum hal_status
 odm_config_bb_with_header_file(struct dm_struct *dm,
 			       enum odm_bb_config_type config_type)
 {
-#if (DM_ODM_SUPPORT_TYPE & ODM_WIN)
-	void *adapter = dm->adapter;
-	PMGNT_INFO mgnt_info = &((PADAPTER)adapter)->MgntInfo;
-#endif
 	enum hal_status result = HAL_STATUS_SUCCESS;
 
 /* @1 AP doesn't use PHYDM initialization in these ICs */

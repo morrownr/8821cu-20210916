@@ -185,9 +185,7 @@ void phydm_set_mac_phy_txinfo_jgr3(void *dm_void,
 	/*0x900[1] ndp_sound */
 	odm_set_bb_reg(dm, R_0x900, BIT(1), tx_info->ndp_sound);
 
-	#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN | ODM_CE))
 	tx_info->m_stbc = tx_info->m_stbc - 1;
-	#endif
 	/*0x900[27:24] txsc [29:28] bw [31:30] m_stbc */
 	tmp = (tx_info->tx_sc) | ((tx_info->bw) << 4) |
 		((tx_info->m_stbc) << 6);

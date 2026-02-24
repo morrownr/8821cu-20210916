@@ -259,10 +259,8 @@ phydm_set_crystal_cap_reg(void *dm_void, u8 crystal_cap)
 	#endif
 	#if (RTL8710B_SUPPORT)
 	else if (dm->support_ic_type & (ODM_RTL8710B)) {
-		#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN | ODM_CE))
 		/* write 0x60[29:24] = 0x60[23:18] = crystal_cap */
 		HAL_SetSYSOnReg(dm->adapter, R_0x60, 0x3FFC0000, reg_val);
-		#endif
 	}
 	#endif
 	#if (RTL8195B_SUPPORT)
@@ -349,18 +347,14 @@ void phydm_cfo_tracking_reset(void *dm_void)
 	}
 
 #if ODM_IC_11N_SERIES_SUPPORT
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN | ODM_CE))
 	if (dm->support_ic_type & ODM_IC_11N_SERIES)
 		phydm_set_atc_status(dm, true);
 #endif
-#endif
 #ifdef PHYDM_IC_JGR3_SERIES_SUPPORT
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN | ODM_CE | ODM_AP))
 	if (dm->support_ic_type & ODM_RTL8814B) {
 		/*Disable advance time for CFO residual*/
 		odm_set_bb_reg(dm, R_0xc2c, BIT29, 0x0);
 	}
-#endif
 #endif
 }
 
@@ -504,7 +498,6 @@ void phydm_cfo_tracking(void *dm_void)
 
 		/* @Dynamic ATC switch */
 		#if ODM_IC_11N_SERIES_SUPPORT
-		#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN | ODM_CE))
 		if (dm->support_ic_type & ODM_IC_11N_SERIES) {
 			if (cfo_avg < CFO_TH_ATC && cfo_avg > -CFO_TH_ATC)
 				phydm_set_atc_status(dm, false);
@@ -513,14 +506,11 @@ void phydm_cfo_tracking(void *dm_void)
 
 		}
 		#endif
-		#endif
 		#ifdef PHYDM_IC_JGR3_SERIES_SUPPORT
-		#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN | ODM_CE | ODM_AP))
 		if (dm->support_ic_type & ODM_RTL8814B) {
 			//Disable advance time for CFO residual
 			odm_set_bb_reg(dm, R_0xc2c, BIT29, 0x0);
 		}
-		#endif
 		#endif
 	}
 }
@@ -539,13 +529,8 @@ void phydm_parsing_cfo(void *dm_void, void *pktinfo_void, s8 *pcfotail,
 
 	pktinfo = (struct phydm_perpkt_info_struct *)pktinfo_void;
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN | ODM_CE | ODM_IOT))
 	if (pktinfo->is_packet_match_bssid)
 		valid_info = true;
-#else
-	if (dm->number_active_client == 1)
-		valid_info = true;
-#endif
 	if (valid_info) {
 		if (num_ss > dm->num_rf_path) /*@For fool proof*/
 			num_ss = dm->num_rf_path;
@@ -578,16 +563,6 @@ void phydm_parsing_cfo(void *dm_void, void *pktinfo_void, s8 *pcfotail,
 	}
 }
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-void phy_Init_crystal_capacity(void *dm_void, u8 crystal_cap)
-{
-	struct dm_struct *dm = (struct dm_struct *)dm_void;
-
-	if (!phydm_set_crystal_cap_reg(dm, crystal_cap))
-		RT_TRACE_F(COMP_INIT, DBG_SERIOUS,
-			   ("Crystal is not initialized!\n"));
-}
-#endif
 
 void phydm_cfo_tracking_debug(void *dm_void, char input[][16], u32 *_used,
 			      char *output, u32 *_out_len)

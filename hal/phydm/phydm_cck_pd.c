@@ -84,7 +84,6 @@ void phydm_cckpd_type1(void *dm_void)
 	boolean is_update = true;
 
 	if (dm->is_linked) {
-	#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN | ODM_CE))
 		if (dm->rssi_min > 60) {
 			lv = CCK_PD_LV_3;
 		} else if (dm->rssi_min > 35) {
@@ -99,16 +98,6 @@ void phydm_cckpd_type1(void *dm_void)
 		} else { /*RSSI < 20*/
 			lv = CCK_PD_LV_1;
 		}
-	#else /*ODM_AP*/
-		if (dig_t->cur_ig_value > 0x32)
-			lv = CCK_PD_LV_4;
-		else if (dig_t->cur_ig_value > 0x2a)
-			lv = CCK_PD_LV_3;
-		else if (dig_t->cur_ig_value > 0x24)
-			lv = CCK_PD_LV_2;
-		else
-			lv = CCK_PD_LV_1;
-	#endif
 	} else {
 		if (cckpd_t->cck_fa_ma > 1000)
 			lv = CCK_PD_LV_1;
@@ -357,16 +346,6 @@ void phydm_cckpd_type2(void *dm_void)
 	}
 
 	/*[Abnormal case] =================================================*/
-	#if (DM_ODM_SUPPORT_TYPE & ODM_WIN)
-	/*@21C Miracast lag issue & [PCIE-3298]*/
-	if (dm->support_ic_type & ODM_RTL8821C && rssi_min > 60) {
-		lv = CCK_PD_LV_4;
-		cckpd_t->cck_pd_lv = lv;
-		phydm_write_cck_pd_type2(dm, 0x1d, (cckpd_t->aaa_default + 8));
-		is_update = false;
-		PHYDM_DBG(dm, DBG_CCKPD, "CCKPD Abnormal case1\n");
-	}
-	#endif
 	/*=================================================================*/
 
 	if (is_update) {
@@ -825,7 +804,6 @@ void phydm_cckpd_type4(void *dm_void)
 
 	if (dm->is_linked) {
 		PHYDM_DBG(dm, DBG_CCKPD, "Linked!!!\n");
-		#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN | ODM_CE))
 		if (dm->rssi_min > 40) {
 			lv = CCK_PD_LV_4;
 			PHYDM_DBG(dm, DBG_CCKPD, "Order 1\n");
@@ -847,29 +825,6 @@ void phydm_cckpd_type4(void *dm_void)
 				PHYDM_DBG(dm, DBG_CCKPD, "Order 4-3\n");
 			}
 		}
-		#else /*ODM_AP*/
-		if (igi > 0x38 && dm->rssi_min > 32) {
-			lv = CCK_PD_LV_4;
-			PHYDM_DBG(dm, DBG_CCKPD, "Order 1\n");
-		} else if (igi > 0x2a && dm->rssi_min > 32) {
-			lv = CCK_PD_LV_3;
-			PHYDM_DBG(dm, DBG_CCKPD, "Order 2\n");
-		} else if (igi > 0x24 || dm->rssi_min > 24) {
-			lv = CCK_PD_LV_2;
-			PHYDM_DBG(dm, DBG_CCKPD, "Order 3\n");
-		} else {
-			if (cckpd_t->cck_fa_ma > 1000) {
-				lv = CCK_PD_LV_1;
-				PHYDM_DBG(dm, DBG_CCKPD, "Order 4-1\n");
-			} else if (cckpd_t->cck_fa_ma < 500) {
-				lv = CCK_PD_LV_0;
-				PHYDM_DBG(dm, DBG_CCKPD, "Order 4-2\n");
-			} else {
-				is_update = false;
-				PHYDM_DBG(dm, DBG_CCKPD, "Order 4-3\n");
-			}
-		}
-		#endif
 	} else {
 		PHYDM_DBG(dm, DBG_CCKPD, "UnLinked!!!\n");
 		if (cckpd_t->cck_fa_ma > 1000) {

@@ -872,13 +872,6 @@ void phydm_phy_sts_n_parsing(struct dm_struct *dm,
 		phy_info->recv_signal_power = rx_pwr_all;
 
 		/* @(3) Get Signal Quality (EVM) */
-		#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-		if (dm->iot_table.win_patch_id == RT_CID_819X_LENOVO)
-			sq = phydm_sq_patch_lenovo(dm, pktinfo->is_cck_rate, pwdb_all, 0, 0);
-		else if (dm->iot_table.win_patch_id == RT_CID_819X_ACER)
-			sq = phydm_sq_patch_rt_cid_819x_acer(dm, pktinfo->is_cck_rate, pwdb_all, 0, 0);
-		else
-		#endif
 			sq = phydm_get_signal_quality(phy_info, dm, phy_sts);
 
 		/* @dbg_print("cck sq = %d\n", sq); */
@@ -919,14 +912,6 @@ void phydm_phy_sts_n_parsing(struct dm_struct *dm,
 
 			/* Record Signal Strength for next packet */
 
-			#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-			if (i == RF_PATH_A) {
-				if (dm->iot_table.win_patch_id == RT_CID_819X_LENOVO) {
-					phy_info->signal_quality = phydm_sq_patch_lenovo(dm, pktinfo->is_cck_rate, pwdb_all, i, RSSI);
-				} else if (dm->iot_table.win_patch_id == RT_CID_819X_ACER)
-					phy_info->signal_quality = phydm_sq_patch_rt_cid_819x_acer(dm, pktinfo->is_cck_rate, pwdb_all, 0, RSSI);
-			}
-			#endif
 		}
 
 		/* @(2)PWDB, Average PWDB calculated by hardware (for RA) */
@@ -1051,18 +1036,7 @@ void phydm_get_sq(struct dm_struct *dm, struct phydm_phyinfo_struct *phy_info,
 {
 	u8 sq = 0;
 	u8 pwdb_all = phy_info->rx_pwdb_all; /*precentage*/
-	#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	u8 rssi = phy_info->rx_mimo_signal_strength[0];
-	#endif
 
-	#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	if (dm->iot_table.win_patch_id == RT_CID_819X_LENOVO) {
-		if (is_cck_rate)
-			sq = phydm_sq_patch_lenovo(dm, 1, pwdb_all, 0, 0);
-		else
-			sq = phydm_sq_patch_lenovo(dm, 0, pwdb_all, 0, rssi);
-	} else
-	#endif
 	{
 		if (is_cck_rate) {
 			if (pwdb_all > 40 && !dm->is_in_hct_test) {
@@ -1308,9 +1282,6 @@ void phydm_process_rssi_for_dm(struct dm_struct *dm,
 	struct cmn_sta_info *sta = NULL;
 	struct rssi_info *rssi_t = NULL;
 	#ifdef CONFIG_PHYDM_ANTENNA_DIVERSITY
-	#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN))
-	struct phydm_fat_struct *fat_tab = &dm->dm_fat_table;
-	#endif
 	#endif
 
 	if (pktinfo->station_id >= ODM_ASSOCIATE_ENTRY_NUM)
@@ -1328,22 +1299,6 @@ void phydm_process_rssi_for_dm(struct dm_struct *dm,
 	rssi_t = &sta->rssi_stat;
 
 	#ifdef CONFIG_PHYDM_ANTENNA_DIVERSITY
-	#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN))
-	if ((dm->support_ability & ODM_BB_ANT_DIV) &&
-	    fat_tab->enable_ctrl_frame_antdiv) {
-		if (pktinfo->is_packet_match_bssid)
-			dm->data_frame_num++;
-
-		if (fat_tab->use_ctrl_frame_antdiv) {
-			if (!pktinfo->is_to_self) /*@data frame + CTRL frame*/
-				return;
-		} else {
-			/*@data frame only*/
-			if (!pktinfo->is_packet_match_bssid)
-				return;
-		}
-	} else
-	#endif
 	#endif
 	{
 		if (!pktinfo->is_packet_match_bssid) /*@data frame only*/
@@ -3156,9 +3111,6 @@ boolean odm_phy_status_query(struct dm_struct *dm,
 		#endif
 	}
 	phy_info->signal_strength = phy_info->rx_pwdb_all;
-	#if (DM_ODM_SUPPORT_TYPE & ODM_WIN)
-	phydm_process_signal_strength(dm, phy_info, pktinfo);
-	#endif
 
 	/*For basic debug message*/
 	if (pktinfo->is_packet_match_bssid || *dm->mp_mode) {

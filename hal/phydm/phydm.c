@@ -263,11 +263,6 @@ void phydm_common_info_self_init(struct dm_struct *dm)
 	reg_tmp = ODM_REG(BB_RX_PATH, dm);
 	mask_tmp = ODM_BIT(BB_RX_PATH, dm);
 	dm->rf_path_rx_enable = (u8)odm_get_bb_reg(dm, reg_tmp, mask_tmp);
-#if (DM_ODM_SUPPORT_TYPE != ODM_CE)
-	dm->is_net_closed = &dm->BOOLEAN_temp;
-
-	phydm_init_debug_setting(dm);
-#endif
 	phydm_init_soft_ml_setting(dm);
 
 	dm->phydm_sys_up_time = 0;
@@ -326,12 +321,6 @@ void phydm_common_info_self_init(struct dm_struct *dm)
 	if (dm->en_auto_bw_th == 0)
 		dm->en_auto_bw_th = 20;
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	if (!(dm->is_fcs_mode_enable)) {
-		dm->is_fcs_mode_enable = &dm->boolean_dummy;
-		pr_debug("[Warning] is_fcs_mode_enable=NULL\n");
-	}
-#endif
 	/*init IOT table*/
 	odm_memory_set(dm, &dm->iot_table, 0, sizeof(struct phydm_iot_center));
 }
@@ -409,18 +398,6 @@ void phydm_common_info_self_update(struct dm_struct *dm)
 	u32 ma_rx_tp = 0;
 	u32 tp_diff = 0;
 	struct cmn_sta_info *sta;
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	PADAPTER adapter = (PADAPTER)dm->adapter;
-	PMGNT_INFO mgnt_info = &((PADAPTER)adapter)->MgntInfo;
-
-	sta = dm->phydm_sta_info[0];
-
-	/* STA mode is linked to AP */
-	if (is_sta_active(sta) && !ACTING_AS_AP(adapter))
-		dm->bsta_state = true;
-	else
-		dm->bsta_state = false;
-#endif
 
 	for (i = 0; i < ODM_ASSOCIATE_ENTRY_NUM; i++) {
 		sta = dm->phydm_sta_info[i];
@@ -446,9 +423,6 @@ void phydm_common_info_self_update(struct dm_struct *dm)
 		}
 	}
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	dm->is_linked = (sta_cnt != 0) ? true : false;
-#endif
 
 	if (sta_cnt == 1) {
 		dm->is_one_entry_only = true;
@@ -1697,15 +1671,7 @@ void phydm_supportability_init(void *dm_void)
 	} else if (*dm->mp_mode) {
 		support_ability = 0;
 	} else {
-		#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN))
-		support_ability = phydm_supportability_init_win(dm);
-		#elif (DM_ODM_SUPPORT_TYPE & (ODM_AP))
-		support_ability = phydm_supportability_init_ap(dm);
-		#elif(DM_ODM_SUPPORT_TYPE & (ODM_CE))
 		support_ability = phydm_supportability_init_ce(dm);
-		#elif(DM_ODM_SUPPORT_TYPE & (ODM_IOT))
-		support_ability = phydm_supportability_init_iot(dm);
-		#endif
 
 		/*@[Config Antenna Diversity]*/
 		if (IS_FUNC_EN(dm->enable_antdiv))
@@ -1778,9 +1744,7 @@ void phydm_tx_collsion_th_set(void *dm_void, u8 val_r2t, u8 val_t2r)
 
 void phydm_dm_early_init(struct dm_struct *dm)
 {
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	phydm_init_debug_setting(dm);
-#endif
 }
 
 enum phydm_init_result odm_dm_init(struct dm_struct *dm)
@@ -2454,9 +2418,7 @@ void phydm_watchdog(struct dm_struct *dm)
 #ifdef CONFIG_BW_INDICATION
 	phydm_dyn_bw_indication(dm);
 #endif
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	odm_dtc(dm);
-#endif
 
 	phydm_env_mntr_watchdog(dm);
 	phydm_enhance_mntr_watchdog(dm);
@@ -2658,11 +2620,6 @@ void odm_cmn_info_init(struct dm_struct *dm, enum odm_cmninfo cmn_info,
 	case ODM_CMNINFO_SMART_CONCURRENT:
 		dm->is_dual_mac_smart_concurrent = (boolean)value;
 		break;
-#if (DM_ODM_SUPPORT_TYPE & (ODM_AP))
-	case ODM_CMNINFO_CONFIG_BB_RF:
-		dm->config_bbrf = (boolean)value;
-		break;
-#endif
 	case ODM_CMNINFO_IQKPAOFF:
 		dm->rf_calibrate_info.is_iqk_pa_off = (boolean)value;
 		break;
@@ -3317,11 +3274,6 @@ void odm_init_all_timers(struct dm_struct *dm)
 
 void odm_cancel_all_timers(struct dm_struct *dm)
 {
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	/* @2012/01/12 MH Temp BSOD fix. We need to find NIC allocate mem fail reason in win7*/
-	if (dm->adapter == NULL)
-		return;
-#endif
 
 #if (defined(CONFIG_PHYDM_ANTENNA_DIVERSITY))
 	odm_ant_div_timers(dm, CANCEL_ANTDIV_TIMMER);

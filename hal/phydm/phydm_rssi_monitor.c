@@ -95,22 +95,6 @@ void phydm_rssi_monitor_h2c(void *dm_void, u8 macid)
 	}
 }
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-void phydm_sta_rssi_init(void *dm_void, u8 macid, u8 init_rssi)
-{
-	struct dm_struct *dm = (struct dm_struct *)dm_void;
-	struct cmn_sta_info *sta = NULL;
-	struct rssi_info *rssi_t = NULL;
-
-	PHYDM_DBG(dm, DBG_RSSI_MNTR, "%s ======>\n", __func__);
-
-	sta = dm->phydm_sta_info[macid];
-	rssi_t = &sta->rssi_stat;
-
-	rssi_t->rssi_acc = (init_rssi << RSSI_MA);
-	rssi_t->rssi = init_rssi;
-}
-#endif
 void phydm_calculate_rssi_min_max(void *dm_void)
 {
 	struct dm_struct *dm = (struct dm_struct *)dm_void;
@@ -149,10 +133,6 @@ void phydm_calculate_rssi_min_max(void *dm_void)
 	}
 	dm->pre_rssi_min = dm->rssi_min;
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-	if (dm->number_linked_client == 0)
-		return;
-#endif
 	dm->rssi_max = (u8)rssi_max_tmp;
 	dm->rssi_min = (u8)rssi_min_tmp;
 }
