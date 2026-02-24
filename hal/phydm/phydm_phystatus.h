@@ -1224,18 +1224,8 @@ void phydm_reset_rssi_for_dm(struct dm_struct *dm, u8 station_id);
 
 void phydm_get_cck_rssi_table_from_reg(struct dm_struct *dm);
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-void phydm_normal_driver_rx_sniffer(
-	struct dm_struct *dm,
-	u8 *desc,
-	PRT_RFD_STATUS rt_rfd_status,
-	u8 *drv_info,
-	u8 phy_status);
-#endif
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 s32 phydm_signal_scale_mapping(struct dm_struct *dm, s32 curr_sig);
-#endif
 
 boolean odm_phy_status_query(struct dm_struct *dm,
 			     struct phydm_phyinfo_struct *phy_info,

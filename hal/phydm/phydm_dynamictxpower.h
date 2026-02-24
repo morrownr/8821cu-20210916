@@ -37,31 +37,12 @@
 
 #define DTP_POWER_LEVEL_SIZE 3
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
 #define TX_POWER_NEAR_FIELD_THRESH_LVL2 74
 #define TX_POWER_NEAR_FIELD_THRESH_LVL1 60
-#define TX_POWER_NEAR_FIELD_THRESH_AP 0x3F
-#elif (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-#define TX_POWER_NEAR_FIELD_THRESH_LVL2 74
-#define TX_POWER_NEAR_FIELD_THRESH_LVL1 67
-#elif (DM_ODM_SUPPORT_TYPE == ODM_CE)
-#define TX_POWER_NEAR_FIELD_THRESH_LVL2 74
-#define TX_POWER_NEAR_FIELD_THRESH_LVL1 60
-#endif
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-#define TX_PWR_NEAR_FIELD_TH_JGR3_LVL3 80
-#define TX_PWR_NEAR_FIELD_TH_JGR3_LVL2 63
-#define TX_PWR_NEAR_FIELD_TH_JGR3_LVL1 55
-#elif (DM_ODM_SUPPORT_TYPE == ODM_WIN)
 #define TX_PWR_NEAR_FIELD_TH_JGR3_LVL3 90
 #define TX_PWR_NEAR_FIELD_TH_JGR3_LVL2 85
 #define TX_PWR_NEAR_FIELD_TH_JGR3_LVL1 80
-#elif (DM_ODM_SUPPORT_TYPE == ODM_CE)
-#define TX_PWR_NEAR_FIELD_TH_JGR3_LVL3 90
-#define TX_PWR_NEAR_FIELD_TH_JGR3_LVL2 85
-#define TX_PWR_NEAR_FIELD_TH_JGR3_LVL1 80
-#endif
 
 #define tx_high_pwr_level_normal 0
 #define tx_high_pwr_level_level1 1
@@ -134,9 +115,6 @@ void phydm_wt_ram_pwr(void *dm_void, u8 macid, boolean is_ofst1,
 		             boolean pwr_ofst_en, s8 pwr_ofst);
 
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-void odm_dynamic_tx_power_win(void *dm_void);
-#endif
 
 #endif
 #endif

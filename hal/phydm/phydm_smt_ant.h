@@ -84,10 +84,6 @@ struct smt_ant_honbo {
 	u8	rfu_protocol_type;
 	u16	rfu_protocol_delay_time;
 
-	#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	RT_WORK_ITEM	hl_smart_antenna_workitem;
-	RT_WORK_ITEM	hl_smart_antenna_decision_workitem;
-	#endif
 
 
 	#ifdef CONFIG_HL_SMART_ANTENNA_TYPE2
@@ -151,13 +147,6 @@ void phydm_cumitek_smt_ant_debug(
 #endif
 
 #if (defined(CONFIG_HL_SMART_ANTENNA))
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-void phydm_beam_switch_workitem_callback(
-	void *context);
-
-void phydm_beam_decision_workitem_callback(
-	void *context);
-#endif /*@#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)*/
 
 #ifdef CONFIG_HL_SMART_ANTENNA_TYPE2
 void phydm_hl_smart_ant_type2_init_8822b(

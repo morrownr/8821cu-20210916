@@ -80,26 +80,12 @@
 #define PHYDM_MAX_RF_PATH		4
 
 /* number of entry */
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	#ifdef DM_ODM_CE_MAC80211
 		/* @defined in wifi.h (32+1) */
 	#else
 		#define	ASSOCIATE_ENTRY_NUM	MACID_NUM_SW_LIMIT  /* @Max size of asoc_entry[].*/
 	#endif
 	#define	ODM_ASSOCIATE_ENTRY_NUM	ASSOCIATE_ENTRY_NUM
-#elif(DM_ODM_SUPPORT_TYPE & (ODM_AP))
-	#define ASSOCIATE_ENTRY_NUM	NUM_STAT
-	#define	ODM_ASSOCIATE_ENTRY_NUM	(ASSOCIATE_ENTRY_NUM + 1)
-#elif(DM_ODM_SUPPORT_TYPE & (ODM_IOT))
-	#ifdef CONFIG_CONCURRENT_MODE
-		#define ASSOCIATE_ENTRY_NUM	NUM_STA + 2 /*@2 is for station mod*/
-	#else
-		#define ASSOCIATE_ENTRY_NUM	NUM_STA /*@8 is for max size of asoc_entry[].*/
-	#endif
-	#define	ODM_ASSOCIATE_ENTRY_NUM	ASSOCIATE_ENTRY_NUM
-#else
-	#define ODM_ASSOCIATE_ENTRY_NUM	(((ASSOCIATE_ENTRY_NUM + 1) * 3) + 1)
-#endif
 
 /* @-----MGN rate--------------------------------- */
 
@@ -363,9 +349,6 @@ enum phydm_legacy_spec_rate {
 	#define PHY_NUM_RATE_IDX NUM_RATE_AC_4SS
 #endif
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	#define CONFIG_SFW_SUPPORTED
-#endif
 
 /****************************************************************
  * 1 ============================================================
@@ -725,16 +708,8 @@ enum phydm_ic {
 
 #define	LOW_BW_RATE_NUM		VHT_RATE_NUM
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 #define	SECOND_CH_AT_LSB	2	/*@primary CH @ MSB,  SD4: HAL_PRIME_CHNL_OFFSET_UPPER*/
 #define	SECOND_CH_AT_USB	1	/*@primary CH @ LSB,   SD4: HAL_PRIME_CHNL_OFFSET_LOWER*/
-#elif (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-#define	SECOND_CH_AT_LSB	2	/*@primary CH @ MSB,  SD7: HAL_PRIME_CHNL_OFFSET_UPPER*/
-#define	SECOND_CH_AT_USB	1	/*@primary CH @ LSB,   SD7: HAL_PRIME_CHNL_OFFSET_LOWER*/
-#else /*if (DM_ODM_SUPPORT_TYPE == ODM_AP)*/
-#define	SECOND_CH_AT_LSB	1	/*@primary CH @ MSB,  SD8: HT_2NDCH_OFFSET_BELOW*/
-#define	SECOND_CH_AT_USB	2	/*@primary CH @ LSB,   SD8: HT_2NDCH_OFFSET_ABOVE*/
-#endif
 
 enum phydm_ic_ip {
 	PHYDM_IC_N		= 0,
@@ -788,7 +763,6 @@ enum odm_operation_mode {
 };
 
 /* ODM_CMNINFO_WM_MODE */
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 enum odm_wireless_mode {
 	ODM_WM_UNKNOW		= 0x0,
 	ODM_WM_B		= BIT(0),
@@ -799,34 +773,13 @@ enum odm_wireless_mode {
 	ODM_WM_AUTO		= BIT(5),
 	ODM_WM_AC		= BIT(6),
 };
-#else
-enum odm_wireless_mode {
-	ODM_WM_UNKNOWN		= 0x00,/*@0x0*/
-	ODM_WM_A		= BIT(0), /* @0x1*/
-	ODM_WM_B		= BIT(1), /* @0x2*/
-	ODM_WM_G		= BIT(2),/* @0x4*/
-	ODM_WM_AUTO		= BIT(3),/* @0x8*/
-	ODM_WM_N24G		= BIT(4),/* @0x10*/
-	ODM_WM_N5G		= BIT(5),/* @0x20*/
-	ODM_WM_AC_5G		= BIT(6),/* @0x40*/
-	ODM_WM_AC_24G		= BIT(7),/* @0x80*/
-	ODM_WM_AC_ONLY		= BIT(8),/* @0x100*/
-	ODM_WM_MAX		= BIT(11)/* @0x800*/
-
-};
-#endif
 
 /* ODM_CMNINFO_BAND */
 enum odm_band_type {
-#if (DM_ODM_SUPPORT_TYPE & (ODM_AP))
-	ODM_BAND_2_4G		= BIT(0),
-	ODM_BAND_5G		= BIT(1),
-#else
 	ODM_BAND_2_4G		= 0,
 	ODM_BAND_5G,
 	ODM_BAND_ON_BOTH,
 	ODM_BANDMAX
-#endif
 };
 
 enum odm_rf_band {

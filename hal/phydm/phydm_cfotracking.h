@@ -68,7 +68,4 @@ void phydm_parsing_cfo(void *dm_void, void *pktinfo_void, s8 *pcfotail,
 		       u8 num_ss);
 void phydm_cfo_tracking_debug(void *dm_void, char input[][16], u32 *_used,
 			      char *output, u32 *_out_len);
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-void phy_Init_crystal_capacity(void *dm_void, u8 crystal_cap);
-#endif
 #endif

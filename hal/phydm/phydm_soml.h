@@ -143,19 +143,10 @@ void phydm_dynamicsoftmletting(void *dm_void);
 
 void phydm_soml_on_off(void *dm_void, u8 swch);
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-void phydm_adaptive_soml_callback(struct phydm_timer_list *timer);
-
-void phydm_adaptive_soml_workitem_callback(void *context);
-
-#elif (DM_ODM_SUPPORT_TYPE == ODM_CE)
 void phydm_adaptive_soml_callback(void *dm_void);
 
 void phydm_adaptive_soml_workitem_callback(void *context);
 
-#else
-void phydm_adaptive_soml_callback(void *dm_void);
-#endif
 
 void phydm_rx_rate_for_soml(void *dm_void, void *pkt_info_void);
 

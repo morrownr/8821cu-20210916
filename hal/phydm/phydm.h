@@ -91,9 +91,7 @@
 #include "phydm_cck_rx_pathdiv.h"
 #endif
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN | ODM_CE))
 	#include "phydm_beamforming.h"
-#endif
 
 #ifdef CONFIG_DIRECTIONAL_BF
 #include "phydm_direct_bf.h"
@@ -187,11 +185,7 @@ extern const u16	phy_rate_table[84];
 #define IS_FUNC_EN(name)	((name) && (*name))
 #endif
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-	#define PHYDM_WATCH_DOG_PERIOD	1 /*second*/
-#else
 	#define PHYDM_WATCH_DOG_PERIOD	2 /*second*/
-#endif
 
 #define PHY_HIST_SIZE		12
 #define PHY_HIST_TH_SIZE	(PHY_HIST_SIZE - 1)
@@ -1125,9 +1119,6 @@ struct dm_struct {
 	u32			n_iqk_ok_cnt;
 	u32			n_iqk_fail_cnt;
 
-#if (DM_ODM_SUPPORT_TYPE & ODM_AP)
-	boolean			config_bbrf;
-#endif
 	boolean			is_disable_power_training;
 	boolean			is_bt_continuous_turn;
 	u8			enhance_pwr_th[3];
@@ -1224,9 +1215,6 @@ struct dm_struct {
 #endif
 	struct odm_noise_monitor	noise_level;
 	struct odm_phy_dbg_info		phy_dbg_info;
-#if (DM_ODM_SUPPORT_TYPE & ODM_WIN)
-	struct odm_phy_dbg_info		phy_dbg_info_win_bkp;
-#endif
 #ifdef PHYDM_IC_JGR3_SERIES_SUPPORT
 	struct phydm_bf_rate_info_jgr3 bf_rate_info_jgr3;
 #endif
@@ -1236,9 +1224,6 @@ struct dm_struct {
 #endif
 
 #if (defined(CONFIG_PHYDM_ANTENNA_DIVERSITY))
-	#if (DM_ODM_SUPPORT_TYPE & (ODM_AP))
-	struct _BF_DIV_COEX_		dm_bdc_table;
-	#endif
 
 	#if (defined(CONFIG_HL_SMART_ANTENNA))
 	struct smt_ant_honbo		dm_sat_table;
@@ -1412,7 +1397,6 @@ enum odm_fw_config_type {
 };
 
 /*status code*/
-#if (DM_ODM_SUPPORT_TYPE != ODM_WIN)
 enum rt_status {
 	RT_STATUS_SUCCESS,
 	RT_STATUS_FAILURE,
@@ -1423,7 +1407,6 @@ enum rt_status {
 	RT_STATUS_NOT_SUPPORT,
 	RT_STATUS_OS_API_FAILED,
 };
-#endif	/*@end of enum rt_status definition*/
 
 void
 phydm_watchdog_lps(struct dm_struct *dm);
@@ -1527,32 +1510,9 @@ void
 phydm_tx_collsion_th_set(void *dm_void, u8 val_r2t, u8 val_t2r);
 #endif
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-void
-odm_init_all_work_items(
-	struct dm_struct	*dm
-);
-void
-odm_free_all_work_items(
-	struct dm_struct	*dm
-);
-#endif	/*@#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)*/
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 void
 odm_dtc(struct dm_struct *dm);
-#endif
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-void
-odm_init_all_threads(
-	struct dm_struct	*dm
-);
-
-void
-odm_stop_all_threads(
-	struct dm_struct	*dm
-);
-#endif
 
 #endif

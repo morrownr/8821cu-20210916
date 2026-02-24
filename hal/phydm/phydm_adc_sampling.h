@@ -138,11 +138,6 @@ struct rt_adcsmp {
 	u32			backup_dma;
 #endif
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	u8			la_work_item_index;
-	RT_WORK_ITEM		adc_smp_work_item;
-	RT_WORK_ITEM		adc_smp_work_item_1;
-#endif
 
 #ifdef PHYDM_IC_JGR3_SERIES_SUPPORT
 	struct la_adv_trig	adv_trig_table;
@@ -165,8 +160,5 @@ void phydm_la_init(void *dm_void);
 
 void adc_smp_de_init(void *dm_void);
 
-#if (DM_ODM_SUPPORT_TYPE & ODM_WIN)
-void adc_smp_work_item_callback(void *context);
-#endif
 #endif
 #endif

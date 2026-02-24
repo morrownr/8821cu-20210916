@@ -33,12 +33,6 @@
 
 #ifdef PHYDM_BEAMFORMING_SUPPORT
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-
-#define eq_mac_addr(a, b) (((a)[0] == (b)[0] && (a)[1] == (b)[1] && (a)[2] == (b)[2] && (a)[3] == (b)[3] && (a)[4] == (b)[4] && (a)[5] == (b)[5]) ? 1 : 0)
-#define cp_mac_addr(des, src) ((des)[0] = (src)[0], (des)[1] = (src)[1], (des)[2] = (src)[2], (des)[3] = (src)[3], (des)[4] = (src)[4], (des)[5] = (src)[5])
-
-#endif
 
 #define MAX_BEAMFORMEE_SU 2
 #define MAX_BEAMFORMER_SU 2
@@ -53,13 +47,11 @@
 #define BEAMFORMEE_ENTRY_NUM (MAX_BEAMFORMEE_SU + MAX_BEAMFORMEE_MU)
 #define BEAMFORMER_ENTRY_NUM (MAX_BEAMFORMER_SU + MAX_BEAMFORMER_MU)
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 /*@for different naming between WIN and CE*/
 #define BEACON_QUEUE BCN_QUEUE_INX
 #define NORMAL_QUEUE MGT_QUEUE_INX
 #define RT_DISABLE_FUNC RTW_DISABLE_FUNC
 #define RT_ENABLE_FUNC RTW_ENABLE_FUNC
-#endif
 
 enum beamforming_entry_state {
 	BEAMFORMING_ENTRY_STATE_UNINITIALIZE,
@@ -214,9 +206,6 @@ struct _RT_BEAMFORMING_INFO {
 	boolean dbg_disable_mu_tx;
 	boolean apply_v_matrix;
 	boolean snding3ss;
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	void *source_adapter;
-#endif
 	/* @Control register */
 	u32 reg_mu_tx_ctrl; /* @For USB/SDIO interfaces aync I/O */
 	u8 tx_bf_data_rate;
@@ -318,11 +307,7 @@ void phydm_beamforming_watchdog(
 	void *dm_void);
 
 void beamforming_sw_timer_callback(
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	struct phydm_timer_list *timer
-#elif (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	void *function_context
-#endif
 	);
 
 boolean
@@ -341,20 +326,5 @@ beamforming_send_vht_ndpa_packet(
 	u8 q_idx);
 
 #else
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN | ODM_AP))
-#define beamforming_gid_paid(adapter, tcb)
-#define phydm_acting_determine(dm, type) false
-#define beamforming_enter(dm, sta_idx, my_mac_addr)
-#define beamforming_leave(dm, RA)
-#define beamforming_end_fw(dm)
-#define beamforming_control_v1(dm, RA, AID, mode, BW, rate) true
-#define beamforming_control_v2(dm, idx, mode, BW, period) true
-#define phydm_beamforming_end_sw(dm, _status)
-#define beamforming_timer_callback(dm)
-#define phydm_beamforming_init(dm)
-#define phydm_beamforming_control_v2(dm, _idx, _mode, _BW, _period) false
-#define beamforming_watchdog(dm)
-#define phydm_beamforming_watchdog(dm)
-#endif /*@(DM_ODM_SUPPORT_TYPE & (ODM_CE | ODM_AP))*/
 #endif /*@#ifdef PHYDM_BEAMFORMING_SUPPORT*/
 #endif

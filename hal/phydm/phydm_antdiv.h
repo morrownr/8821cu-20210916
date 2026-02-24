@@ -330,7 +330,6 @@ struct phydm_fat_struct {
 	u8	pre_antdiv_rssi;
 	u8	pre_antdiv_tp;
 #endif
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN | ODM_CE | ODM_IOT))
 	u32    cck_ctrl_frame_cnt_main;
 	u32    cck_ctrl_frame_cnt_aux;
 	u32    ofdm_ctrl_frame_cnt_main;
@@ -339,7 +338,6 @@ struct phydm_fat_struct {
 	u32	aux_ctrl_sum;
 	u32	main_ctrl_cnt;
 	u32	aux_ctrl_cnt;
-#endif
 
 	u8	b_fix_tx_ant;
 	boolean	fix_ant_bfee;
@@ -440,22 +438,11 @@ void odm_update_rx_idle_ant_8723d(void *dm_void, u8 ant, u32 default_ant,
 
 #ifdef CONFIG_S0S1_SW_ANTENNA_DIVERSITY
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-void odm_sw_antdiv_callback(struct phydm_timer_list *timer);
-
-void odm_sw_antdiv_workitem_callback(void *context);
-
-#elif (DM_ODM_SUPPORT_TYPE == ODM_CE)
 
 void odm_sw_antdiv_workitem_callback(void *context);
 
 void odm_sw_antdiv_callback(void *function_context);
 
-#elif (DM_ODM_SUPPORT_TYPE == ODM_IOT)
-
-void odm_sw_antdiv_callback(void *dm_void);
-
-#endif
 
 void odm_s0s1_sw_ant_div_by_ctrl_frame(void *dm_void, u8 step);
 
@@ -475,19 +462,10 @@ void phydm_rx_rate_for_antdiv(void *dm_void, void *pkt_info_void);
 
 void phydm_antdiv_reset_rx_rate(void *dm_void);
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-void phydm_evm_antdiv_callback(struct phydm_timer_list *timer);
-
-void phydm_evm_antdiv_workitem_callback(void *context);
-
-#elif (DM_ODM_SUPPORT_TYPE == ODM_CE)
 void phydm_evm_antdiv_callback(void *dm_void);
 
 void phydm_evm_antdiv_workitem_callback(void *context);
 
-#else
-void phydm_evm_antdiv_callback(void *dm_void);
-#endif
 
 #endif
 
@@ -514,34 +492,5 @@ void odm_antsel_statistics(void *dm_void, void *phy_info_void,
 void odm_process_rssi_for_ant_div(void *dm_void, void *phy_info_void,
 				  void *pkt_info_void);
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN | ODM_CE))
 void odm_set_tx_ant_by_tx_info(void *dm_void,	 u8 *desc, u8 mac_id);
 
-#elif (DM_ODM_SUPPORT_TYPE == ODM_AP)
-
-struct tx_desc;
-/*@declared tx_desc here or compile error happened when enabled 8822B*/
-
-void odm_set_tx_ant_by_tx_info(struct rtl8192cd_priv *priv,
-			       struct tx_desc *pdesc, unsigned short aid);
-
-#if 1 /*@def def CONFIG_WLAN_HAL*/
-void odm_set_tx_ant_by_tx_info_hal(struct rtl8192cd_priv *priv,
-				   void *pdesc_data, u16 aid);
-#endif /*@#ifdef CONFIG_WLAN_HAL*/
-#endif
-
-void odm_ant_div_config(void *dm_void);
-
-void odm_ant_div_timers(void *dm_void, u8 state);
-
-void phydm_antdiv_debug(void *dm_void, char input[][16], u32 *_used,
-			char *output, u32 *_out_len);
-
-void odm_ant_div_reset(void *dm_void);
-
-void odm_antenna_diversity_init(void *dm_void);
-
-void odm_antenna_diversity(void *dm_void);
-#endif /*@#ifdef CONFIG_PHYDM_ANTENNA_DIVERSITY*/
-#endif /*@#ifndef	__ODMANTDIV_H__*/
