@@ -37,9 +37,6 @@
  */
 
 #if (DM_ODM_SUPPORT_TYPE & ODM_AP)
-#if (RTL8197F_SUPPORT || RTL8198F_SUPPORT || RTL8197G_SUPPORT)
-	#define PHYDM_COMPILE_LA_STORE_IN_IMEM
-#endif
 #endif
 
 #define PHYDM_LA_STORE_IN_IMEM_IC (ODM_RTL8197F | ODM_RTL8198F | ODM_RTL8197G)
@@ -134,9 +131,6 @@ struct rt_adcsmp {
 	u32			txff_page;
 	boolean			is_la_print;
 	boolean			en_fake_trig;
-#if (RTL8197F_SUPPORT)
-	u32			backup_dma;
-#endif
 
 
 #ifdef PHYDM_IC_JGR3_SERIES_SUPPORT

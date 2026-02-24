@@ -46,9 +46,6 @@ struct phydm_mp {
 	/*The Value of IO operation is depend of MptActType.*/
 	u32 io_value;
 	u32 rf0[RF_PATH_MEM_SIZE];
-	#if (RTL8814B_SUPPORT)
-	u32 rf0_syn[2];
-	#endif
 	u32 rf1[RF_PATH_MEM_SIZE];
 };
 

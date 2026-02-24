@@ -15,7 +15,6 @@
 #ifndef __INC_ODM_REGCONFIG_H_8821C
 #define __INC_ODM_REGCONFIG_H_8821C
 
-#if (RTL8821C_SUPPORT == 1)
 
 void odm_config_rf_reg_8821c(struct dm_struct *dm, u32 addr, u32 data,
 			     enum rf_path rf_path, u32 reg_addr);
@@ -50,5 +49,4 @@ void odm_config_bb_txpwr_lmt_8821c(struct dm_struct *dm, u8 *regulation,
 				   u8 *band, u8 *bandwidth, u8 *rate_section,
 				   u8 *rf_path, u8 *channel, u8 *power_limit);
 
-#endif
 #endif /* RTL8821C_SUPPORT == 1*/

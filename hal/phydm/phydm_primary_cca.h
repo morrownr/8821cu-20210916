@@ -47,13 +47,6 @@ enum primary_cca_ch_position { /*N-series REG0xc6c[8:7]*/
 };
 
 struct phydm_pricca_struct {
-	#if (RTL8188E_SUPPORT == 1) || (RTL8192E_SUPPORT == 1)
-	u8	pri_cca_flag;
-	u8	intf_flag;
-	u8	intf_type;
-	u8	monitor_flag;
-	u8	ch_offset;
-	#endif
 	u8	dup_rts_flag;
 	u8	cca_th_40m_bkp; /*@c84[31:28]*/
 	enum channel_width	pre_bw;

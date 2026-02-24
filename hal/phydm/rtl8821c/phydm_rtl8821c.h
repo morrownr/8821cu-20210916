@@ -22,10 +22,8 @@
  * Larry Finger <Larry.Finger@lwfinger.net>
  *
  *****************************************************************************/
-#if (RTL8821C_SUPPORT)
 #ifndef __ODM_RTL8821C_H__
 #define __ODM_RTL8821C_H__
 
 void phydm_hwsetting_8821c(struct dm_struct *dm);
-#endif
 #endif

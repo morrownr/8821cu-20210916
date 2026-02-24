@@ -15,7 +15,6 @@
 #ifndef __INC_PHYDM_API_H_8821C__
 #define __INC_PHYDM_API_H_8821C__
 
-#if (RTL8821C_SUPPORT == 1)
 
 #define PHY_CONFIG_VERSION_8821C "3.1.27" /*2017.08.08     (HW user guide version: R03, SW user guide version: R01, Modification: R27)*/
 
@@ -125,5 +124,4 @@ u8 query_phydm_current_ant_num_8821c(struct dm_struct *dm);
 
 u8 query_phydm_ant_num_map_8821c(struct dm_struct *dm);
 
-#endif /* RTL8821C_SUPPORT == 1 */
 #endif /*  __INC_PHYDM_API_H_8821C__ */

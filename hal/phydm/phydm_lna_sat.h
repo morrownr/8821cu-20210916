@@ -167,14 +167,6 @@ void phydm_lna_sat_chk(void *dm_void);
 void phydm_lna_sat_chk_timers(void *dm_void, u8 state);
 
 #ifdef PHYDM_LNA_SAT_CHK_TYPE1
-#if (RTL8198F_SUPPORT || RTL8814B_SUPPORT)
-void phydm_lna_sat_chk_bb_init(void *dm_void);
-
-void phydm_set_ofdm_agc_tab_path(void *dm_void,
-				 u8 tab_sel, enum rf_path path);
-
-u8 phydm_get_ofdm_agc_tab_path(void *dm_void, enum rf_path path);
-#endif /*@#if (RTL8198F_SUPPORT || RTL8814B_SUPPORT)*/
 #endif
 
 #ifdef PHYDM_LNA_SAT_CHK_TYPE2

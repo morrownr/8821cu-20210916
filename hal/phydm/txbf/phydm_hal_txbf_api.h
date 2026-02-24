@@ -78,9 +78,6 @@ void phydm_txbf_avoid_hang(void *dm_void);
 void phydm_mu_rsoml_init(void *dm_void);
 void phydm_mu_rsoml_decision(void *dm_void);
 
-#if (RTL8814B_SUPPORT == 1)
-void phydm_txbf_80p80_rfmode(void *dm_void, u8 su_bfee_cnt, u8 mu_bfee_cnt);
-#endif
 
 #endif /*#PHYDM_IC_JGR3_SERIES_SUPPORT*/
 void phydm_bf_debug(void *dm_void, char input[][16], u32 *_used, char *output,

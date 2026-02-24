@@ -174,11 +174,6 @@
 /*@Hong Lin Smart antenna*/
 #define HL_SMTANT_2WIRE_DATA_LEN 24
 
-#if (RTL8723D_SUPPORT == 1 || RTL8710C_SUPPORT == 1)
-	#ifndef CONFIG_ANTDIV_PERIOD
-		#define CONFIG_ANTDIV_PERIOD 1
-	#endif
-#endif
 /* @1 ============================================================
  * 1  structure
  * 1 ============================================================
@@ -418,23 +413,8 @@ void phydm_update_rx_idle_ant_pathb(void *dm_void, u8 ant);
 
 void phydm_set_antdiv_val(void *dm_void, u32 *val_buf,	u8 val_len);
 
-#if (RTL8723B_SUPPORT == 1)
-void odm_update_rx_idle_ant_8723b(void *dm_void, u8 ant, u32 default_ant,
-				  u32 optional_ant);
-#endif
 
-#if (RTL8188F_SUPPORT == 1)
-void phydm_update_rx_idle_antenna_8188F(void *dm_void,	u32 default_ant);
-#endif
 
-#if (RTL8723D_SUPPORT == 1)
-
-void phydm_set_tx_ant_pwr_8723d(void *dm_void, u8 ant);
-
-void odm_update_rx_idle_ant_8723d(void *dm_void, u8 ant, u32 default_ant,
-				  u32 optional_ant);
-
-#endif
 
 #ifdef CONFIG_S0S1_SW_ANTENNA_DIVERSITY
 

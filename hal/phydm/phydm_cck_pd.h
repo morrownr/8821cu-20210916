@@ -67,15 +67,9 @@
 	#define PHYDM_COMPILE_CCKPD_TYPE2 /*@extend 0xaaa*/
 #endif
 
-#if (RTL8192F_SUPPORT || RTL8721D_SUPPORT || RTL8710C_SUPPORT)
-	#define PHYDM_COMPILE_CCKPD_TYPE3 /*@extend for different & path*/
-#endif
 
 #ifdef PHYDM_IC_JGR3_SERIES_SUPPORT
 	#define PHYDM_COMPILE_CCKPD_TYPE4 /*@extend for different bw & path*/
-#endif
-#if (RTL8723F_SUPPORT)
-	#define PHYDM_COMPILE_CCKPD_TYPE5 /*@extend for different & path*/
 #endif
 
 /*@

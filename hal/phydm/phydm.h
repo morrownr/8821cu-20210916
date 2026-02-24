@@ -719,13 +719,6 @@ struct	phydm_iot_center {
 	u32			phydm_patch_id;		/*temp for CCX IOT */
 };
 
-#if (RTL8822B_SUPPORT)
-struct drp_rtl8822b_struct {
-	enum bb_path path_judge;
-	u16 path_a_cck_fa;
-	u16 path_b_cck_fa;
-};
-#endif
 
 #ifdef CONFIG_MCC_DM
 #define MCC_DM_REG_NUM	32
@@ -746,12 +739,6 @@ struct _phydm_mcc_dm_ {
 };
 #endif
 
-#if (RTL8822C_SUPPORT || RTL8812F_SUPPORT || RTL8197G_SUPPORT || RTL8723F_SUPPORT)
-struct phydm_physts {
-	u8			cck_gi_u_bnd;
-	u8			cck_gi_l_bnd;
-};
-#endif
 
 #if (DM_ODM_SUPPORT_TYPE & ODM_WIN)
 	#if (RT_PLATFORM != PLATFORM_LINUX)
@@ -850,19 +837,6 @@ struct dm_struct {
 	boolean			en_dis_dpd;
 	u16			dis_dpd_rate;
 	u8			en_auto_bw_th;
-	#if (RTL8822C_SUPPORT || RTL8814B_SUPPORT || RTL8197G_SUPPORT || RTL8723F_SUPPORT)
-	u8			txagc_buff[RF_PATH_MEM_SIZE][PHY_NUM_RATE_IDX];
-	u32			bp_0x9b0;
-	#endif
-	#if (RTL8822C_SUPPORT)
-	u8			ofdm_rxagc_l_bnd[16];
-	boolean			l_bnd_detect[16];
-	u16			agc_rf_gain_ori[16][64];/*[table][mp_gain_idx]*/
-	u16			agc_rf_gain[16][64];/*[table][mp_gain_idx]*/
-	u8			agc_table_cnt;
-	boolean			is_agc_tab_pos_shift;
-	u8			agc_table_shift;
-	#endif
 /*@-----------HOOK BEFORE REG INIT-----------*/
 /*@===========================================================*/
 /*@====[ CALL BY Reference ]=========================================*/
@@ -1061,15 +1035,6 @@ struct dm_struct {
 	boolean			en_reg_mntr_mac;
 	boolean			en_reg_mntr_byte;
 	/*@--------------------------------------------------------------*/
-#if (RTL8814B_SUPPORT || RTL8812F_SUPPORT || RTL8198F_SUPPORT)
-	u8			dsde_sel;
-	u8			nbi_path_sel;
-	u8			csi_wgt;
-#endif
-#if (RTL8814B_SUPPORT || RTL8198F_SUPPORT)
-	u8			csi_wgt_th_db[5]; /*@wgt 4,3,2,1,0 */
-						  /*    ^ ^ ^ ^ ^  */
-#endif
 	/*@------------------------------------------*/
 
 	/*@--- for noise detection ---------------------------------------*/
@@ -1164,15 +1129,6 @@ struct dm_struct {
 #endif
 
 /*@=== RTL8721D ===*/
-#if (RTL8721D_SUPPORT)
-	boolean			cbw20_adc80;
-	boolean			invalid_mode;
-	u8			power_voltage;
-	u8			cca_cbw20_lev;
-	u8			cca_cbw40_lev;
-	u8			antdiv_gpio;
-	u8			peak_detect_mode;
-#endif
 
 /*@=== PHYDM Timer ========================================== (start)*/
 
@@ -1277,9 +1233,6 @@ struct dm_struct {
 	struct ccx_info			dm_ccx_info;
 
 	struct odm_power_trim_data	power_trim_data;
-#if (RTL8822B_SUPPORT)
-	struct drp_rtl8822b_struct	phydm_rtl8822b;
-#endif
 
 #ifdef CONFIG_PSD_TOOL
 	struct psd_info			dm_psd_table;
@@ -1325,10 +1278,6 @@ struct dm_struct {
 #endif
 /*@==========================================================*/
 
-#if (RTL8822C_SUPPORT || RTL8812F_SUPPORT || RTL8197G_SUPPORT || RTL8723F_SUPPORT)
-	/*@-------------------phydm_phystatus report --------------------*/
-	struct phydm_physts dm_physts_table;
-#endif
 
 #if (DM_ODM_SUPPORT_TYPE & ODM_WIN)
 

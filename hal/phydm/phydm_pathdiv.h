@@ -89,38 +89,6 @@ struct _ODM_PATH_DIVERSITY_ {
 	u16	path_b_cnt[ODM_ASSOCIATE_ENTRY_NUM];
 	u8	phydm_path_div_type;
 	boolean force_update;
-#if RTL8814A_SUPPORT
-
-	u32	path_a_sum_all;
-	u32	path_b_sum_all;
-	u32	path_c_sum_all;
-	u32	path_d_sum_all;
-
-	u32	path_a_cnt_all;
-	u32	path_b_cnt_all;
-	u32	path_c_cnt_all;
-	u32	path_d_cnt_all;
-
-	u8	dtp_period;
-	boolean	is_become_linked;
-	boolean	is_u3_mode;
-	u8	num_tx_path;
-	u8	default_path;
-	u8	num_candidate;
-	u8	ant_candidate_1;
-	u8	ant_candidate_2;
-	u8	ant_candidate_3;
-	u8     phydm_dtp_state;
-	u8	dtp_check_patha_counter;
-	boolean	fix_path_bfer;
-	u8	search_space_2[NUM_CHOOSE2_FROM4];
-	u8	search_space_3[NUM_CHOOSE3_FROM4];
-
-	u8	pre_tx_path;
-	u8	use_path_a_as_default_ant;
-	boolean	is_path_a_exist;
-
-#endif
 };
 
 void phydm_set_tx_path_by_bb_reg(void *dm_void, enum bb_path tx_path_sel_1ss);
