@@ -16,7 +16,6 @@
 #include "mp_precomp.h"
 #include "../../phydm_precomp.h"
 
-#if (RTL8821C_SUPPORT == 1)
 /*---------------------------Define Local Constant---------------------------*/
 
 static u32 dpk_result[DPK_BACKUP_REG_NUM_8821C];
@@ -3710,4 +3709,3 @@ void dpk_temperature_compensate_8821c(void *dm_void)
 	       delta_dpk, pgthermal, tmp, odm_read_4byte(dm, 0x1bd0));
 }
 
-#endif

@@ -40,71 +40,19 @@ void halrf_basic_profile(void *dm_void, u32 *_used, char *output, u32 *_out_len)
 	u32 rf_release_ver = 0;
 
 	switch (dm->support_ic_type) {
-#if (RTL8814A_SUPPORT)
-	case ODM_RTL8814A:
-		rf_release_ver = RF_RELEASE_VERSION_8814A;
-		break;
-#endif
 
-#if (RTL8821C_SUPPORT)
 	case ODM_RTL8821C:
 		rf_release_ver = RF_RELEASE_VERSION_8821C;
 		break;
-#endif
 
-#if (RTL8822B_SUPPORT)
-	case ODM_RTL8822B:
-		rf_release_ver = RF_RELEASE_VERSION_8822B;
-		break;
-#endif
 
-#if (RTL8822C_SUPPORT)
-	case ODM_RTL8822C:
-		rf_release_ver = RF_RELEASE_VERSION_8822C;
-		break;
-#endif
 
-#if (RTL8814B_SUPPORT)
-	case ODM_RTL8814B:
-		rf_release_ver = RF_RELEASE_VERSION_8814B;
-		break;
-#endif
 
-#if (RTL8812F_SUPPORT)
-	case ODM_RTL8812F:
-		rf_release_ver = RF_RELEASE_VERSION_8812F;
-		break;
-#endif
 
-#if (RTL8198F_SUPPORT)
-	case ODM_RTL8198F:
-		rf_release_ver = RF_RELEASE_VERSION_8198F;
-		break;
-#endif
 
-#if (RTL8197F_SUPPORT)
-	case ODM_RTL8197F:
-		rf_release_ver = RF_RELEASE_VERSION_8197F;
-		break;
-#endif
 
-#if (RTL8192F_SUPPORT)
-	case ODM_RTL8192F:
-		rf_release_ver = RF_RELEASE_VERSION_8192F;
-		break;
-#endif
 
-#if (RTL8710B_SUPPORT)
-	case ODM_RTL8710B:
-		rf_release_ver = RF_RELEASE_VERSION_8710B;
-		break;
-#endif
 
-#if (RTL8195B_SUPPORT)
-	case ODM_RTL8195B:
-		rf_release_ver = RF_RELEASE_VERSION_8195B;
-		break;
-#endif
 	}
 
 	PDM_SNPF(out_len, used, output + used, out_len - used, "  %-35s: %d\n",
@@ -313,17 +261,13 @@ void halrf_cmd_parser(void *dm_void, char input[][16], u32 *_used, char *output,
 		halrf_basic_profile(dm, &used, output, &out_len);
 		break;
 	case HALRF_IQK_INFO:
-#if (RTL8822B_SUPPORT == 1 || RTL8821C_SUPPORT == 1)
 		halrf_iqk_info_dump(dm, &used, output, &out_len);
-#endif
 		break;
 	case HALRF_IQK:
 		PDM_SNPF(out_len, used, output + used, out_len - used,
 			 "TRX IQK Trigger\n");
 		halrf_iqk_trigger(dm, false);
-#if (RTL8822B_SUPPORT == 1 || RTL8821C_SUPPORT == 1)
 		halrf_iqk_info_dump(dm, &used, output, &out_len);
-#endif
 		break;
 	case HALRF_IQK_DEBUG:
 		PDM_SNPF(out_len, used, output + used, out_len - used,
@@ -337,11 +281,9 @@ void halrf_cmd_parser(void *dm_void, char input[][16], u32 *_used, char *output,
 		}
 
 		if (input_idx >= 1) {
-#if (RTL8822B_SUPPORT == 1 || RTL8821C_SUPPORT == 1 || RTL8822C_SUPPORT == 1 || RTL8814B_SUPPORT == 1)
 			if (dm->support_ic_type & (ODM_RTL8822B | ODM_RTL8821C | ODM_RTL8822C | ODM_RTL8814B))
 				halrf_iqk_debug(dm, (u32 *)rf_var, &used,
 						output, &out_len);
-#endif
 		}
 		break;
 	case HALRF_DPK:

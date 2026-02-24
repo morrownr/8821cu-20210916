@@ -16,7 +16,6 @@
 #include "mp_precomp.h"
 #include "../../phydm_precomp.h"
 
-#if (RTL8821C_SUPPORT == 1)
 void halrf_rf_lna_setting_8821c(struct dm_struct *dm_void,
 				enum halrf_lna_set type)
 {
@@ -386,4 +385,3 @@ boolean phy_query_rf_path_switch_8821c(void *adapter
 	return _phy_query_rf_path_switch_8821c(adapter);
 }
 
-#endif /* (RTL8821C_SUPPORT == 0)*/

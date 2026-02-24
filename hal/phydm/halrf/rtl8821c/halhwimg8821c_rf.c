@@ -31,7 +31,6 @@
 #define D_S_SIZE DELTA_SWINGIDX_SIZE
 #define D_ST_SIZE DELTA_SWINTSSI_SIZE
 
-#if (RTL8821C_SUPPORT == 1)
 static boolean
 check_positive(struct dm_struct *dm,
 	       const u32	condition1,
@@ -7707,5 +7706,4 @@ odm_read_and_config_mp_8821c_txpwr_lmt_lowpower(struct dm_struct *dm)
 #endif
 }
 
-#endif /* end of HWIMG_SUPPORT*/
 
