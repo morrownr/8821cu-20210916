@@ -106,15 +106,7 @@
 #include "halrf/halrf_dpk.h"
 #include "halrf/halrf.h"
 #include "halrf/halrf_powertracking.h"
-#if (DM_ODM_SUPPORT_TYPE & (ODM_AP))
-	#include "halrf/halphyrf_ap.h"
-#elif(DM_ODM_SUPPORT_TYPE & (ODM_CE))
-	#include "halrf/halphyrf_ce.h"
-#elif (DM_ODM_SUPPORT_TYPE & (ODM_WIN))
-	#include "halrf/halphyrf_win.h"
-#elif(DM_ODM_SUPPORT_TYPE & (ODM_IOT))
-	#include "halrf/halphyrf_iot.h"
-#endif
+#include "halrf/halphyrf_ce.h"
 
 extern const u16	phy_rate_table[84];
 

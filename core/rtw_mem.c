@@ -22,35 +22,7 @@ MODULE_AUTHOR("Realtek Semiconductor Corp.");
 MODULE_VERSION("DRIVERVERSION");
 
 /* for MAX_RECVBUF_SZ */
-#if defined(CONFIG_RTL8188E)
-#include <rtl8188e_hal.h>
-#elif defined(CONFIG_RTL8188F)
-#include <rtl8188f_hal.h>
-#elif defined(CONFIG_RTL8188GTV)
-#include <rtl8188gtv_hal.h>
-#elif defined(CONFIG_RTL8710B)
-#include <rtl8710b_hal.h>
-#elif defined(CONFIG_RTL8192E)
-#include <rtl8192e_hal.h>
-#elif defined(CONFIG_RTL8192F)
-#include <rtl8192f_hal.h>
-#elif defined(CONFIG_RTL8723B)
-#include <rtl8723b_hal.h>
-#elif defined(CONFIG_RTL8703B)
-#include <rtl8703b_hal.h>
-#elif defined(CONFIG_RTL8723D)
-#include <rtl8723d_hal.h>
-#elif defined(CONFIG_RTL8812A) || defined(CONFIG_RTL8821A)
-#include <rtl8812a_hal.h>
-#elif defined(CONFIG_RTL8822B)
-#include <rtl8822b_hal.h>
-#elif defined(CONFIG_RTL8822C)
-#include <rtl8822c_hal.h>
-#elif defined(CONFIG_RTL8814A)
-#include <rtl8814a_hal.h>
-#elif defined(CONFIG_RTL8814B)
-#include <rtl8814b_hal.h>
-#endif
+#include <rtl8821c_hal.h>
 
 #if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
 #define MAX_RTKM_RECVBUF_SZ		MAX_RECVBUF_SZ

@@ -191,10 +191,6 @@ void rtw_mi_hal_dump_macaddr(void *sel, _adapter *padapter);
 void rtw_mi_buddy_hal_dump_macaddr(void *sel, _adapter *padapter);
 #endif
 
-#ifdef CONFIG_PCI_HCI
-void rtw_mi_xmit_tasklet_schedule(_adapter *padapter);
-void rtw_mi_buddy_xmit_tasklet_schedule(_adapter *padapter);
-#endif
 
 u8 rtw_mi_busy_traffic_check(_adapter *padapter);
 u8 rtw_mi_buddy_busy_traffic_check(_adapter *padapter);
@@ -234,19 +230,6 @@ u8 rtw_mi_check_pending_xmitbuf(_adapter *padapter);
 u8 rtw_mi_buddy_check_pending_xmitbuf(_adapter *padapter);
 #endif
 
-#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
-#ifdef CONFIG_RTL8822B
-	#include <rtl8822b_hal.h>
-#elif defined(CONFIG_RTL8822C)
-	#include <rtl8822c_hal.h>
-#elif defined(CONFIG_RTL8723F)
-	#include <rtl8723f_hal.h>
-#else
-	extern s32 _dequeue_writeport(PADAPTER padapter);
-#endif
-u8 rtw_mi_dequeue_writeport(_adapter *padapter);
-u8 rtw_mi_buddy_dequeue_writeport(_adapter *padapter);
-#endif
 
 void rtw_mi_adapter_reset(_adapter *padapter);
 void rtw_mi_buddy_adapter_reset(_adapter *padapter);
@@ -293,10 +276,6 @@ _adapter *rtw_get_iface_by_hwport(_adapter *padapter, u8 hw_port);
 
 void rtw_mi_buddy_clone_bcmc_packet(_adapter *padapter, union recv_frame *precvframe, u8 *pphy_status);
 
-#ifdef CONFIG_PCI_HCI
-/*API be create temporary for MI, caller is interrupt-handler, PCIE's interrupt handler cannot apply to multi-AP*/
-_adapter *rtw_mi_get_ap_adapter(_adapter *padapter);
-#endif
 
 u8 rtw_mi_get_ld_sta_ifbmp(_adapter *adapter);
 u8 rtw_mi_get_ap_mesh_ifbmp(_adapter *adapter);

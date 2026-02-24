@@ -34,17 +34,7 @@
 	#include <net/arp.h>
 #endif
 
-#ifdef PLATFORM_OS_XP
-	#include <drv_types_xp.h>
-#endif
-
-#ifdef PLATFORM_OS_CE
-	#include <drv_types_ce.h>
-#endif
-
-#ifdef PLATFORM_LINUX
-	#include <drv_types_linux.h>
-#endif
+#include <drv_types_linux.h>
 
 enum _NIC_VERSION {
 
@@ -497,10 +487,6 @@ struct registry_priv {
 	u8 check_hw_status;
 	u8 wowlan_sta_mix_mode;
 
-#ifdef CONFIG_PCI_HCI
-	u32 pci_aspm_config;
-	u32 pci_dynamic_aspm_linkctrl;
-#endif
 
 	u8 iqk_fw_offload;
 	u8 ch_switch_offload;
@@ -618,16 +604,6 @@ typedef struct rtw_if_operations {
 				 size_t len, bool fixed);
 } RTW_IF_OPS, *PRTW_IF_OPS;
 
-#ifdef CONFIG_SDIO_HCI
-	#include <drv_types_sdio.h>
-	#define INTF_DATA	SDIO_DATA
-	#define INTF_OPS	PRTW_IF_OPS
-#elif defined(CONFIG_GSPI_HCI)
-	#include <drv_types_gspi.h>
-	#define INTF_DATA GSPI_DATA
-#elif defined(CONFIG_PCI_HCI)
-	#include <drv_types_pci.h>
-#endif
 
 #define get_hw_port(adapter) (adapter->hw_port)
 
@@ -1150,23 +1126,8 @@ struct halmac_indicator {
 };
 
 struct halmacpriv {
-	/* flags */
-#ifdef CONFIG_SDIO_HCI
-	/*
-	 * Indirect Access for SDIO,
-	 * 0:default, 1:enable, 2:disable
-	 */
-	u8 sdio_io_indir;
-#endif /* CONFIG_SDIO_HCI */
-
 	/* For asynchronous functions */
 	struct halmac_indicator *indicator;
-
-	/* Hardware parameters */
-#ifdef CONFIG_SDIO_HCI
-	/* Store hardware tx queue page number setting */
-	u16 txpage[HW_QUEUE_ENTRY];
-#endif /* CONFIG_SDIO_HCI */
 };
 #endif /* RTW_HALMAC */
 
@@ -1383,56 +1344,11 @@ struct dvobj_priv {
 	u8 *usb_vendor_req_buf;
 #endif
 
-#ifdef PLATFORM_LINUX
 	struct usb_interface *pusbintf;
 	struct usb_device *pusbdev;
-#endif/* PLATFORM_LINUX */
-
-#ifdef PLATFORM_FREEBSD
-	struct usb_interface *pusbintf;
-	struct usb_device *pusbdev;
-#endif/* PLATFORM_FREEBSD */
 
 #endif/* CONFIG_USB_HCI */
 
-	/*-------- below is for PCIE INTERFACE --------*/
-
-#ifdef CONFIG_PCI_HCI
-
-#ifdef PLATFORM_LINUX
-	struct pci_dev *ppcidev;
-
-	/* PCI MEM map */
-	unsigned long	pci_mem_end;	/* shared mem end	*/
-	unsigned long	pci_mem_start;	/* shared mem start	*/
-
-	/* PCI IO map */
-	unsigned long	pci_base_addr;	/* device I/O address	*/
-
-#ifdef CONFIG_PLATFORM_RTK129X
-	unsigned long	ctrl_start;
-	/* PCI MASK addr */
-	unsigned long	mask_addr;
-
-	/* PCI TRANSLATE addr */
-	unsigned long	tran_addr;
-
-	_lock   io_reg_lock;
-#endif
-
-	/* PciBridge */
-	struct pci_priv	pcipriv;
-
-	unsigned int irq; /* get from pci_dev.irq, store to net_device.irq */
-	u16	irqline;
-	u8	irq_enabled;
-	RT_ISR_CONTENT	isr_content;
-	_lock	irq_th_lock;
-
-	u8	bdma64;
-#endif/* PLATFORM_LINUX */
-
-#endif/* CONFIG_PCI_HCI */
 
 #ifdef CONFIG_MCC_MODE
 	struct mcc_obj_priv mcc_objpriv;
@@ -1532,22 +1448,7 @@ static inline void dev_clr_drv_stopped(struct dvobj_priv *dvobj)
 #ifdef PLATFORM_LINUX
 static inline struct device *dvobj_to_dev(struct dvobj_priv *dvobj)
 {
-	/* todo: get interface type from dvobj and the return the dev accordingly */
-#ifdef RTW_DVOBJ_CHIP_HW_TYPE
-#endif
-
-#ifdef CONFIG_USB_HCI
 	return &dvobj->pusbintf->dev;
-#endif
-#ifdef CONFIG_SDIO_HCI
-	return &dvobj->intf_data.func->dev;
-#endif
-#ifdef CONFIG_GSPI_HCI
-	return &dvobj->intf_data.func->dev;
-#endif
-#ifdef CONFIG_PCI_HCI
-	return &dvobj->ppcidev->dev;
-#endif
 }
 #endif
 
@@ -1756,11 +1657,6 @@ struct _ADAPTER {
 
 #endif /* PLATFORM_LINUX */
 
-#ifdef PLATFORM_FREEBSD
-	_nic_hdl pifp;
-	int bup;
-	_lock glock;
-#endif /* PLATFORM_FREEBSD */
 	u8 mac_addr[ETH_ALEN];
 	int net_closed;
 
@@ -2022,28 +1918,8 @@ int rtw_suspend_free_assoc_resource(_adapter *padapter);
 #endif
 
 /* HCI Related header file */
-#ifdef CONFIG_USB_HCI
-	#include <usb_osintf.h>
-	#include <usb_ops.h>
-	#include <usb_hal.h>
-#endif
-
-#ifdef CONFIG_SDIO_HCI
-	#include <sdio_osintf.h>
-	#include <sdio_ops.h>
-	#include <sdio_hal.h>
-#endif
-
-#ifdef CONFIG_GSPI_HCI
-	#include <gspi_osintf.h>
-	#include <gspi_ops.h>
-	#include <gspi_hal.h>
-#endif
-
-#ifdef CONFIG_PCI_HCI
-	#include <pci_osintf.h>
-	#include <pci_ops.h>
-	#include <pci_hal.h>
-#endif
+#include <usb_osintf.h>
+#include <usb_ops.h>
+#include <usb_hal.h>
 
 #endif /* __DRV_TYPES_H__ */

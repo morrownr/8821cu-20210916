@@ -68,15 +68,6 @@
 #endif
 #endif
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	#include	"phydm_features_win.h"
-#elif (DM_ODM_SUPPORT_TYPE == ODM_CE)
-	#include	"phydm_features_ce.h"
-	/*@#include	"phydm_features_ce2_kernel.h"*/
-#elif (DM_ODM_SUPPORT_TYPE == ODM_AP)
-	#include	"phydm_features_ap.h"
-#elif (DM_ODM_SUPPORT_TYPE == ODM_IOT)
-	#include	"phydm_features_iot.h"
-#endif
+#include	"phydm_features_ce.h"
 
 #endif

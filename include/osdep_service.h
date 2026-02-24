@@ -41,10 +41,6 @@
 #define _FALSE		0
 
 
-#ifdef PLATFORM_FREEBSD
-	#include <osdep_service_bsd.h>
-#endif
-
 #ifdef PLATFORM_LINUX
 	#include <linux/version.h>
 #if defined(CONFIG_RTW_ANDROID_GKI)
@@ -56,16 +52,6 @@
 #endif
 	#include <osdep_service_linux.h>
 	#include <drv_types_linux.h>
-#endif
-
-#ifdef PLATFORM_OS_XP
-	#include <osdep_service_xp.h>
-	#include <drv_types_xp.h>
-#endif
-
-#ifdef PLATFORM_OS_CE
-	#include <osdep_service_ce.h>
-	#include <drv_types_ce.h>
 #endif
 
 /* #include <rtw_byteorder.h> */
@@ -327,9 +313,7 @@ void rtw_list_splice(_list *list, _list *head);
 void rtw_list_splice_init(_list *list, _list *head);
 void rtw_list_splice_tail(_list *list, _list *head);
 
-#ifndef PLATFORM_FREEBSD
 extern void	rtw_list_delete(_list *plist);
-#endif /* PLATFORM_FREEBSD */
 
 void rtw_hlist_head_init(rtw_hlist_head *h);
 void rtw_hlist_add_head(rtw_hlist_node *n, rtw_hlist_head *h);
@@ -479,12 +463,7 @@ __inline static unsigned char _cancel_timer_ex(_timer *ptimer)
 
 static __inline void thread_enter(char *name)
 {
-#ifdef PLATFORM_LINUX
 	allow_signal(SIGTERM);
-#endif
-#ifdef PLATFORM_FREEBSD
-	printf("%s", "RTKTHREAD_enter");
-#endif
 }
 void thread_exit(_completion *comp);
 void _rtw_init_completion(_completion *comp);
@@ -524,20 +503,7 @@ __inline static void flush_signals_thread(void)
 
 __inline static _OS_STATUS res_to_status(sint res)
 {
-
-#if defined(PLATFORM_LINUX) || defined (PLATFORM_MPIXEL) || defined (PLATFORM_FREEBSD)
 	return res;
-#endif
-
-#ifdef PLATFORM_WINDOWS
-
-	if (res == _SUCCESS)
-		return NDIS_STATUS_SUCCESS;
-	else
-		return NDIS_STATUS_FAILURE;
-
-#endif
-
 }
 
 __inline static void rtw_dump_stack(void)
@@ -722,9 +688,7 @@ extern int rtw_readable_file_sz_chk(const char *path, u32 sz);
 extern int rtw_retrieve_from_file(const char *path, u8 *buf, u32 sz);
 
 
-#ifndef PLATFORM_FREEBSD
 extern void rtw_free_netdev(struct net_device *netdev);
-#endif /* PLATFORM_FREEBSD */
 
 
 extern u64 rtw_modular64(u64 x, u64 y);
