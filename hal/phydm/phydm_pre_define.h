@@ -320,13 +320,7 @@ enum phydm_legacy_spec_rate {
 
 /*Define from larger rate size to small rate size, DO NOT change the position*/
 /*[AC-4SS]*/
-#if (RTL8814B_SUPPORT)
-	#define PHY_NUM_RATE_IDX NUM_RATE_AC_4SS
-/*[AC-3SS]*/
-#elif (RTL8814A_SUPPORT)
-	#define PHY_NUM_RATE_IDX NUM_RATE_AC_3SS
-/*[AC-2SS]*/
-#elif (RTL8812A_SUPPORT || RTL8822B_SUPPORT || RTL8822C_SUPPORT ||\
+#if (RTL8812A_SUPPORT || RTL8822B_SUPPORT || RTL8822C_SUPPORT ||\
 	RTL8812F_SUPPORT)
 	#define PHY_NUM_RATE_IDX NUM_RATE_AC_2SS
 /*[AC-1SS]*/
@@ -506,9 +500,6 @@ enum phydm_ic {
 #if (RTL8814B_SUPPORT || RTL8198F_SUPPORT || RTL8822C_SUPPORT ||\
 	RTL8812F_SUPPORT || RTL8197G_SUPPORT || RTL8723F_SUPPORT)
 	#define PHYDM_IC_JGR3_SERIES_SUPPORT
-	#if (RTL8814B_SUPPORT || RTL8822C_SUPPORT || RTL8812F_SUPPORT)
-		#define PHYDM_IC_JGR3_80M_SUPPORT
-	#endif
 #endif
 
 #if (RTL8822C_SUPPORT || RTL8812F_SUPPORT || RTL8814B_SUPPORT ||\
@@ -573,9 +564,6 @@ enum phydm_ic {
 
 /*@#define PHYDM_COMPILE_IC_3SS*/
 
-#if ((RTL8814B_SUPPORT) || (RTL8814A_SUPPORT) || (RTL8198F_SUPPORT))
-	#define PHYDM_COMPILE_IC_4SS
-#endif
 
 /*@==[ABOVE N-SS COMPILE FLAG]=================================================*/
 #if (defined(PHYDM_COMPILE_IC_1SS) || defined(PHYDM_COMPILE_IC_2SS) ||\
@@ -638,20 +626,9 @@ enum phydm_ic {
 	#define PHYDM_COMPILE_MU
 #endif
 
-#if (RTL8822B_SUPPORT)
-	#define CONFIG_MU_JAGUAR_2
-#endif
 
-#if (RTL8814B_SUPPORT || RTL8822C_SUPPORT  || RTL8812F_SUPPORT)
-	#define CONFIG_MU_JAGUAR_3
-#endif
 
 #if (defined(CONFIG_MU_JAGUAR_2) || defined(CONFIG_MU_JAGUAR_3))
-	#if (RTL8814B_SUPPORT)
-		#define MU_EX_MACID		76
-	#elif (RTL8822B_SUPPORT || RTL8822C_SUPPORT || RTL8812F_SUPPORT)
-		#define MU_EX_MACID		30
-	#endif
 #endif
 /*@============================================================================*/
 
@@ -672,9 +649,7 @@ enum phydm_ic {
 #define PHYDM_COMMON_API_NOT_SUPPORT
 #endif
 
-#if (RTL8821C_SUPPORT || RTL8197F_SUPPORT || RTL8197G_SUPPORT)
 	#define CONFIG_RFE_BY_HW_INFO
-#endif
 
 #define	CCK_RATE_NUM		4
 #define	OFDM_RATE_NUM		8
@@ -906,33 +881,6 @@ enum odm_type_alna {
 	TYPE_ALNA15		= 0xFFFF,
 };
 
-#if (RTL8721D_SUPPORT)
-/* ODM_CMNINFO_POWER_VOLTAGE */
-enum odm_power_voltage {
-	ODM_POWER_18V		= 0,
-	ODM_POWER_33V		= 1,
-};
-
-/* ODM_CMNINFO_ANTDIV_GPIO */
-enum odm_antdiv_gpio {
-	ANTDIV_GPIO_PA2PA4	= 0,
-	ANTDIV_GPIO_PA5PA6	= 1,
-	ANTDIV_GPIO_PA12PA13	= 2,
-	ANTDIV_GPIO_PA14PA15	= 3,
-	ANTDIV_GPIO_PA16PA17	= 4,
-	ANTDIV_GPIO_PB1PB2	= 5,
-	ANTDIV_GPIO_PB26PB29	= 6,
-	ANTDIV_GPIO_PB1PB2PB26 = 7, // add by Jiao Qi for AmebaD SP3T only
-};
-
-/* ODM_CMNINFO_PEAK_DETECT_MODE */
-enum odm_peak_detect_mode {
-	ODM_PD_DIS		= 0,
-	ODM_PD_ENG		= 1,
-	ODM_PD_ENA		= 2,
-	ODM_PD_ENALL		= 3,
-};
-#endif
 
 #define	PAUSE_FAIL		0
 #define	PAUSE_SUCCESS		1

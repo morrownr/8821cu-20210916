@@ -44,20 +44,13 @@
 #define THERMAL_DPK_AVG_NUM 4
 
 /*define RF path numer*/
-#if (RTL8198F_SUPPORT == 1 || RTL8814B_SUPPORT == 1)
-#define KPATH 4
-#elif (RTL8192F_SUPPORT == 1 || RTL8197F_SUPPORT == 1 ||RTL8197G_SUPPORT == 1 ||\
+#if (RTL8192F_SUPPORT == 1 || RTL8197F_SUPPORT == 1 ||RTL8197G_SUPPORT == 1 ||\
 	RTL8822C_SUPPORT == 1 || RTL8812F_SUPPORT == 1)
 #define KPATH 2
 #else
 #define KPATH 1
 #endif
 
-#if (RTL8814B_SUPPORT == 1 || RTL8721D_SUPPORT == 1)
-#define GROUP_5G 6
-#elif (RTL8195B_SUPPORT == 1)
-#define GROUP_5G 13
-#endif
 
 /*@---------------------------End Define Parameters---------------------------*/
 
@@ -85,20 +78,7 @@ struct dm_dpk_info {
 	u32	dpk_ok_cnt;
 	u32	dpk_reload_cnt;
 
-#if (RTL8822C_SUPPORT == 1 || RTL8812F_SUPPORT == 1 || RTL8197G_SUPPORT == 1)
-	u16	dc_i[2];			/*MDPD DC I path*/
-	u16	dc_q[2];			/*MDPD DC Q path*/
-	u8	corr_val[2];			/*Corr value path*/
-	u8	corr_idx[2];			/*Corr index path*/
-#endif
 
-#if (RTL8822C_SUPPORT == 1 || RTL8812F_SUPPORT == 1)
-	u8	result[2];			/*path*/
-	u8	dpk_txagc[2];			/*path*/
-	u32	coef[2][20];			/*path/MDPD coefficient*/
-	u16	dpk_gs[2];			/*MDPD coef gs*/
-	u8	thermal_dpk_delta[2];		/*path*/
-#endif
 
 #if (RTL8198F_SUPPORT == 1 || RTL8192F_SUPPORT == 1 || RTL8197F_SUPPORT == 1 ||\
 	RTL8814B_SUPPORT == 1 || RTL8197G_SUPPORT == 1)
@@ -111,40 +91,8 @@ struct dm_dpk_info {
 	s16	tmp_pas_q[32];			/*PAScan Q data*/
 #endif
 
-#if (RTL8814B_SUPPORT == 1)
-	/*5G DPK data*/
-	u8	dpk_5g_result[KPATH][GROUP_5G];			/*path/group*/
-	u8	pwsf_5g[KPATH][GROUP_5G];			/*path/group*/
-	u32	lut_5g[KPATH][GROUP_5G][64];			/*path/group/LUT data*/
-	u32	lut_2g[KPATH][3][64];			/*path/group/LUT data*/
-	u8	rxbb[4];			/*path/group*/
-	u8	txbb[4];			/*path/group*/
-	u8	tx_gain;
-#endif
 
-#if (RTL8195B_SUPPORT == 1 || RTL8721D_SUPPORT == 1)
-		u8	dpk_txagc;
-		/*2G DPK data*/
-	u8	dpk_2g_result[KPATH][3];			/*path/group*/
-	u8	pwsf_2g[KPATH][3];			/*path/group*/
-	u32	lut_2g_even[KPATH][3][16];		/*path/group/LUT data*/
-	u32	lut_2g_odd[KPATH][3][16];		/*path/group/LUT data*/
-		/*5G DPK data*/
-	u8	dpk_5g_result[KPATH][GROUP_5G];			/*path/group*/
-	u8	pwsf_5g[KPATH][GROUP_5G];			/*path/group*/
-	u32	lut_5g_even[KPATH][GROUP_5G][16];		/*path/group/LUT data*/
-	u32	lut_5g_odd[KPATH][GROUP_5G][16];		/*path/group/LUT data*/
-#endif
 };
 
-#if (RTL8822C_SUPPORT == 1)
-struct dm_dpk_c2h_report {
-	u8	result[2];		/*ch0_result/ch1_result*/
-	u8	therm[2][2];		/*therm0_s0/therm0_s1/therm1_s0/therm1_s1*/
-	u8	therm_delta[2][2];	/*therm_delta0_s0/therm_delta0_s1/therm_delta1_s0/therm_delta1_s1*/
-	u32	dpk_rf18[2];		/*dpk_ch0/dpk_ch1*/
-	u8	dpk_status;		/*dpk_status*/
-};
-#endif
 
 #endif /*__HALRF_DPK_H__*/
