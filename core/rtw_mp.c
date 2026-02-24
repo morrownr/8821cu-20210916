@@ -939,9 +939,6 @@ end_of_mp_start_test:
 s32 mp_start_test(PADAPTER padapter)
 {
 	struct mp_priv *pmppriv = &padapter->mppriv;
-#ifdef CONFIG_PCI_HCI
-	PHAL_DATA_TYPE hal;
-#endif
 	s32 res = _SUCCESS;
 
 	padapter->registrypriv.mp_mode = 1;
@@ -975,11 +972,6 @@ s32 mp_start_test(PADAPTER padapter)
 	rtl8723d_InitHalDm(padapter);
 #endif /* CONFIG_RTL8723D */
 
-#ifdef CONFIG_PCI_HCI
-	hal = GET_HAL_DATA(padapter);
-	hal->pci_backdoor_ctrl = 0;
-	rtw_pci_aspm_config(padapter);
-#endif
 
 
 	/* 3 0. update mp_priv */
@@ -1017,10 +1009,6 @@ void mp_stop_test(PADAPTER padapter)
 	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
 	struct wlan_network *tgt_network = &pmlmepriv->cur_network;
 	struct sta_info *psta;
-#ifdef CONFIG_PCI_HCI
-	struct registry_priv  *registry_par = &padapter->registrypriv;
-	PHAL_DATA_TYPE hal;
-#endif
 
 	_irqL irqL;
 
@@ -1052,11 +1040,6 @@ end_of_mp_stop_test:
 
 		_exit_critical_bh(&pmlmepriv->lock, &irqL);
 
-#ifdef CONFIG_PCI_HCI
-		hal = GET_HAL_DATA(padapter);
-		hal->pci_backdoor_ctrl = registry_par->pci_aspm_config;
-		rtw_pci_aspm_config(padapter);
-#endif
 
 #ifdef CONFIG_RTL8812A
 		rtl8812_InitHalDm(padapter);
@@ -1316,47 +1299,6 @@ static struct xmit_frame *alloc_mp_xmitframe(struct xmit_priv *pxmitpriv)
 
 }
 
-#ifdef CONFIG_PCI_HCI
-static u8 check_nic_enough_desc(_adapter *padapter, struct pkt_attrib *pattrib)
-{
-	u32 prio;
-	struct xmit_priv	*pxmitpriv = &padapter->xmitpriv;
-	struct rtw_tx_ring	*ring;
-
-	switch (pattrib->qsel) {
-	case 0:
-	case 3:
-		prio = BE_QUEUE_INX;
-		break;
-	case 1:
-	case 2:
-		prio = BK_QUEUE_INX;
-		break;
-	case 4:
-	case 5:
-		prio = VI_QUEUE_INX;
-		break;
-	case 6:
-	case 7:
-		prio = VO_QUEUE_INX;
-		break;
-	default:
-		prio = BE_QUEUE_INX;
-		break;
-	}
-
-	ring = &pxmitpriv->tx_ring[prio];
-
-	/*
-	 * for now we reserve two free descriptor as a safety boundary
-	 * between the tail and the head
-	 */
-	if ((ring->entries - ring->qlen) >= 2)
-		return _TRUE;
-	else
-		return _FALSE;
-}
-#endif
 
 static thread_return mp_xmit_packet_thread(thread_context context)
 {
@@ -1376,12 +1318,6 @@ static thread_return mp_xmit_packet_thread(thread_context context)
 	RTW_INFO("%s:pkTx Start\n", __func__);
 	while (1) {
 		pxmitframe = alloc_mp_xmitframe(pxmitpriv);
-#ifdef CONFIG_PCI_HCI
-		if(check_nic_enough_desc(padapter, &pmptx->attrib) == _FALSE) {
-			rtw_usleep_os(1000);
-			continue;
-		}
-#endif
 		if (pxmitframe == NULL) {
 			if (pmptx->stop ||
 			    RTW_CANNOT_RUN(padapter))
@@ -1436,15 +1372,6 @@ void fill_tx_desc_8188e(PADAPTER padapter)
 	u32	pkt_size = pattrib->last_txcmdsz;
 	s32 bmcast = IS_MCAST(pattrib->ra);
 	/* offset 0 */
-#if !defined(CONFIG_RTL8188E_SDIO) && !defined(CONFIG_PCI_HCI)
-	desc->txdw0 |= cpu_to_le32(OWN | FSG | LSG);
-	desc->txdw0 |= cpu_to_le32(pkt_size & 0x0000FFFF); /* packet size */
-	desc->txdw0 |= cpu_to_le32(((TXDESC_SIZE + OFFSET_SZ) << OFFSET_SHT) & 0x00FF0000); /* 32 bytes for TX Desc */
-	if (bmcast)
-		desc->txdw0 |= cpu_to_le32(BMC); /* broadcast packet */
-
-	desc->txdw1 |= cpu_to_le32((0x01 << 26) & 0xff000000);
-#endif
 
 	desc->txdw1 |= cpu_to_le32((pattrib->mac_id) & 0x3F); /* CAM_ID(MAC_ID) */
 	desc->txdw1 |= cpu_to_le32((pattrib->qsel << QSEL_SHT) & 0x00001F00); /* Queue Select, TID */
@@ -1501,11 +1428,7 @@ void fill_tx_desc_8814a(PADAPTER padapter)
 	offset = TXDESC_SIZE + OFFSET_SZ;
 
 	SET_TX_DESC_OFFSET_8814A(pDesc, offset);
-#if defined(CONFIG_PCI_HCI)
-	SET_TX_DESC_PKT_OFFSET_8814A(pDesc, 0); /* 8814AE pkt_offset is 0 */
-#else
 	SET_TX_DESC_PKT_OFFSET_8814A(pDesc, 1);
-#endif
 
 	if (bmcast)
 		SET_TX_DESC_BMC_8814A(pDesc, 1);
@@ -1560,11 +1483,7 @@ void fill_tx_desc_8812a(PADAPTER padapter)
 
 	SET_TX_DESC_OFFSET_8812(pDesc, offset);
 
-#if defined(CONFIG_PCI_HCI)
-	SET_TX_DESC_PKT_OFFSET_8812(pDesc, 0);
-#else
 	SET_TX_DESC_PKT_OFFSET_8812(pDesc, 1);
-#endif
 	if (bmcast)
 		SET_TX_DESC_BMC_8812(pDesc, 1);
 
@@ -1610,12 +1529,7 @@ void fill_tx_desc_8192e(PADAPTER padapter)
 	offset = TXDESC_SIZE + OFFSET_SZ;
 
 	SET_TX_DESC_OFFSET_92E(pDesc, offset);
-#if defined(CONFIG_PCI_HCI) /* 8192EE */
-
-	SET_TX_DESC_PKT_OFFSET_92E(pDesc, 0); /* 8192EE pkt_offset is 0 */
-#else /* 8192EU 8192ES */
 	SET_TX_DESC_PKT_OFFSET_92E(pDesc, 1);
-#endif
 
 	if (bmcast)
 		SET_TX_DESC_BMC_92E(pDesc, 1);
@@ -2586,12 +2500,6 @@ void _rtw_mp_xmit_priv(struct xmit_priv *pxmitpriv)
 			goto exit;
 		}
 
-#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
-		pxmitbuf->phead = pxmitbuf->pbuf;
-		pxmitbuf->pend = pxmitbuf->pbuf + max_xmit_extbuf_size;
-		pxmitbuf->len = 0;
-		pxmitbuf->pdata = pxmitbuf->ptail = pxmitbuf->phead;
-#endif
 
 		rtw_list_insert_tail(&pxmitbuf->list, &(pxmitpriv->free_xmit_extbuf_queue.queue));
 #ifdef DBG_XMIT_BUF_EXT

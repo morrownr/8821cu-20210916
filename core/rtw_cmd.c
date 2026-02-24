@@ -154,17 +154,6 @@ sint _rtw_init_evt_priv(struct evt_priv *pevtpriv)
 	pevtpriv->evt_buf = pevtpriv->evt_allocated_buf  +  4 - ((unsigned int)(pevtpriv->evt_allocated_buf) & 3);
 
 
-#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
-	pevtpriv->allocated_c2h_mem = rtw_zmalloc(C2H_MEM_SZ + 4);
-
-	if (pevtpriv->allocated_c2h_mem == NULL) {
-		res = _FAIL;
-		goto exit;
-	}
-
-	pevtpriv->c2h_mem = pevtpriv->allocated_c2h_mem +  4\
-			    - ((u32)(pevtpriv->allocated_c2h_mem) & 3);
-#endif /* end of CONFIG_SDIO_HCI */
 
 	_rtw_init_queue(&(pevtpriv->evt_queue));
 
@@ -4567,13 +4556,8 @@ static s32 rtw_mp_cmd_hdl(_adapter *padapter, u8 mp_cmd_id)
 		}
 		padapter->mppriv.bmac_filter = _FALSE;
 #ifdef CONFIG_RTL8723B
-#ifdef CONFIG_USB_HCI
 		rtw_write32(padapter, 0x765, 0x0000);
 		rtw_write32(padapter, 0x948, 0x0280);
-#else
-		rtw_write32(padapter, 0x765, 0x0000);
-		rtw_write32(padapter, 0x948, 0x0000);
-#endif
 #ifdef CONFIG_FOR_RTL8723BS_VQ0
 		rtw_write32(padapter, 0x765, 0x0000);
 		rtw_write32(padapter, 0x948, 0x0280);

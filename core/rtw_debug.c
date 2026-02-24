@@ -224,8 +224,6 @@ extern uint rtw_recvbuf_nr;
 #endif
 #endif /*CONFIG_SDIO_HCI*/
 
-#ifdef CONFIG_PCI_HCI
-#endif
 
 	RTW_PRINT_SEL(sel, "CONFIG_IFACE_NUMBER = %d\n", CONFIG_IFACE_NUMBER);
 #ifdef CONFIG_MI_WITH_MBSSID_CAM
@@ -279,37 +277,6 @@ void dump_log_level(void *sel)
 #endif
 }
 
-#ifdef CONFIG_SDIO_HCI
-void sd_f0_reg_dump(void *sel, _adapter *adapter)
-{
-	int i;
-
-	for (i = 0x0; i <= 0xff; i++) {
-		if (i % 16 == 0)
-			RTW_PRINT_SEL(sel, "0x%02x ", i);
-
-		_RTW_PRINT_SEL(sel, "%02x ", rtw_sd_f0_read8(adapter, i));
-
-		if (i % 16 == 15)
-			_RTW_PRINT_SEL(sel, "\n");
-		else if (i % 8 == 7)
-			_RTW_PRINT_SEL(sel, "\t");
-	}
-}
-
-void sdio_local_reg_dump(void *sel, _adapter *adapter)
-{
-	int i, j = 1;
-
-	for (i = 0x0; i < 0x100; i += 4) {
-		if (j % 4 == 1)
-			RTW_PRINT_SEL(sel, "0x%02x", i);
-		_RTW_PRINT_SEL(sel, " 0x%08x ", rtw_read32(adapter, (0x1025 << 16) | i));
-		if ((j++) % 4 == 0)
-			_RTW_PRINT_SEL(sel, "\n");
-	}
-}
-#endif /* CONFIG_SDIO_HCI */
 
 void mac_reg_dump(void *sel, _adapter *adapter)
 {
@@ -4771,14 +4738,12 @@ int proc_get_all_sta_info(struct seq_file *m, void *v)
 #ifdef CONFIG_PREALLOC_RX_SKB_BUFFER
 int proc_get_rtkm_info(struct seq_file *m, void *v)
 {
-#ifdef CONFIG_USB_HCI
 	struct net_device *dev = m->private;
 	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
 	struct recv_priv	*precvpriv = &padapter->recvpriv;
 	struct recv_buf *precvbuf;
 
 	precvbuf = (struct recv_buf *)precvpriv->precv_buf;
-#endif /* CONFIG_USB_HCI */
 
 	RTW_PRINT_SEL(m, "============[RTKM Info]============\n");
 	RTW_PRINT_SEL(m, "MAX_RTKM_NR_PREALLOC_RECV_SKB: %d\n", rtw_rtkm_get_nr_recv_skb());
@@ -4786,11 +4751,7 @@ int proc_get_rtkm_info(struct seq_file *m, void *v)
 
 	RTW_PRINT_SEL(m, "============[Driver Info]============\n");
 	RTW_PRINT_SEL(m, "NR_PREALLOC_RECV_SKB: %d\n", NR_PREALLOC_RECV_SKB);
-#ifdef CONFIG_USB_HCI
 	RTW_PRINT_SEL(m, "MAX_RECVBUF_SZ: %d\n", precvbuf->alloc_sz);
-#else /* !CONFIG_USB_HCI */
-	RTW_PRINT_SEL(m, "MAX_RECVBUF_SZ: %d\n", MAX_RECVBUF_SZ);
-#endif /* !CONFIG_USB_HCI */
 
 	return 0;
 }

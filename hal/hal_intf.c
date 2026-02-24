@@ -704,17 +704,11 @@ void	rtw_hal_get_odm_var(_adapter *padapter, HAL_ODM_VARIABLE eVariable, void *p
 /* FOR SDIO & PCIE */
 void rtw_hal_enable_interrupt(_adapter *padapter)
 {
-#if defined(CONFIG_PCI_HCI) || defined(CONFIG_SDIO_HCI) || defined (CONFIG_GSPI_HCI)
-	padapter->hal_func.enable_interrupt(padapter);
-#endif /* #if defined(CONFIG_PCI_HCI) || defined (CONFIG_SDIO_HCI) || defined (CONFIG_GSPI_HCI) */
 }
 
 /* FOR SDIO & PCIE */
 void rtw_hal_disable_interrupt(_adapter *padapter)
 {
-#if defined(CONFIG_PCI_HCI) || defined(CONFIG_SDIO_HCI) || defined (CONFIG_GSPI_HCI)
-	padapter->hal_func.disable_interrupt(padapter);
-#endif /* #if defined(CONFIG_PCI_HCI) || defined (CONFIG_SDIO_HCI) || defined (CONFIG_GSPI_HCI) */
 }
 
 
@@ -764,13 +758,9 @@ s32 rtw_hal_fw_mem_dl(_adapter *padapter, enum fw_mem mem)
 #if defined(CONFIG_WOWLAN) || defined(CONFIG_AP_WOWLAN)
 void rtw_hal_clear_interrupt(_adapter *padapter)
 {
-#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
-	padapter->hal_func.clear_interrupt(padapter);
-#endif
 }
 #endif
 
-#if defined(CONFIG_USB_HCI) || defined(CONFIG_PCI_HCI)
 u32	rtw_hal_inirp_init(_adapter *padapter)
 {
 	if (is_primary_adapter(padapter))
@@ -785,66 +775,7 @@ u32	rtw_hal_inirp_deinit(_adapter *padapter)
 
 	return _SUCCESS;
 }
-#endif /* #if defined(CONFIG_USB_HCI) || defined (CONFIG_PCI_HCI) */
 
-#if defined(CONFIG_PCI_HCI)
-void	rtw_hal_irp_reset(_adapter *padapter)
-{
-	padapter->hal_func.irp_reset(GET_PRIMARY_ADAPTER(padapter));
-}
-
-void rtw_hal_pci_dbi_write(_adapter *padapter, u16 addr, u8 data)
-{
-	u16 cmd[2];
-
-	cmd[0] = addr;
-	cmd[1] = data;
-
-	padapter->hal_func.set_hw_reg_handler(padapter, HW_VAR_DBI, (u8 *) cmd);
-}
-
-u8 rtw_hal_pci_dbi_read(_adapter *padapter, u16 addr)
-{
-	padapter->hal_func.GetHwRegHandler(padapter, HW_VAR_DBI, (u8 *)(&addr));
-
-	return (u8)addr;
-}
-
-void rtw_hal_pci_mdio_write(_adapter *padapter, u8 addr, u16 data)
-{
-	u16 cmd[2];
-
-	cmd[0] = (u16)addr;
-	cmd[1] = data;
-
-	padapter->hal_func.set_hw_reg_handler(padapter, HW_VAR_MDIO, (u8 *) cmd);
-}
-
-u16 rtw_hal_pci_mdio_read(_adapter *padapter, u8 addr)
-{
-	padapter->hal_func.GetHwRegHandler(padapter, HW_VAR_MDIO, &addr);
-
-	return (u8)addr;
-}
-
-u8 rtw_hal_pci_l1off_nic_support(_adapter *padapter)
-{
-	u8 l1off;
-
-	padapter->hal_func.GetHwRegHandler(padapter, HW_VAR_L1OFF_NIC_SUPPORT, &l1off);
-	return l1off;
-}
-
-u8 rtw_hal_pci_l1off_capability(_adapter *padapter)
-{
-	u8 l1off;
-
-	padapter->hal_func.GetHwRegHandler(padapter, HW_VAR_L1OFF_CAPABILITY, &l1off);
-	return l1off;
-}
-
-
-#endif /* #if defined(CONFIG_PCI_HCI) */
 
 /* for USB Auto-suspend */
 u8	rtw_hal_intf_ps_func(_adapter *padapter, HAL_INTF_PS_FUNC efunc_id, u8 *val)
@@ -1039,10 +970,6 @@ void rtw_hal_write_rfreg(_adapter *padapter, enum rf_path eRFPath, u32 RegAddr, 
 
 		padapter->hal_func.write_rfreg(padapter, eRFPath, RegAddr, BitMask, Data);
 
-#ifdef CONFIG_PCI_HCI
-		if (!IS_HARDWARE_TYPE_JAGUAR_AND_JAGUAR2(padapter)) /*For N-Series IC, suggest by Jenyu*/
-			rtw_udelay_os(2);
-#endif
 	}
 }
 
@@ -1063,19 +990,6 @@ void rtw_hal_write_syson_reg(_adapter *padapter, u32 RegAddr, u32 BitMask, u32 D
 }
 #endif
 
-#if defined(CONFIG_PCI_HCI)
-s32	rtw_hal_interrupt_handler(_adapter *padapter)
-{
-	s32 ret = _FAIL;
-	ret = padapter->hal_func.interrupt_handler(padapter);
-	return ret;
-}
-
-void	rtw_hal_unmap_beacon_icf(_adapter *padapter)
-{
-	padapter->hal_func.unmap_beacon_icf(padapter);
-}
-#endif
 #if defined(CONFIG_USB_HCI) && defined(CONFIG_SUPPORT_USB_INT)
 void	rtw_hal_interrupt_handler(_adapter *padapter, u16 pkt_len, u8 *pbuf)
 {
@@ -2142,7 +2056,6 @@ u8 rtw_hal_ops_check(_adapter *padapter)
 		ret = _FAIL;
 	}
 #endif
-#if defined(CONFIG_USB_HCI) || defined(CONFIG_PCI_HCI)
 	if (NULL == padapter->hal_func.inirp_init) {
 		rtw_hal_error_msg("inirp_init");
 		ret = _FAIL;
@@ -2151,33 +2064,16 @@ u8 rtw_hal_ops_check(_adapter *padapter)
 		rtw_hal_error_msg("inirp_deinit");
 		ret = _FAIL;
 	}
-#endif /* #if defined(CONFIG_USB_HCI) || defined (CONFIG_PCI_HCI) */
 
 
 	/*** interrupt hdl section ***/
-#if defined(CONFIG_PCI_HCI)
-	if (NULL == padapter->hal_func.irp_reset) {
-		rtw_hal_error_msg("irp_reset");
-		ret = _FAIL;
-	}
-#endif/*#if defined(CONFIG_PCI_HCI)*/
-#if (defined(CONFIG_PCI_HCI)) || (defined(CONFIG_USB_HCI) && defined(CONFIG_SUPPORT_USB_INT))
+#ifdef CONFIG_SUPPORT_USB_INT
 	if (NULL == padapter->hal_func.interrupt_handler) {
 		rtw_hal_error_msg("interrupt_handler");
 		ret = _FAIL;
 	}
-#endif /*#if (defined(CONFIG_PCI_HCI)) || (defined(CONFIG_USB_HCI) && defined(CONFIG_SUPPORT_USB_INT))*/
+#endif
 
-#if defined(CONFIG_PCI_HCI) || defined(CONFIG_SDIO_HCI) || defined (CONFIG_GSPI_HCI)
-	if (NULL == padapter->hal_func.enable_interrupt) {
-		rtw_hal_error_msg("enable_interrupt");
-		ret = _FAIL;
-	}
-	if (NULL == padapter->hal_func.disable_interrupt) {
-		rtw_hal_error_msg("disable_interrupt");
-		ret = _FAIL;
-	}
-#endif /* defined(CONFIG_PCI_HCI) || defined (CONFIG_SDIO_HCI) || defined (CONFIG_GSPI_HCI) */
 
 
 	/*** DM section ***/
@@ -2262,12 +2158,6 @@ u8 rtw_hal_ops_check(_adapter *padapter)
 #endif /* !RTW_HALMAC */
 
 #if defined(CONFIG_WOWLAN) || defined(CONFIG_AP_WOWLAN)
-#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
-	if (NULL == padapter->hal_func.clear_interrupt) {
-		rtw_hal_error_msg("clear_interrupt");
-		ret = _FAIL;
-	}
-#endif
 #endif /* CONFIG_WOWLAN */
 
 	if (NULL == padapter->hal_func.fw_dl) {

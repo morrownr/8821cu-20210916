@@ -66,18 +66,8 @@ BOOLEAN efuse_IsBT_Masked(PADAPTER pAdapter, u16 Offset)
 
 #ifdef CONFIG_BT_EFUSE_MASK
 #ifdef CONFIG_RTL8822C
-#ifdef CONFIG_USB_HCI
 	if (IS_HARDWARE_TYPE_8822C(pAdapter))
 		return (IS_BT_MASKED(8822C, _MUSB, Offset)) ? TRUE : FALSE;
-#endif
-#ifdef CONFIG_PCI_HCI
-	if (IS_HARDWARE_TYPE_8822C(pAdapter))
-		return (IS_BT_MASKED(8822C, _MPCIE, Offset)) ? TRUE : FALSE;
-#endif
-#ifdef CONFIG_SDIO_HCI
-	if (IS_HARDWARE_TYPE_8822C(pAdapter))
-		return (IS_BT_MASKED(8822C, _MSDIO, Offset)) ? TRUE : FALSE;
-#endif
 #endif /*#ifdef CONFIG_RTL8822C*/
 #endif /* CONFIG_BT_EFUSE_MASK */
 	return FALSE;
@@ -89,18 +79,8 @@ void rtw_bt_efuse_mask_array(PADAPTER pAdapter, u8 *pArray)
 
 #ifdef CONFIG_BT_EFUSE_MASK
 #ifdef CONFIG_RTL8822C
-#ifdef CONFIG_USB_HCI
 if (IS_HARDWARE_TYPE_8822CU(pAdapter))
 		GET_BT_MASK_ARRAY(8822C, _MUSB, pArray);
-#endif
-#ifdef CONFIG_PCI_HCI
-	if (IS_HARDWARE_TYPE_8822CE(pAdapter))
-		GET_BT_MASK_ARRAY(8822C, _MPCIE, pArray);
-#endif
-#ifdef CONFIG_SDIO_HCI
-	if (IS_HARDWARE_TYPE_8822CS(pAdapter))
-		GET_BT_MASK_ARRAY(8822C, _MSDIO, pArray);
-#endif
 #endif /*#ifdef CONFIG_RTL8822C*/
 #endif /* CONFIG_BT_EFUSE_MASK */
 
@@ -112,18 +92,8 @@ u16 rtw_get_bt_efuse_mask_arraylen(PADAPTER pAdapter)
 
 #ifdef CONFIG_BT_EFUSE_MASK
 #ifdef CONFIG_RTL8822C
-#ifdef CONFIG_USB_HCI
 	if (IS_HARDWARE_TYPE_8822CU(pAdapter))
 		return GET_BT_MASK_ARRAY_LEN(8822C, _MUSB);
-#endif
-#ifdef CONFIG_PCI_HCI
-	if (IS_HARDWARE_TYPE_8822CE(pAdapter))
-		return GET_BT_MASK_ARRAY_LEN(8822C, _MPCIE);
-#endif
-#ifdef CONFIG_SDIO_HCI
-	if (IS_HARDWARE_TYPE_8822CS(pAdapter))
-		return GET_BT_MASK_ARRAY_LEN(8822C, _MSDIO);
-#endif
 #endif /*#ifdef CONFIG_RTL8822C*/
 #endif /* CONFIG_BT_EFUSE_MASK */
 

@@ -41,7 +41,6 @@ static void dm_CheckPbcGPIO(PADAPTER adapter)
 	if (!adapter->registrypriv.hw_wps_pbc)
 		return;
 	
-#ifdef CONFIG_USB_HCI
 	tmp1byte = rtw_read8(adapter, GPIO_IO_SEL);
 	tmp1byte |= (HAL_8192C_HW_GPIO_WPS_BIT);
 	rtw_write8(adapter, GPIO_IO_SEL, tmp1byte); /* enable GPIO[2] as output mode */
@@ -59,15 +58,6 @@ static void dm_CheckPbcGPIO(PADAPTER adapter)
 	
 	if (tmp1byte & HAL_8192C_HW_GPIO_WPS_BIT)
 		bPbcPressed = _TRUE;
-#else
-	tmp1byte = rtw_read8(adapter, GPIO_IN);
-	
-	if ((tmp1byte == 0xff) || adapter->init_adpt_in_progress)
-		return;
-	
-	if ((tmp1byte & HAL_8192C_HW_GPIO_WPS_BIT) == 0)
-		bPbcPressed = _TRUE;
-#endif
 	
 	if (_TRUE == bPbcPressed) {
 	/*
@@ -81,60 +71,6 @@ static void dm_CheckPbcGPIO(PADAPTER adapter)
 #endif /* CONFIG_SUPPORT_HW_WPS_PBC */
 	
 	
-#ifdef CONFIG_PCI_HCI
-/*
- * Description:
- *	Perform interrupt migration dynamically to reduce CPU utilization.
- *
- * Assumption:
- *	1. Do not enable migration under WIFI test.
- */
-void dm_InterruptMigration(PADAPTER adapter)
-{
-	PHAL_DATA_TYPE hal = GET_HAL_DATA(adapter);
-	struct mlme_priv *pmlmepriv = &adapter->mlmepriv;
-	BOOLEAN bCurrentIntMt, bCurrentACIntDisable;
-	BOOLEAN IntMtToSet = _FALSE;
-	BOOLEAN ACIntToSet = _FALSE;
-
-
-	/* Retrieve current interrupt migration and Tx four ACs IMR settings first. */
-	bCurrentIntMt = hal->bInterruptMigration;
-	bCurrentACIntDisable = hal->bDisableTxInt;
-
-	/*
-	 * <Roger_Notes> Currently we use busy traffic for reference instead of RxIntOK counts to prevent non-linear Rx statistics
-	 * when interrupt migration is set before. 2010.03.05.
-	 */
-	if (!adapter->registrypriv.wifi_spec
-		&& (check_fwstate(pmlmepriv, WIFI_ASOC_STATE) == _TRUE)
-		&& pmlmepriv->LinkDetectInfo.bHigherBusyTraffic) {
-		IntMtToSet = _TRUE;
-
-		/* To check whether we should disable Tx interrupt or not. */
-		if (pmlmepriv->LinkDetectInfo.bHigherBusyRxTraffic)
-			ACIntToSet = _TRUE;
-	}
-
-	/* Update current settings. */
-	if (bCurrentIntMt != IntMtToSet) {
-		RTW_INFO("%s: Update interrrupt migration(%d)\n", __FUNCTION__, IntMtToSet);
-		if (IntMtToSet) {
-			/*
-			 * <Roger_Notes> Set interrrupt migration timer and corresponging Tx/Rx counter.
-			 * timer 25ns*0xfa0=100us for 0xf packets.
-			 * 2010.03.05.
-			 */
-			rtw_write32(adapter, REG_INT_MIG, 0xff000fa0); /* 0x306:Rx, 0x307:Tx */
-			hal->bInterruptMigration = IntMtToSet;
-		} else {
-			/* Reset all interrupt migration settings. */
-			rtw_write32(adapter, REG_INT_MIG, 0);
-			hal->bInterruptMigration = IntMtToSet;
-		}
-	}
-}
-#endif /* CONFIG_PCI_HCI */
 	
 /*
  * ============================================================

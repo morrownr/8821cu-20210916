@@ -47,17 +47,10 @@ jackson@realtek.com.tw
 #include <drv_types.h>
 #include <hal_data.h>
 
-#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_PLATFORM_RTL8197D)
-	#define rtw_le16_to_cpu(val)		val
-	#define rtw_le32_to_cpu(val)		val
-	#define rtw_cpu_to_le16(val)		val
-	#define rtw_cpu_to_le32(val)		val
-#else
 	#define rtw_le16_to_cpu(val)		le16_to_cpu(val)
 	#define rtw_le32_to_cpu(val)		le32_to_cpu(val)
 	#define rtw_cpu_to_le16(val)		cpu_to_le16(val)
 	#define rtw_cpu_to_le32(val)		cpu_to_le32(val)
-#endif
 
 
 u8 _rtw_read8(_adapter *adapter, u32 addr)

@@ -1563,13 +1563,11 @@ int hal_read_mac_hidden_rpt(_adapter *adapter)
 	u8 id = C2H_DEFEATURE_RSVD;
 	int i;
 
-#if defined(CONFIG_USB_HCI) || defined(CONFIG_PCI_HCI)
 	u8 hci_type = rtw_get_intf_type(adapter);
 
 	if ((hci_type == RTW_USB || hci_type == RTW_PCIE)
 		&& !rtw_is_hw_init_completed(adapter))
 		rtw_hal_power_on(adapter);
-#endif
 
 	/* inform FW mac hidden rpt from reg is needed */
 	rtw_write8(adapter, REG_C2HEVT_MSG_NORMAL, C2H_DEFEATURE_RSVD);
@@ -1607,11 +1605,9 @@ mac_hidden_rpt_hdl:
 	if (ret_fwdl == _SUCCESS && id == C2H_MAC_HIDDEN_RPT)
 		ret = _SUCCESS;
 
-#if defined(CONFIG_USB_HCI) || defined(CONFIG_PCI_HCI)
 	if ((hci_type == RTW_USB || hci_type == RTW_PCIE)
 		&& !rtw_is_hw_init_completed(adapter))
 		rtw_hal_power_off(adapter);
-#endif
 
 	RTW_INFO("%s %s! (%u, %dms), fwdl:%d, id:0x%02x\n", __func__
 		, (ret == _SUCCESS) ? "OK" : "Fail", cnt, rtw_get_passing_time_ms(start), ret_fwdl, id);
@@ -4759,10 +4755,6 @@ void rtw_hal_switch_gpio_wl_ctrl(_adapter *padapter, u8 index, u8 enable)
 	*/
 
 	if ((index == 13 || index == 14)
-		#if defined(CONFIG_RTL8821A) && defined(CONFIG_SDIO_HCI)
-		/* 8821A's LED2 circuit(used by HW_LED strategy) needs enable WL GPIO control of GPIO[14:13], can't disable */
-		&& (!IS_HW_LED_STRATEGY(rtw_led_get_strategy(padapter)) || enable)
-		#endif
 	)
 		rtw_hal_set_hwreg(padapter, HW_SET_GPIO_WL_CTRL, (u8 *)(&enable));
 }
@@ -5124,33 +5116,23 @@ static u8 rtw_hal_pause_rx_dma(_adapter *adapter)
 		    (rtw_read32(adapter, REG_RXPKT_NUM) | RW_RELEASE_EN));
 	do {
 		if ((rtw_read32(adapter, REG_RXPKT_NUM) & RXDMA_IDLE)) {
-#ifdef CONFIG_USB_HCI
 			/* stop interface before leave */
 			if (_TRUE == hal->usb_intf_start) {
 				rtw_intf_stop(adapter);
 				RTW_ENABLE_FUNC(adapter, DF_RX_BIT);
 				RTW_ENABLE_FUNC(adapter, DF_TX_BIT);
 			}
-#endif /* CONFIG_USB_HCI */
 
 			RTW_PRINT("RX_DMA_IDLE is true\n");
 			ret = _SUCCESS;
 			break;
 		}
-#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
-		else {
-			res = RecvOnePkt(adapter);
-			RTW_PRINT("RecvOnePkt Result: %d\n", res);
-		}
-#endif /* CONFIG_SDIO_HCI || CONFIG_GSPI_HCI */
 
-#ifdef CONFIG_USB_HCI
 		else {
 			/* to avoid interface start repeatedly  */
 			if (_FALSE == hal->usb_intf_start)
 				rtw_intf_start(adapter);
 		}
-#endif /* CONFIG_USB_HCI */
 	} while (trycnt--);
 
 	if (trycnt < 0) {
@@ -6351,12 +6333,6 @@ static void rtw_hal_ap_wow_enable(_adapter *padapter)
 	if (res == _FAIL)
 		RTW_PRINT("[WARNING] pause RX DMA fail\n");
 
-#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
-	/* Enable CPWM2 only. */
-	res = rtw_hal_enable_cpwm2(padapter);
-	if (res == _FAIL)
-		RTW_PRINT("[WARNING] enable cpwm2 fail\n");
-#endif
 
 #ifdef CONFIG_GPIO_WAKEUP
 #ifdef CONFIG_RTW_ONE_PIN_GPIO
@@ -6386,16 +6362,12 @@ static void rtw_hal_ap_wow_enable(_adapter *padapter)
 	rtw_hal_set_fw_ap_wow_related_cmd(padapter, 1);
 
 	rtw_write8(padapter, REG_MCUTST_WOWLAN, 0);
-#ifdef CONFIG_USB_HCI
 	rtw_mi_intf_stop(padapter);
-#endif
-#if defined(CONFIG_USB_HCI) || defined(CONFIG_PCI_HCI)
 	/* Invoid SE0 reset signal during suspending*/
 	rtw_write8(padapter, REG_RSV_CTRL, 0x20);
 	if (IS_8188F(pHalData->version_id) == FALSE
 		&& IS_8188GTV(pHalData->version_id) == FALSE)
 		rtw_write8(padapter, REG_RSV_CTRL, 0x60);
-#endif
 }
 
 static void rtw_hal_ap_wow_disable(_adapter *padapter)
@@ -10959,12 +10931,6 @@ static void rtw_hal_wow_enable(_adapter *adapter)
 #endif /* CONFIG_FW_MULTI_PORT_SUPPORT */
 	}
 
-#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
-	/* Enable CPWM2 only. */
-	res = rtw_hal_enable_cpwm2(adapter);
-	if (res == _FAIL)
-		RTW_PRINT("[WARNING] enable cpwm2 fail\n");
-#endif
 #ifdef CONFIG_GPIO_WAKEUP
 #ifdef CONFIG_RTW_ONE_PIN_GPIO
 	rtw_hal_switch_gpio_wl_ctrl(adapter, pwrctl->wowlan_gpio_index, _TRUE);
@@ -11013,18 +10979,14 @@ static void rtw_hal_wow_enable(_adapter *adapter)
 	}
 #endif
 
-#ifdef CONFIG_USB_HCI
 	/* free adapter's resource */
 	rtw_mi_intf_stop(adapter);
 
-#endif
-#if defined(CONFIG_USB_HCI) || defined(CONFIG_PCI_HCI)
 	/* Invoid SE0 reset signal during suspending*/
 	rtw_write8(adapter, REG_RSV_CTRL, 0x20);
 	if (IS_8188F(pHalData->version_id) == FALSE
 		&& IS_8188GTV(pHalData->version_id) == FALSE)
 		rtw_write8(adapter, REG_RSV_CTRL, 0x60);
-#endif
 
 	rtw_hal_gate_bb(adapter, _FALSE);
 }
@@ -12230,11 +12192,7 @@ download_page:
 		pattrib->qsel = QSLT_BEACON;
 		pattrib->pktlen = TotalPacketLen;
 		pattrib->last_txcmdsz = TotalPacketLen;
-#ifdef CONFIG_PCI_HCI
-		dump_mgntframe(adapter, pcmdframe);
-#else
 		dump_mgntframe_and_wait(adapter, pcmdframe, 100);
-#endif
 	}
 
 	RTW_INFO("%s: Set RSVD page location to Fw ,TotalPacketLen(%d), TotalPageNum(%d)\n",
@@ -13543,16 +13501,6 @@ u8 SetHwReg(_adapter *adapter, u8 variable, u8 *val)
 	}
 	break;
 #endif/*CONFIG_RTS_FULL_BW*/
-#if defined(CONFIG_PCI_HCI)
-	case HW_VAR_ENSWBCN:
-	if (*val == _TRUE) {
-		rtw_write8(adapter, REG_CR + 1,
-			   rtw_read8(adapter, REG_CR + 1) | BIT(0));
-	} else
-		rtw_write8(adapter, REG_CR + 1,
-			   rtw_read8(adapter, REG_CR + 1) & ~BIT(0));
-	break;
-#endif
 	case HW_VAR_BCN_EARLY_C2H_RPT:
 		rtw_hal_set_fw_bcn_early_c2h_rpt_cmd(adapter, *(u8 *)val);
 		break;
@@ -13722,9 +13670,7 @@ u8 rtw_hal_query_txbfer_rf_num(_adapter *adapter)
 		return pregistrypriv->beamformer_rf_num;
 	else if (IS_HARDWARE_TYPE_8814AE(adapter)
 #if 0
-#if defined(CONFIG_USB_HCI)
 		|| (IS_HARDWARE_TYPE_8814AU(adapter) && (pUsbModeMech->CurUsbMode == 2 || pUsbModeMech->HubUsbMode == 2))  /* for USB3.0 */
-#endif
 #endif
 		) {
 		/*BF cap provided by Yu Chen, Sean, 2015, 01 */

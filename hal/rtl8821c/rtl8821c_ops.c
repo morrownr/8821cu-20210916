@@ -23,13 +23,7 @@
 #include <hal_com.h>		/* dump_chip_info() and etc. */
 #include "../hal_halmac.h"	/* GET_RX_DESC_XXX_8821C() */
 #include "rtl8821c.h"
-#ifdef CONFIG_PCI_HCI
-	#include "rtl8821ce_hal.h"
-#endif
 #include "rtl8821c_dm.h"
-#ifdef CONFIG_SDIO_HCI
-#include "sdio/rtl8821cs.h"
-#endif
 
 static void read_chip_version(PADAPTER adapter)
 {
@@ -418,7 +412,6 @@ static void Hal_EfuseParsePackageType(PADAPTER adapter, u8 *map, u8 mapvalid)
 {
 }
 
-#ifdef CONFIG_USB_HCI
 static void Hal_ReadUsbModeSwitch(PADAPTER adapter, u8 *map, u8 mapvalid)
 {
 	PHAL_DATA_TYPE hal = GET_HAL_DATA(adapter);
@@ -448,7 +441,6 @@ static void hal_read_usb_pid_vid(PADAPTER adapter, u8 *map, u8 mapvalid)
 	RTW_INFO("EEPROM VID = 0x%04X, PID = 0x%04X\n", hal->EEPROMVID, hal->EEPROMPID);
 }
 
-#endif /* CONFIG_USB_HCI */
 
 /*
  * Description:
@@ -514,10 +506,8 @@ u8 rtl8821c_read_efuse(PADAPTER adapter)
 	/* Data out of Efuse Map */
 	Hal_EfuseParsePackageType(adapter, efuse_map, valid);
 
-#ifdef CONFIG_USB_HCI
 	Hal_ReadUsbModeSwitch(adapter, efuse_map, valid);
 	hal_read_usb_pid_vid(adapter, efuse_map, valid);
-#endif /* CONFIG_USB_HCI */
 
 	/* set coex. ant info once efuse parsing is done */
 	rtw_btcoex_set_ant_info(adapter);
@@ -588,7 +578,6 @@ static void xmit_status_check(PADAPTER p)
 		rtw_hal_sreset_reset(p);
 	}
 	#ifdef DBG_PRE_TX_HANG
-	#if defined(CONFIG_USB_HCI) || defined(CONFIG_SDIO_HCI)
 	{
 		u8 hisr = rtw_read8(p, REG_HISR1_8821C + 3);
 		if (hisr & BIT_PRETXERR) {
@@ -596,10 +585,8 @@ static void xmit_status_check(PADAPTER p)
 			rtw_write8(p, REG_HISR1_8821C + 3, BIT_PRETXERR);
 		}
 	}
-	#endif
 	#endif/*DBG_PRE_TX_HANG*/
 
-#ifdef CONFIG_USB_HCI
 	current_time = rtw_get_current_time();
 
 	if (0 == pxmitpriv->free_xmitbuf_cnt || 0 == pxmitpriv->free_xmit_extbuf_cnt) {
@@ -625,7 +612,6 @@ static void xmit_status_check(PADAPTER p)
 		}
 	}
 
-#endif /* CONFIG_USB_HCI */
 
 	if (psrtpriv->dbg_trigger_point == SRESET_TGP_XMIT_STATUS) {
 		psrtpriv->dbg_trigger_point = SRESET_TGP_NULL;
@@ -681,21 +667,15 @@ static void linked_status_check(PADAPTER p)
 		RTW_INFO("%s REG_RXDMA_STATUS:0x%08x\n", __FUNCTION__, rx_dma_status);
 		psrtpriv->rx_dma_status_cnt++;
 		psrtpriv->self_dect_case = 5;
-#ifdef CONFIG_USB_HCI
 		rtw_hal_sreset_reset(p);
-#endif /* CONFIG_USB_HCI */
 	}
 
 	if (psrtpriv->self_dect_fw) {
 		psrtpriv->self_dect_case = 3;
-#ifdef CONFIG_USB_HCI
 		rtw_hal_sreset_reset(p);
-#endif /* CONFIG_USB_HCI */
 	}
 
-#ifdef CONFIG_USB_HCI
 	check_rx_count(p);
-#endif /* CONFIG_USB_HCI */
 
 	if (psrtpriv->dbg_trigger_point == SRESET_TGP_LINK_STATUS) {
 		psrtpriv->dbg_trigger_point = SRESET_TGP_NULL;
@@ -1063,15 +1043,9 @@ static void hw_var_set_opmode(PADAPTER Adapter, u8 *val)
 			/*CONFIG_INTERRUPT_BASED_TXBCN*/
 			#ifdef CONFIG_INTERRUPT_BASED_TXBCN_EARLY_INT
 			rtw_write8(Adapter, REG_DRVERLYINT, 0x05);/* restore early int time to 5ms */
-			#if defined(CONFIG_SDIO_HCI)
-			rtl8821cs_update_interrupt_mask(Adapter, 0, SDIO_HIMR_BCNERLY_INT_MSK);
-			#endif
 			#endif/* CONFIG_INTERRUPT_BASED_TXBCN_EARLY_INT */
 
 			#ifdef CONFIG_INTERRUPT_BASED_TXBCN_BCN_OK_ERR
-			#if defined(CONFIG_SDIO_HCI)
-			rtl8821cs_update_interrupt_mask(Adapter, 0, (SDIO_HIMR_TXBCNOK_MSK | SDIO_HIMR_TXBCNERR_MSK));
-			#endif
 			#endif /* CONFIG_INTERRUPT_BASED_TXBCN_BCN_OK_ERR */
 		}
 		#endif /* CONFIG_INTERRUPT_BASED_TXBCN */
@@ -1089,15 +1063,9 @@ static void hw_var_set_opmode(PADAPTER Adapter, u8 *val)
 		if (Adapter->hw_port == HW_PORT0) {
 			#ifdef CONFIG_INTERRUPT_BASED_TXBCN
 			#ifdef CONFIG_INTERRUPT_BASED_TXBCN_EARLY_INT
-			#if defined(CONFIG_SDIO_HCI)
-			rtl8821cs_update_interrupt_mask(Adapter, SDIO_HIMR_BCNERLY_INT_MSK, 0);
-			#endif
 			#endif/* CONFIG_INTERRUPT_BASED_TXBCN_EARLY_INT */
 
 			#ifdef CONFIG_INTERRUPT_BASED_TXBCN_BCN_OK_ERR
-			#if defined(CONFIG_SDIO_HCI)
-			rtl8821cs_update_interrupt_mask(Adapter, (SDIO_HIMR_TXBCNOK_MSK | SDIO_HIMR_TXBCNERR_MSK), 0);
-			#endif
 			#endif/* CONFIG_INTERRUPT_BASED_TXBCN_BCN_OK_ERR */
 			#endif /* CONFIG_INTERRUPT_BASED_TXBCN */
 
@@ -2947,11 +2915,7 @@ void rtl8821c_prepare_mp_txdesc(PADAPTER adapter, struct mp_priv *pmp_priv)
 	offset = desc_size;
 	SET_TX_DESC_OFFSET_8821C(desc, offset);
 
-#if defined(CONFIG_PCI_HCI) || defined(CONFIG_SDIO_HCI)
-	SET_TX_DESC_PKT_OFFSET_8821C(desc, 0); /* Don't need to set PACKET Offset bit,it's no use 512bytes of length */
-#else
 	SET_TX_DESC_PKT_OFFSET_8821C(desc, 1);
-#endif
 
 	if (bmcast)
 		SET_TX_DESC_BMC_8821C(desc, 1);
@@ -3078,12 +3042,6 @@ static void fill_default_txdesc(struct xmit_frame *pxmitframe, u8 *pbuf)
 		if (bmcst)
 			fill_txdesc_force_bmc_camid(pattrib, pbuf);
 
-#if defined(CONFIG_USB_TX_AGGREGATION) || defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
-		if (pxmitframe->agg_num > 1) {
-			/*RTW_INFO("%s agg_num:%d\n",__func__,pxmitframe->agg_num );*/
-			SET_TX_DESC_DMA_TXAGG_NUM_8821C(pbuf, pxmitframe->agg_num);
-		}
-#endif /*CONFIG_USB_TX_AGGREGATION*/
 
 		rtl8821c_fill_txdesc_vcs(adapter, pattrib, pbuf);
 
@@ -3413,13 +3371,11 @@ static void fill_fake_txdesc(PADAPTER adapter, u8 *pDesc, u32 BufferLen,
 	SET_TX_DESC_PORT_ID_8821C(pDesc, hw_port);
 	SET_TX_DESC_MULTIPLE_PORT_8821C(pDesc, hw_port);
 
-#if defined(CONFIG_USB_HCI) || defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
 	/*
 	 * USB interface drop packet if the checksum of descriptor isn't correct.
 	 * Using this checksum can let hardware recovery from packet bulk out error (e.g. Cancel URC, Bulk out error.).
 	 */
 	rtl8821c_cal_txdesc_chksum(adapter, pDesc);
-#endif
 }
 
 void rtl8821c_rxdesc2attribute(struct rx_pkt_attrib *pattrib, u8 *desc)
@@ -3565,10 +3521,8 @@ void rtl8821c_set_hal_ops(PADAPTER adapter)
 	/*
 		ops->init_recv_priv = NULL;
 		ops->free_recv_priv = NULL;
-	#if defined(CONFIG_USB_HCI) || defined(CONFIG_PCI_HCI)
 		ops->inirp_init = NULL;
 		ops->inirp_deinit = NULL;
-	#endif
 	*/
 	/*** interrupt hdl section ***/
 	/*
@@ -3577,14 +3531,8 @@ void rtl8821c_set_hal_ops(PADAPTER adapter)
 	*/
 	ops_func->check_ips_status = check_ips_status;
 	/*
-	#if defined(CONFIG_PCI_HCI)
-		ops->interrupt_handler = NULL;
-	#endif
 	#if defined(CONFIG_USB_HCI) && defined(CONFIG_SUPPORT_USB_INT)
 		ops->interrupt_handler = NULL;
-	#endif
-	#if defined(CONFIG_PCI_HCI)
-		ops->irp_reset = NULL;
 	#endif
 	*/
 
