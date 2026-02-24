@@ -1198,12 +1198,6 @@ void halbtc8821c1ant_update_wifi_link_info(struct btc_coexist *btc, u8 reason)
 	 * Only PCIe/USB can set 0x454[6] = 1 to solve this issue,
 	 * WL SDIO/USB interface need driver support.
 	 */
-#ifdef PLATFORM_WINDOWS
-	if (btc->chip_interface != BTC_INTF_SDIO)
-		btc->btc_write_1byte_bitmask(btc, 0x454, BIT(6), 0x1);
-	else
-		btc->btc_write_1byte_bitmask(btc, 0x454, BIT(6), 0x0);
-#endif
 }
 
 static
@@ -3472,12 +3466,6 @@ void halbtc8821c1ant_action_wifi_multiport2g(struct btc_coexist *btc)
 			break;
 		case BTC_LINK_ONLY_GO:
 		case BTC_LINK_ONLY_GC:
-#ifdef PLATFORM_WINDOWS
-			if (btc->chip_interface == BTC_INTF_PCI &&
-			    coex_sta->a2dp_exist && !coex_sta->is_bt_multi_link)
-				halbtc8821c1ant_table(btc, NM_EXCU, 10);
-			else
-#endif
 				halbtc8821c1ant_table(btc, NM_EXCU, 19);
 			halbtc8821c1ant_tdma(btc, NM_EXCU, FALSE, 8);
 			break;

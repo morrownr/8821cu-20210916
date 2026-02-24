@@ -14,9 +14,6 @@
  *****************************************************************************/
 #define _RTW_MP_C_
 #include <drv_types.h>
-#ifdef PLATFORM_FREEBSD
-	#include <sys/unistd.h>		/* for RFHIGHPID */
-#endif
 
 #include "../hal/phydm/phydm_precomp.h"
 #if defined(CONFIG_RTL8723B) || defined(CONFIG_RTL8821A)
@@ -2009,24 +2006,11 @@ void SetPacketTx(PADAPTER padapter)
 		}
 	}
 	/* 3 6. start thread */
-#ifdef PLATFORM_LINUX
 	pmp_priv->tx.PktTxThread = kthread_run(mp_xmit_packet_thread, pmp_priv, "RTW_MP_THREAD");
 	if (IS_ERR(pmp_priv->tx.PktTxThread)) {
 		RTW_ERR("Create PktTx Thread Fail !!!!!\n");
 		pmp_priv->tx.PktTxThread = NULL;
 	}
-#endif
-#ifdef PLATFORM_FREEBSD
-	{
-		struct proc *p;
-		struct thread *td;
-		pmp_priv->tx.PktTxThread = kproc_kthread_add(mp_xmit_packet_thread, pmp_priv,
-			&p, &td, RFHIGHPID, 0, "MPXmitThread", "MPXmitThread");
-
-		if (pmp_priv->tx.PktTxThread < 0)
-			RTW_INFO("Create PktTx Thread Fail !!!!!\n");
-	}
-#endif
 
 	Rtw_MPSetMacTxEDCA(padapter);
 	return;
@@ -2349,11 +2333,9 @@ u32 mp_query_psd(PADAPTER pAdapter, u8 *data)
 	char *pdata = NULL;
 
 
-#ifdef PLATFORM_LINUX
 	if (!netif_running(pAdapter->pnetdev)) {
 		return 0;
 	}
-#endif
 
 	if (check_fwstate(&pAdapter->mlmepriv, WIFI_MP_STATE) == _FALSE) {
 		return 0;

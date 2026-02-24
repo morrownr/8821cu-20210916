@@ -27,11 +27,6 @@ struct pkt_file {
 
 #ifdef PLATFORM_WINDOWS
 
-#ifdef PLATFORM_OS_XP
-#include <usb.h>
-#include <usbdlib.h>
-#include <usbioctl.h>
-#endif
 
 	#define NR_XMITFRAME     128
 
@@ -45,13 +40,7 @@ extern NDIS_STATUS rtw_xmit_entry(
 
 #endif /* PLATFORM_WINDOWS */
 
-#ifdef PLATFORM_FREEBSD
-#define NR_XMITFRAME	256
-extern int rtw_xmit_entry(_pkt *pkt, _nic_hdl pnetdev);
-extern void rtw_xmit_entry_wrap(struct ifnet *pifp);
-#endif /* PLATFORM_FREEBSD */
 
-#ifdef PLATFORM_LINUX
 
 #define NR_XMITFRAME	256
 
@@ -64,7 +53,6 @@ struct xmit_buf;
 extern int _rtw_xmit_entry(_pkt *pkt, _nic_hdl pnetdev);
 extern int rtw_xmit_entry(_pkt *pkt, _nic_hdl pnetdev);
 
-#endif /* PLATFORM_LINUX */
 
 void rtw_os_xmit_schedule(_adapter *padapter);
 

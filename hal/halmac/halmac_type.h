@@ -136,9 +136,6 @@
 	adapter->pltfm_api->EVENT_INDICATION(adapter->drv_adapter, feature_id, \
 					     proc_status, buf, size)
 
-#if HALMAC_PLATFORM_WINDOWS
-#define PLTFM_MSG_PRINT	adapter->pltfm_api->MSG_PRINT
-#endif
 
 #define PLTFM_MSG_ALWAYS(...)                                                  \
 	adapter->pltfm_api->MSG_PRINT(adapter->drv_adapter, HALMAC_MSG_INIT,   \

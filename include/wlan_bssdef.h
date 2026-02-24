@@ -19,7 +19,6 @@
 #define MAX_IE_SZ	768
 
 
-#ifdef PLATFORM_LINUX
 
 #define NDIS_802_11_LENGTH_SSID         32
 #define NDIS_802_11_LENGTH_RATES        8
@@ -103,91 +102,7 @@ typedef struct _NDIS_802_11_WEP {
 	u8     KeyMaterial[16];/* variable length depending on above field */
 } NDIS_802_11_WEP, *PNDIS_802_11_WEP;
 
-#endif /* end of #ifdef PLATFORM_LINUX */
 
-#ifdef PLATFORM_FREEBSD
-
-#define NDIS_802_11_LENGTH_SSID         32
-#define NDIS_802_11_LENGTH_RATES        8
-#define NDIS_802_11_LENGTH_RATES_EX     16
-
-typedef unsigned char   NDIS_802_11_MAC_ADDRESS[ETH_ALEN];
-typedef long    		NDIS_802_11_RSSI;           /* in dBm */
-typedef unsigned char   NDIS_802_11_RATES[NDIS_802_11_LENGTH_RATES];        /* Set of 8 data rates */
-typedef unsigned char   NDIS_802_11_RATES_EX[NDIS_802_11_LENGTH_RATES_EX];  /* Set of 16 data rates */
-
-
-typedef struct _NDIS_802_11_SSID {
-	u32  SsidLength;
-	u8  Ssid[32];
-} NDIS_802_11_SSID, *PNDIS_802_11_SSID;
-
-/*
-	FW will only save the channel number in DSConfig.
-	ODI Handler will convert the channel number to freq. number.
-*/
-typedef struct _NDIS_802_11_CONFIGURATION {
-	u32           Length;             /* Length of structure */
-	u32           BeaconPeriod;       /* units are Kusec */
-	u32           ATIMWindow;         /* units are Kusec */
-	u32           DSConfig;           /* channel number */
-} NDIS_802_11_CONFIGURATION, *PNDIS_802_11_CONFIGURATION;
-
-typedef enum _NDIS_802_11_NETWORK_INFRASTRUCTURE {
-	Ndis802_11IBSS,
-	Ndis802_11Infrastructure,
-	Ndis802_11AutoUnknown,
-	Ndis802_11InfrastructureMax,     /* Not a real value, defined as upper bound */
-	Ndis802_11APMode
-} NDIS_802_11_NETWORK_INFRASTRUCTURE, *PNDIS_802_11_NETWORK_INFRASTRUCTURE;
-
-typedef struct _NDIS_802_11_FIXED_IEs {
-	u8  Timestamp[8];
-	u16  BeaconInterval;
-	u16  Capabilities;
-} NDIS_802_11_FIXED_IEs, *PNDIS_802_11_FIXED_IEs;
-
-typedef struct _NDIS_802_11_VARIABLE_IEs {
-	u8  ElementID;
-	u8  Length;
-	u8  data[];
-} NDIS_802_11_VARIABLE_IEs, *PNDIS_802_11_VARIABLE_IEs;
-
-typedef enum _NDIS_802_11_AUTHENTICATION_MODE {
-	Ndis802_11AuthModeOpen,
-	Ndis802_11AuthModeShared,
-	Ndis802_11AuthModeAutoSwitch,
-	Ndis802_11AuthModeWPA,
-	Ndis802_11AuthModeWPAPSK,
-	Ndis802_11AuthModeWPANone,
-	Ndis802_11AuthModeMax               /* Not a real mode, defined as upper bound */
-} NDIS_802_11_AUTHENTICATION_MODE, *PNDIS_802_11_AUTHENTICATION_MODE;
-
-typedef enum _NDIS_802_11_WEP_STATUS {
-	Ndis802_11WEPEnabled,
-	Ndis802_11Encryption1Enabled = Ndis802_11WEPEnabled,
-	Ndis802_11WEPDisabled,
-	Ndis802_11EncryptionDisabled = Ndis802_11WEPDisabled,
-	Ndis802_11WEPKeyAbsent,
-	Ndis802_11Encryption1KeyAbsent = Ndis802_11WEPKeyAbsent,
-	Ndis802_11WEPNotSupported,
-	Ndis802_11EncryptionNotSupported = Ndis802_11WEPNotSupported,
-	Ndis802_11Encryption2Enabled,
-	Ndis802_11Encryption2KeyAbsent,
-	Ndis802_11Encryption3Enabled,
-	Ndis802_11Encryption3KeyAbsent
-} NDIS_802_11_WEP_STATUS, *PNDIS_802_11_WEP_STATUS,
-NDIS_802_11_ENCRYPTION_STATUS, *PNDIS_802_11_ENCRYPTION_STATUS;
-
-
-typedef struct _NDIS_802_11_WEP {
-	u32     Length;        /* Length of this structure */
-	u32     KeyIndex;      /* 0 is the per-client key, 1-N are the global keys */
-	u32     KeyLength;     /* length of key in bytes */
-	u8     KeyMaterial[16];/* variable length depending on above field */
-} NDIS_802_11_WEP, *PNDIS_802_11_WEP;
-
-#endif /* PLATFORM_FREEBSD */
 
 #ifndef Ndis802_11APMode
 #define Ndis802_11APMode (Ndis802_11InfrastructureMax+1)

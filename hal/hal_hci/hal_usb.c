@@ -41,14 +41,12 @@ int	usb_init_recv_priv(_adapter *padapter, u16 ini_in_buf_sz)
 #endif /* PLATFORM_FREEBSD */
 
 #ifdef CONFIG_USB_INTERRUPT_IN_PIPE
-#ifdef PLATFORM_LINUX
 	precvpriv->int_in_urb = usb_alloc_urb(0, GFP_KERNEL);
 	if (precvpriv->int_in_urb == NULL) {
 		res = _FAIL;
 		RTW_INFO("alloc_urb for interrupt in endpoint fail !!!!\n");
 		goto exit;
 	}
-#endif /* PLATFORM_LINUX */
 	precvpriv->int_in_buf = rtw_zmalloc(ini_in_buf_sz);
 	if (precvpriv->int_in_buf == NULL) {
 		res = _FAIL;
@@ -80,9 +78,6 @@ int	usb_init_recv_priv(_adapter *padapter, u16 ini_in_buf_sz)
 	for (i = 0; i < regsty->recvbuf_nr ; i++) {
 		_rtw_init_listhead(&precvbuf->list);
 
-#ifdef PLATFORM_WINDOWS
-		_rtw_spinlock_init(&precvbuf->recvbuf_lock);
-#endif
 
 		precvbuf->alloc_sz = MAX_RECVBUF_SZ;
 
@@ -132,11 +127,7 @@ int	usb_init_recv_priv(_adapter *padapter, u16 ini_in_buf_sz)
 #endif /* CONFIG_PREALLOC_RX_SKB_BUFFER */
 
 			if (pskb) {
-#ifdef PLATFORM_FREEBSD
-				pskb->dev = padapter->pifp;
-#else
 				pskb->dev = padapter->pnetdev;
-#endif /* PLATFORM_FREEBSD */
 
 #ifndef CONFIG_PREALLOC_RX_SKB_BUFFER
 				tmpaddr = (SIZE_PTR)pskb->data;
@@ -174,10 +165,8 @@ void usb_free_recv_priv(_adapter *padapter, u16 ini_in_buf_sz)
 		rtw_mfree(precvpriv->pallocated_recv_buf, regsty->recvbuf_nr * sizeof(struct recv_buf) + 4);
 
 #ifdef CONFIG_USB_INTERRUPT_IN_PIPE
-#ifdef PLATFORM_LINUX
 	if (precvpriv->int_in_urb)
 		usb_free_urb(precvpriv->int_in_urb);
-#endif
 	if (precvpriv->int_in_buf)
 		rtw_mfree(precvpriv->int_in_buf, ini_in_buf_sz);
 #endif /* CONFIG_USB_INTERRUPT_IN_PIPE */
