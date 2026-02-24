@@ -23,12 +23,6 @@
 #endif
 	#include <hal_btcoex_wifionly.h>
 
-#ifdef CONFIG_SDIO_HCI
-	#include <hal_sdio.h>
-#endif
-#ifdef CONFIG_GSPI_HCI
-	#include <hal_gspi.h>
-#endif
 
 #if defined(CONFIG_RTW_ACS) || defined(CONFIG_BACKGROUND_NOISE_MONITOR)
 #include "../hal/hal_dm_acs.h"
@@ -97,7 +91,7 @@ typedef enum _RT_AMPDU_BRUST_MODE {
 #define NUM_OF_TARGET_TXPWR_2G	10 /* CCK:1, OFDM:1, HT:4, VHT:4 */
 #define NUM_OF_TARGET_TXPWR_5G	9 /* OFDM:1, HT:4, VHT:4 */
 
-#ifdef RTW_RX_AGGREGATION
+#ifdef CONFIG_USB_RX_AGGREGATION
 typedef enum _RX_AGG_MODE {
 	RX_AGG_DISABLE,
 	RX_AGG_DMA,
@@ -107,7 +101,7 @@ typedef enum _RX_AGG_MODE {
 
 /* #define MAX_RX_DMA_BUFFER_SIZE	10240 */		/* 10K for 8192C RX DMA buffer */
 
-#endif /* RTW_RX_AGGREGATION */
+#endif /* CONFIG_USB_RX_AGGREGATION */
 
 /* E-Fuse */
 #ifdef CONFIG_RTL8188E
@@ -438,15 +432,9 @@ typedef struct hal_com_data {
 
 	u16	EEPROMVID;
 	u16	EEPROMSVID;
-#ifdef CONFIG_USB_HCI
 	u8	EEPROMUsbSwitch;
 	u16	EEPROMPID;
 	u16	EEPROMSDID;
-#endif
-#ifdef CONFIG_PCI_HCI
-	u16	EEPROMDID;
-	u16	EEPROMSMID;
-#endif
 
 	u8	EEPROMCustomerID;
 	u8	EEPROMSubCustomerID;
@@ -625,13 +613,13 @@ typedef struct hal_com_data {
 	u8	OutEpQueueSel;
 	u8	OutEpNumber;
 
-#ifdef RTW_RX_AGGREGATION
+#ifdef CONFIG_USB_RX_AGGREGATION
 	RX_AGG_MODE rxagg_mode;
 
 	/* For RX Aggregation DMA Mode */
 	u8 rxagg_dma_size;
 	u8 rxagg_dma_timeout;
-#endif /* RTW_RX_AGGREGATION */
+#endif /* CONFIG_USB_RX_AGGREGATION */
 
 	bool intf_start;
 
@@ -729,28 +717,6 @@ typedef struct hal_com_data {
 #endif /* CONFIG_USB_HCI */
 
 
-#ifdef CONFIG_PCI_HCI
-	/*  */
-	/* EEPROM setting. */
-	/*  */
-	u32			TransmitConfig;
-	u32			IntrMaskToSet[2];
-	u32			IntArray[4];
-	u32			IntrMask[4];
-	u32			SysIntArray[1];
-	u32			SysIntrMask[1];
-	u32			IntrMaskReg[2];
-	u32			IntrMaskDefault[4];
-
-	u32			pci_backdoor_ctrl;
-
-	u8			bDefaultAntenna;
-
-	u8			bInterruptMigration;
-	u8			bDisableTxInt;
-
-	u16			RxTag;
-#endif /* CONFIG_PCI_HCI */
 
 
 #ifdef DBG_CONFIG_ERROR_DETECT
@@ -806,9 +772,6 @@ typedef struct hal_com_data {
 	BOOLEAN				bCCKinCH14;
 	BB_INIT_REGISTER	RegForRecover[5];
 
-#if defined(CONFIG_PCI_HCI) && defined(RTL8814AE_SW_BCN)
-	BOOLEAN bCorrectBCN;
-#endif
 #ifdef CONFIG_RTL8814A
 	u32 RxGainOffset[4]; /*{2G, 5G_Low, 5G_Middle, G_High}*/
 	u8 BackUp_IG_REG_4_Chnl_Section[4]; /*{A,B,C,D}*/

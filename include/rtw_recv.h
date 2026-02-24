@@ -259,22 +259,12 @@ struct recv_stat {
 
 	unsigned int rxdw1;
 
-#if !((defined(CONFIG_RTL8192E) || defined(CONFIG_RTL8814A) || defined(CONFIG_RTL8822B) || defined(CONFIG_RTL8821C) || defined(CONFIG_RTL8822C)) && defined(CONFIG_PCI_HCI))  /* exclude 8192ee, 8814ae, 8822be, 8821ce */
-	unsigned int rxdw2;
-
-	unsigned int rxdw3;
-#endif
 
 #ifndef BUF_DESC_ARCH
 	unsigned int rxdw4;
 
 	unsigned int rxdw5;
 
-#ifdef CONFIG_PCI_HCI
-	unsigned int rxdw6;
-
-	unsigned int rxdw7;
-#endif
 #endif /* if BUF_DESC_ARCH is defined, rx_buf_desc occupy 4 double words */
 };
 #endif
@@ -403,9 +393,7 @@ struct recv_priv {
 	_queue	free_recv_buf_queue;
 	u32	free_recv_buf_queue_cnt;
 
-#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI) || defined(CONFIG_USB_HCI)
 	_queue	recv_buf_pending_queue;
-#endif
 
 #if defined(CONFIG_SDIO_HCI)
 #ifdef CONFIG_SDIO_RECVBUF_PWAIT
@@ -416,12 +404,6 @@ struct recv_priv {
 #endif
 #endif /* CONFIG_SDIO_HCI */
 
-#ifdef CONFIG_PCI_HCI
-	/* Rx */
-	struct rtw_rx_ring	rx_ring[PCI_MAX_RX_QUEUE];
-	int rxringcount;	/* size should be PCI_MAX_RX_QUEUE */
-	u32	rxbuffersize;
-#endif
 
 	/* For display the phy informatiom */
 	u8 is_signal_dbg;	/* for debug */
@@ -537,14 +519,12 @@ struct recv_buf {
 	u8	*ptail;
 	u8	*pend;
 
-#ifdef CONFIG_USB_HCI
 	PURB	purb;
 	dma_addr_t dma_transfer_addr;	/* (in) dma addr for transfer_buffer */
 	u32 alloc_sz;
 
 	u8  irp_pending;
 	int  transfer_len;
-#endif
 
 #if defined(PLATFORM_LINUX)
 	_pkt *pskb;

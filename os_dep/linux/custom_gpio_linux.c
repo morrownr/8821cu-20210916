@@ -38,27 +38,10 @@
 #ifndef GPIO_WIFI_PWDN
 #define GPIO_WIFI_PWDN -1
 #endif /* !GPIO_WIFI_RESET */
-#ifdef CONFIG_GSPI_HCI
-extern unsigned int oob_irq;
-#endif /* CONFIG_GSPI_HCI */
 
-#ifdef CONFIG_SDIO_HCI
-extern int rtw_mp_mode;
-#else /* !CONFIG_SDIO_HCI */
-#endif /* !CONFIG_SDIO_HCI */
 
 int rtw_wifi_gpio_init(void)
 {
-#ifdef CONFIG_GSPI_HCI
-	if (GPIO_WIFI_IRQ > 0) {
-		gpio_request(GPIO_WIFI_IRQ, "oob_irq");
-		gpio_direction_input(GPIO_WIFI_IRQ);
-
-		oob_irq = gpio_to_irq(GPIO_WIFI_IRQ);
-
-		RTW_INFO("%s oob_irq:%d\n", __func__, oob_irq);
-	}
-#endif
 	if (GPIO_WIFI_RESET > 0)
 		gpio_request(GPIO_WIFI_RESET , "wifi_rst");
 	if (GPIO_WIFI_POWER > 0)
@@ -78,10 +61,6 @@ int rtw_wifi_gpio_init(void)
 
 int rtw_wifi_gpio_deinit(void)
 {
-#ifdef CONFIG_GSPI_HCI
-	if (GPIO_WIFI_IRQ > 0)
-		gpio_free(GPIO_WIFI_IRQ);
-#endif
 	if (GPIO_WIFI_RESET > 0)
 		gpio_free(GPIO_WIFI_RESET);
 	if (GPIO_WIFI_POWER > 0)
@@ -270,27 +249,12 @@ void rtw_wifi_gpio_wlan_ctrl(int onoff)
 extern unsigned int oob_irq;
 int rtw_wifi_gpio_init(void)
 {
-#ifdef CONFIG_GSPI_HCI
-	if (GPIO_WIFI_IRQ > 0) {
-		rk30_mux_api_set(GPIO2C2_LCDC1DATA18_SMCBLSN1_HSADCDATA5_NAME, GPIO2C_GPIO2C2);/* jacky_test */
-		gpio_request(GPIO_WIFI_IRQ, "oob_irq");
-		gpio_direction_input(GPIO_WIFI_IRQ);
-
-		oob_irq = gpio_to_irq(GPIO_WIFI_IRQ);
-
-		RTW_INFO("%s oob_irq:%d\n", __func__, oob_irq);
-	}
-#endif
 	return 0;
 }
 
 
 int rtw_wifi_gpio_deinit(void)
 {
-#ifdef CONFIG_GSPI_HCI
-	if (GPIO_WIFI_IRQ > 0)
-		gpio_free(GPIO_WIFI_IRQ);
-#endif
 	return 0;
 }
 

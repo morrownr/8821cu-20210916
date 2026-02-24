@@ -3291,20 +3291,6 @@ static int rtw_wx_read32(struct net_device *dev,
 		sprintf(extra, "0x%08X", data32);
 		break;
 
-	#if defined(CONFIG_SDIO_HCI) && defined(CONFIG_SDIO_INDIRECT_ACCESS) && defined(DBG_SDIO_INDIRECT_ACCESS)
-	case 11:
-		data32 = rtw_sd_iread8(padapter, addr);
-		sprintf(extra, "0x%02X", data32);
-		break;
-	case 12:
-		data32 = rtw_sd_iread16(padapter, addr);
-		sprintf(extra, "0x%04X", data32);
-		break;
-	case 14:
-		data32 = rtw_sd_iread32(padapter, addr);
-		sprintf(extra, "0x%08X", data32);
-		break;
-	#endif
 	default:
 		RTW_INFO("%s: usage> read [bytes],[address(hex)]\n", __func__);
 		ret = -EINVAL;
@@ -6110,9 +6096,7 @@ static int rtw_dbg_port(struct net_device *dev,
 				pxmitpriv->free_xmitbuf_cnt, pxmitpriv->free_xmitframe_cnt,
 				pxmitpriv->free_xmit_extbuf_cnt, pxmitpriv->free_xframe_ext_cnt,
 				 precvpriv->free_recvframe_cnt);
-#ifdef CONFIG_USB_HCI
 			RTW_INFO("rx_urb_pending_cn=%d\n", ATOMIC_READ(&(precvpriv->rx_pending_cnt)));
-#endif
 		}
 			break;
 		case 0x09: {
@@ -6390,61 +6374,6 @@ static int rtw_dbg_port(struct net_device *dev,
 #endif
 
 
-#if defined(CONFIG_SDIO_HCI) && defined(CONFIG_SDIO_INDIRECT_ACCESS) && defined(DBG_SDIO_INDIRECT_ACCESS)
-		case 0x1f:
-			{
-				int i, j = 0, test_cnts = 0;
-				static u8 test_code = 0x5A;
-				static u32 data_misatch_cnt = 0, d_acc_err_cnt = 0;
-
-				u32 d_data, i_data;
-				u32 imr;
-
-				test_cnts = extra_arg;
-				for (i = 0; i < test_cnts; i++) {
-					if (RTW_CANNOT_IO(padapter))
-						break;
-
-					rtw_write8(padapter, 0x07, test_code);
-
-					d_data = rtw_read32(padapter, 0x04);
-					imr =  rtw_read32(padapter, 0x10250014);
-					rtw_write32(padapter, 0x10250014, 0);
-					rtw_msleep_os(50);
-
-					i_data = rtw_sd_iread32(padapter, 0x04);
-
-					rtw_write32(padapter, 0x10250014, imr);
-
-					if (d_data != i_data) {
-						data_misatch_cnt++;
-						RTW_ERR("d_data :0x%08x, i_data : 0x%08x\n", d_data, i_data);
-					}
-
-					if (test_code != (i_data >> 24)) {
-						d_acc_err_cnt++;
-						rtw_write8(padapter, 0x07, 0xAA);
-						RTW_ERR("test_code :0x%02x, i_data : 0x%08x\n", test_code, i_data);
-					}
-					if ((j++) == 100) {
-						rtw_msleep_os(2000);
-						RTW_INFO(" Indirect access testing..........%d/%d\n", i, test_cnts);
-						j = 0;
-					}
-
-					test_code = ~test_code;
-					rtw_msleep_os(50);
-				}
-				RTW_INFO("========Indirect access test=========\n");
-				RTW_INFO(" test_cnts = %d\n", test_cnts);
-				RTW_INFO(" direct & indirect read32 data missatch cnts = %d\n", data_misatch_cnt);
-				RTW_INFO(" indirect rdata is not equal to wdata cnts = %d\n", d_acc_err_cnt);
-				RTW_INFO("========Indirect access test=========\n\n");
-				data_misatch_cnt = d_acc_err_cnt = 0;
-
-			}
-			break;
-#endif
 		case 0x20:
 			{
 				if (arg == 0xAA) {
@@ -7943,10 +7872,8 @@ static int rtw_wowlan_ctrl(struct net_device *dev,
 		rtw_suspend_common(padapter);
 
 	else if (_rtw_memcmp(extra, "disable", 7)) {
-#ifdef CONFIG_USB_HCI
 		RTW_ENABLE_FUNC(padapter, DF_RX_BIT);
 		RTW_ENABLE_FUNC(padapter, DF_TX_BIT);
-#endif
 		rtw_resume_common(padapter);
 
 #ifdef CONFIG_PNO_SUPPORT
@@ -8188,10 +8115,8 @@ static int rtw_ap_wowlan_ctrl(struct net_device *dev,
 
 		rtw_suspend_common(padapter);
 	} else if (_rtw_memcmp(extra, "disable", 7)) {
-#ifdef CONFIG_USB_HCI
 		RTW_ENABLE_FUNC(padapter, DF_RX_BIT);
 		RTW_ENABLE_FUNC(padapter, DF_TX_BIT);
-#endif
 		rtw_resume_common(padapter);
 	} else {
 		RTW_INFO("[%s] Invalid Parameter.\n", __func__);
@@ -8789,21 +8714,11 @@ static int rtw_mp_efuse_get(struct net_device *dev,
 		/*		RTW_INFO("}\n"); */
 	} else if (strcmp(tmp[0], "vidpid") == 0) {
 #ifdef CONFIG_RTL8188E
-#ifdef CONFIG_USB_HCI
 		addr = EEPROM_VID_88EU;
-#endif
-#ifdef CONFIG_PCI_HCI
-		addr = EEPROM_VID_88EE;
-#endif
 #endif /* CONFIG_RTL8188E */
 
 #ifdef CONFIG_RTL8192E
-#ifdef CONFIG_USB_HCI
 		addr = EEPROM_VID_8192EU;
-#endif
-#ifdef CONFIG_PCI_HCI
-		addr = EEPROM_VID_8192EE;
-#endif
 #endif /* CONFIG_RTL8192E */
 #ifdef CONFIG_RTL8723B
 		addr = EEPROM_VID_8723BU;
@@ -8818,15 +8733,11 @@ static int rtw_mp_efuse_get(struct net_device *dev,
 #endif
 
 #ifdef CONFIG_RTL8703B
-#ifdef CONFIG_USB_HCI
 		addr = EEPROM_VID_8703BU;
-#endif
 #endif /* CONFIG_RTL8703B */
 
 #ifdef CONFIG_RTL8723D
-#ifdef CONFIG_USB_HCI
 		addr = EEPROM_VID_8723DU;
-#endif /* CONFIG_USB_HCI */
 #endif /* CONFIG_RTL8723D */
 
 		cnts = 4;
@@ -9448,21 +9359,11 @@ static int rtw_mp_efuse_set(struct net_device *dev,
 
 		/* pidvid,da0b7881		 */
 #ifdef CONFIG_RTL8188E
-#ifdef CONFIG_USB_HCI
 		addr = EEPROM_VID_88EU;
-#endif
-#ifdef CONFIG_PCI_HCI
-		addr = EEPROM_VID_88EE;
-#endif
 #endif /* CONFIG_RTL8188E */
 
 #ifdef CONFIG_RTL8192E
-#ifdef CONFIG_USB_HCI
 		addr = EEPROM_VID_8192EU;
-#endif
-#ifdef CONFIG_PCI_HCI
-		addr = EEPROM_VID_8192EE;
-#endif
 #endif /* CONFIG_RTL8188E */
 
 #ifdef CONFIG_RTL8723B
@@ -9478,15 +9379,11 @@ static int rtw_mp_efuse_set(struct net_device *dev,
 #endif
 
 #ifdef CONFIG_RTL8703B
-#ifdef CONFIG_USB_HCI
 		addr = EEPROM_VID_8703BU;
-#endif /* CONFIG_USB_HCI */
 #endif /* CONFIG_RTL8703B */
 
 #ifdef CONFIG_RTL8723D
-#ifdef CONFIG_USB_HCI
 		addr = EEPROM_VID_8723DU;
-#endif /* CONFIG_USB_HCI */
 #endif /* CONFIG_RTL8723D */
 
 		cnts = strlen(tmp[1]);
@@ -11726,16 +11623,6 @@ static struct xmit_frame *createloopbackpkt(PADAPTER padapter, u32 size)
 	desc->txdw5 = cpu_to_le32(desc->txdw5);
 	desc->txdw6 = cpu_to_le32(desc->txdw6);
 	desc->txdw7 = cpu_to_le32(desc->txdw7);
-#ifdef CONFIG_PCI_HCI
-	desc->txdw8 = cpu_to_le32(desc->txdw8);
-	desc->txdw9 = cpu_to_le32(desc->txdw9);
-	desc->txdw10 = cpu_to_le32(desc->txdw10);
-	desc->txdw11 = cpu_to_le32(desc->txdw11);
-	desc->txdw12 = cpu_to_le32(desc->txdw12);
-	desc->txdw13 = cpu_to_le32(desc->txdw13);
-	desc->txdw14 = cpu_to_le32(desc->txdw14);
-	desc->txdw15 = cpu_to_le32(desc->txdw15);
-#endif
 #endif
 
 	cal_txdesc_chksum(padapter, (u8*)desc);
@@ -11757,9 +11644,6 @@ static struct xmit_frame *createloopbackpkt(PADAPTER padapter, u32 size)
 	get_random_bytes(ptr, pkt_end - ptr);
 
 	pxmitbuf->len = TXDESC_SIZE + pattrib->last_txcmdsz;
-#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
-	pxmitbuf->ptail += pxmitbuf->len;
-#endif
 
 	dbg_dump_pkt("TX packet", pxmitbuf->pbuf, pxmitbuf->len);
 
@@ -11921,9 +11805,6 @@ thread_return lbk_thread(thread_context context)
 		ff_hwaddr = rtw_get_ff_hwaddr(pxmitframe);
 		cnt++;
 		RTW_INFO("%s: wirte port cnt=%d size=%d\n", __func__, cnt, ploopback->txsize);
-#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
-		pxmitframe->pxmitbuf->pdata = ploopback->txbuf;
-#endif
 		rtw_write_port(padapter, ff_hwaddr, ploopback->txsize, (u8 *)pxmitframe->pxmitbuf);
 
 		/* wait for rx pkt */

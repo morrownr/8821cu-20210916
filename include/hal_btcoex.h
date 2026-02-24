@@ -101,8 +101,5 @@ void hal_btcoex_set_rf4ce_link_state(u8 state);
 u8 hal_btcoex_get_rf4ce_link_state(void);
 #endif
 
-#ifdef CONFIG_SDIO_HCI
-#include <hal_sdio_coex.h>	/* sdio multi coex */
-#endif
 
 #endif /* !__HAL_BTCOEX_H__ */

@@ -285,10 +285,6 @@ extern uint rtw_drv_log_level;
 void dump_drv_version(void *sel);
 void dump_log_level(void *sel);
 
-#ifdef CONFIG_SDIO_HCI
-void sd_f0_reg_dump(void *sel, _adapter *adapter);
-void sdio_local_reg_dump(void *sel, _adapter *adapter);
-#endif /* CONFIG_SDIO_HCI */
 
 void mac_reg_dump(void *sel, _adapter *adapter);
 void bb_reg_dump(void *sel, _adapter *adapter);

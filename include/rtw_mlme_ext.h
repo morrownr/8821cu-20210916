@@ -34,11 +34,7 @@
 #define REASSOC_LIMIT	(4)
 #define READDBA_LIMIT	(2)
 
-#ifdef CONFIG_GSPI_HCI
-	#define ROAMING_LIMIT	5
-#else
 	#define ROAMING_LIMIT	8
-#endif
 
 /*net_type, pmlmeinfo->state*/
 #define _HW_STATE_NOLINK_	0x00

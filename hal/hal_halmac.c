@@ -4460,7 +4460,7 @@ int rtw_halmac_rx_agg_switch(struct dvobj_priv *d, u8 enable)
 	 */
 	rxaggcfg.threshold.size_limit_en = 1;
 
-#ifdef RTW_RX_AGGREGATION
+#ifdef CONFIG_USB_RX_AGGREGATION
 	if (_TRUE == enable) {
 		switch (hal->rxagg_mode) {
 		case RX_AGG_DISABLE:
@@ -4487,7 +4487,7 @@ int rtw_halmac_rx_agg_switch(struct dvobj_priv *d, u8 enable)
 			break;
 		}
 	}
-#endif /* RTW_RX_AGGREGATION */
+#endif /* CONFIG_USB_RX_AGGREGATION */
 
 	status = api->halmac_cfg_rx_aggregation(halmac, &rxaggcfg);
 	if (status != HALMAC_RET_SUCCESS)

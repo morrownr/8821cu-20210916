@@ -441,11 +441,7 @@ int rtw_recv_napi_poll(struct napi_struct *napi, int budget)
 
 	work_done = napi_recv(padapter, budget);
 	if (work_done < budget) {
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 19, 0)) && defined(CONFIG_PCI_HCI)
-		napi_complete_done(napi, work_done);
-#else
 		napi_complete(napi);
-#endif
 		if (!skb_queue_empty(&precvpriv->rx_napi_skb_queue))
 			napi_schedule(napi);
 	}
@@ -717,7 +713,6 @@ _recv_indicatepkt_drop:
 
 void rtw_os_read_port(_adapter *padapter, struct recv_buf *precvbuf)
 {
-#ifdef CONFIG_USB_HCI
 	struct recv_priv *precvpriv = &padapter->recvpriv;
 
 	precvbuf->ref_cnt--;
@@ -731,10 +726,6 @@ void rtw_os_read_port(_adapter *padapter, struct recv_buf *precvbuf)
 		rtw_read_port(padapter, precvpriv->ff_hwaddr, 0, (unsigned char *)precvbuf);
 
 
-#endif
-#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
-	precvbuf->pskb = NULL;
-#endif
 
 }
 

@@ -635,9 +635,6 @@ defined(CONFIG_RTL8723F) /*|| defined(CONFIG_RTL8814A)*/
 			#undef CONFIG_SWTIMER_BASED_TXBCN
 			#undef CONFIG_LIMITED_AP_NUM
 			#define CONFIG_LIMITED_AP_NUM	4
-			#ifdef CONFIG_PCI_HCI
-			#define CONFIG_PORT_BASED_HIQ	/* 8814BU doesn't support */
-			#endif
 		#endif
 	#endif /*CONFIG_AP_MODE*/
 
@@ -698,9 +695,6 @@ defined(CONFIG_RTL8723F) /*|| defined(CONFIG_RTL8814A)*/
  * Add by Lucas@2016/02/15
  * For RX Aggregation
  */
-#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_USB_RX_AGGREGATION)
-	#define RTW_RX_AGGREGATION
-#endif /* CONFIG_SDIO_HCI || CONFIG_USB_RX_AGGREGATION */
 
 #ifdef CONFIG_RTW_HOSTAPD_ACS
 	#ifndef CONFIG_RTW_ACS

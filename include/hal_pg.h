@@ -880,11 +880,7 @@
 #define EEPROM_Default_internalPA_SP3T_C9	0xAA
 #define EEPROM_Default_internalPA_SP3T_CC	0xAF
 #define EEPROM_Default_internalPA_SPDT_C9	0xAA
-#ifdef CONFIG_PCI_HCI
-	#define EEPROM_Default_internalPA_SPDT_CC	0xA0
-#else
 	#define EEPROM_Default_internalPA_SPDT_CC	0xFA
-#endif
 #define EEPROM_Default_PAType						0
 #define EEPROM_Default_LNAType						0
 

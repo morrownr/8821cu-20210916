@@ -214,9 +214,6 @@ typedef enum _HW_VARIABLES {
 	#ifdef CONFIG_RTS_FULL_BW
 	HW_VAR_SET_RTS_BW,
 	#endif
-#if defined(CONFIG_PCI_HCI)
-	HW_VAR_ENSWBCN,
-#endif
 #ifdef CONFIG_WOWLAN
 	HW_VAR_VENDOR_WOW_MODE,
 #endif /* CONFIG_WOWLAN */
@@ -319,26 +316,17 @@ struct hal_ops {
 #ifdef CONFIG_RECV_THREAD_MODE
 	s32 (*recv_hdl)(_adapter *adapter);
 #endif
-#if defined(CONFIG_USB_HCI) || defined(CONFIG_PCI_HCI)
 	u32(*inirp_init)(_adapter *padapter);
 	u32(*inirp_deinit)(_adapter *padapter);
-#endif
 	/*** interrupt hdl section ***/
 	void	(*enable_interrupt)(_adapter *padapter);
 	void	(*disable_interrupt)(_adapter *padapter);
 	u8(*check_ips_status)(_adapter *padapter);
-#if defined(CONFIG_PCI_HCI)
-	s32(*interrupt_handler)(_adapter *padapter);
-	void (*unmap_beacon_icf)(_adapter *padapter);
-#endif
 
 #if defined(CONFIG_USB_HCI) && defined(CONFIG_SUPPORT_USB_INT)
 	void	(*interrupt_handler)(_adapter *padapter, u16 pkt_len, u8 *pbuf);
 #endif
 
-#if defined(CONFIG_PCI_HCI)
-	void	(*irp_reset)(_adapter *padapter);
-#endif
 
 	/*** DM section ***/
 #ifdef CONFIG_RTW_SW_LED
@@ -430,9 +418,6 @@ struct hal_ops {
 	s32 (*fw_mem_dl)(_adapter *adapter, enum fw_mem mem);
 #endif
 
-#if defined(CONFIG_WOWLAN) || defined(CONFIG_AP_WOWLAN) || defined(CONFIG_PCI_HCI)
-	void (*clear_interrupt)(_adapter *padapter);
-#endif
 	u8(*hal_get_tx_buff_rsvd_page_num)(_adapter *adapter, bool wowlan);
 #ifdef CONFIG_GPIO_API
 	void (*update_hisr_hsisr_ind)(PADAPTER padapter, u32 flag);
@@ -448,9 +433,6 @@ struct hal_ops {
 	u8(*init_phy)(PADAPTER);
 #endif /* RTW_HALMAC */
 
-#ifdef CONFIG_PCI_HCI
-	void (*hal_set_l1ssbackdoor_handler)(_adapter *padapter, u8 enable);
-#endif
 
 #ifdef CONFIG_RFKILL_POLL
 	bool (*hal_radio_onoff_check)(_adapter *adapter, u8 *valid);
@@ -739,20 +721,9 @@ void rtw_hal_disable_interrupt(_adapter *padapter);
 
 u8 rtw_hal_check_ips_status(_adapter *padapter);
 
-#if defined(CONFIG_USB_HCI) || defined(CONFIG_PCI_HCI)
 	u32	rtw_hal_inirp_init(_adapter *padapter);
 	u32	rtw_hal_inirp_deinit(_adapter *padapter);
-#endif
 
-#if defined(CONFIG_PCI_HCI)
-	void	rtw_hal_irp_reset(_adapter *padapter);
-void	rtw_hal_pci_dbi_write(_adapter *padapter, u16 addr, u8 data);
-u8	rtw_hal_pci_dbi_read(_adapter *padapter, u16 addr);
-void	rtw_hal_pci_mdio_write(_adapter *padapter, u8 addr, u16 data);
-u16	rtw_hal_pci_mdio_read(_adapter *padapter, u8 addr);
-u8	rtw_hal_pci_l1off_nic_support(_adapter *padapter);
-u8	rtw_hal_pci_l1off_capability(_adapter *padapter);
-#endif
 
 u8	rtw_hal_intf_ps_func(_adapter *padapter, HAL_INTF_PS_FUNC efunc_id, u8 *val);
 
@@ -797,10 +768,6 @@ void rtw_hal_write_syson_reg(_adapter *padapter, u32 RegAddr, u32 BitMask, u32 D
 #define phy_set_mac_reg	phy_set_bb_reg
 #define phy_query_mac_reg phy_query_bb_reg
 
-#if defined(CONFIG_PCI_HCI)
-	s32	rtw_hal_interrupt_handler(_adapter *padapter);
-	void	rtw_hal_unmap_beacon_icf(_adapter *padapter);
-#endif
 #if  defined(CONFIG_USB_HCI) && defined(CONFIG_SUPPORT_USB_INT)
 	void	rtw_hal_interrupt_handler(_adapter *padapter, u16 pkt_len, u8 *pbuf);
 #endif

@@ -64,11 +64,7 @@ int rtw_scan_mode = 1;/* active, passive */
 #if (RTW_LPS_MODE > 0)
 	int rtw_power_mgnt = PS_MODE_MAX;
 
-	#ifdef CONFIG_USB_HCI
 		int rtw_lps_level = LPS_NORMAL; /*USB default LPS level*/
-	#else /*SDIO,PCIE*/
-		int rtw_lps_level = (RTW_LPS_MODE - 1);
-	#endif/*CONFIG_USB_HCI*/
 #else
 	int rtw_power_mgnt = PS_MODE_ACTIVE;
 	int rtw_lps_level = LPS_NORMAL;
@@ -444,11 +440,7 @@ int rtw_hwpwrp_detect = 1;
 int rtw_hwpwrp_detect = 0; /* HW power  ping detect 0:disable , 1:enable */
 #endif
 
-#ifdef CONFIG_USB_HCI
 int rtw_hw_wps_pbc = 1;
-#else
-int rtw_hw_wps_pbc = 0;
-#endif
 
 #ifdef CONFIG_80211D
 int rtw_80211d = 0;
@@ -622,9 +614,6 @@ module_param(rtw_hwpwrp_detect, int, 0644);
 module_param(rtw_hw_wps_pbc, int, 0644);
 module_param(rtw_check_hw_status, int, 0644);
 
-#ifdef CONFIG_PCI_HCI
-module_param(rtw_pci_aspm_enable, int, 0644);
-#endif
 
 #ifdef CONFIG_TX_EARLY_MODE
 module_param(rtw_early_mode, int, 0644);
@@ -1513,12 +1502,6 @@ uint loadparam(_adapter *padapter)
 	registry_par->suspend_type = rtw_suspend_type;
 #endif
 
-#if defined(CONFIG_SDIO_HCI) && defined(CONFIG_PREALLOC_RX_SKB_BUFFER)
-	if (rtw_recvbuf_nr != NR_RECVBUFF) {
-		RTW_WARN("CONFIG_PREALLOC_RX_SKB_BUFFER && CONFIG_SDIO_HCI, force recvbuf_nr to NR_RECVBUFF(%d)\n", NR_RECVBUFF);
-		rtw_recvbuf_nr = NR_RECVBUFF;
-	}
-#endif
 	registry_par->recvbuf_nr = rtw_recvbuf_nr;
 
 #ifdef CONFIG_SUPPORT_TRX_SHARED
@@ -1526,10 +1509,6 @@ uint loadparam(_adapter *padapter)
 #endif
 	registry_par->wowlan_sta_mix_mode = rtw_wowlan_sta_mix_mode;
 
-#ifdef CONFIG_PCI_HCI
-	registry_par->pci_aspm_config = rtw_pci_aspm_enable;
-	registry_par->pci_dynamic_aspm_linkctrl = rtw_pci_dynamic_aspm_linkctrl;
-#endif
 
 #ifdef CONFIG_RTW_NAPI
 	registry_par->en_napi = (u8)rtw_en_napi;
@@ -1999,11 +1978,6 @@ int rtw_os_ndev_alloc(_adapter *adapter)
 	SET_NETDEV_DEV(ndev, dvobj_to_dev(adapter_to_dvobj(adapter)));
 #endif
 
-#ifdef CONFIG_PCI_HCI
-	if (adapter_to_dvobj(adapter)->bdma64)
-		ndev->features |= NETIF_F_HIGHDMA;
-	ndev->irq = adapter_to_dvobj(adapter)->irq;
-#endif
 
 #if defined(CONFIG_IOCTL_CFG80211)
 	if (rtw_cfg80211_ndev_res_alloc(adapter) != _SUCCESS) {
@@ -2165,9 +2139,6 @@ int rtw_os_ndev_register(_adapter *adapter, const char *name)
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 7, 8))
 	netdev_set_default_ethtool_ops(ndev, &rtw_ethtool_ops);
 #endif /* LINUX_VERSION_CODE >= 3.7.8 */
-#endif
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 19, 0)) && defined(CONFIG_PCI_HCI)
-	ndev->gro_flush_timeout = 100000;
 #endif
 	/* alloc netdev name */
 	rtw_init_netdev_name(ndev, name);
@@ -2376,9 +2347,6 @@ u32 rtw_start_drv_threads(_adapter *padapter)
 	RTW_INFO(FUNC_ADPT_FMT" enter\n", FUNC_ADPT_ARG(padapter));
 
 #ifdef CONFIG_XMIT_THREAD_MODE
-#if defined(CONFIG_SDIO_HCI)
-	if (is_primary_adapter(padapter))
-#endif
 	{
 		if (padapter->xmitThread == NULL) {
 			RTW_INFO(FUNC_ADPT_FMT " start RTW_XMIT_THREAD\n", FUNC_ADPT_ARG(padapter));
@@ -2450,10 +2418,6 @@ void rtw_stop_drv_threads(_adapter *padapter)
 
 #ifdef CONFIG_XMIT_THREAD_MODE
 	/* Below is to termindate tx_thread... */
-#if defined(CONFIG_SDIO_HCI)
-	/* Only wake-up primary adapter */
-	if (is_primary_adapter(padapter))
-#endif  /*SDIO_HCI */
 	{
 		if (padapter->xmitThread) {
 			_rtw_up_sema(&padapter->xmitpriv.xmit_sema);
@@ -2642,9 +2606,6 @@ struct dvobj_priv *devobj_init(void)
 #endif
 	_rtw_spinlock_init(&pdvobj->cam_ctl.lock);
 	_rtw_mutex_init(&pdvobj->cam_ctl.sec_cam_access_mutex);
-#if defined(CONFIG_PLATFORM_RTK129X) && defined(CONFIG_PCI_HCI)
-	_rtw_spinlock_init(&pdvobj->io_reg_lock);
-#endif
 #ifdef CONFIG_MBSSID_CAM
 	rtw_mbid_cam_init(pdvobj);
 #endif
@@ -2742,9 +2703,6 @@ void devobj_deinit(struct dvobj_priv *pdvobj)
 	_rtw_spinlock_free(&pdvobj->cam_ctl.lock);
 	_rtw_mutex_free(&pdvobj->cam_ctl.sec_cam_access_mutex);
 
-#if defined(CONFIG_PLATFORM_RTK129X) && defined(CONFIG_PCI_HCI)
-	_rtw_spinlock_free(&pdvobj->io_reg_lock);
-#endif
 #ifdef CONFIG_MBSSID_CAM
 	rtw_mbid_cam_deinit(pdvobj);
 #endif
@@ -4957,13 +4915,6 @@ int rtw_suspend_wow(_adapter *padapter)
 		/* 0. Power off LED */
 		rtw_led_control(padapter, LED_CTL_POWER_OFF);
 
-#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
-		/* 2.only for SDIO disable interrupt */
-		rtw_intf_stop(padapter);
-
-		/* 2.1 clean interrupt */
-		rtw_hal_clear_interrupt(padapter);
-#endif /* CONFIG_SDIO_HCI */
 
 		/* enable ac lifetime during scan to avoid txfifo not empty. */
 		dvobj->lifetime_en = rtw_read8(padapter, 0x426);
@@ -5095,13 +5046,6 @@ int rtw_suspend_ap_wow(_adapter *padapter)
 
 	/* 0. Power off LED */
 	rtw_led_control(padapter, LED_CTL_POWER_OFF);
-#ifdef CONFIG_SDIO_HCI
-	/* 2.only for SDIO disable interrupt*/
-	rtw_intf_stop(padapter);
-
-	/* 2.1 clean interrupt */
-	rtw_hal_clear_interrupt(padapter);
-#endif /* CONFIG_SDIO_HCI */
 
 	/* 1. stop thread */
 	rtw_set_drv_stopped(padapter);	/*for stop thread*/
@@ -5349,10 +5293,6 @@ int rtw_resume_process_wow(_adapter *padapter)
 
 		pwrpriv->bFwCurrentInPSMode = _FALSE;
 
-#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_PCI_HCI)
-		rtw_mi_intf_stop(padapter);
-		rtw_hal_clear_interrupt(padapter);
-#endif
 
 		#ifdef CONFIG_SDIO_HCI
 		#if !(CONFIG_RTW_SDIO_KEEP_IRQ)
@@ -5635,13 +5575,6 @@ int rtw_resume_process_normal(_adapter *padapter)
 
 	RTW_INFO("==> "FUNC_ADPT_FMT" entry....\n", FUNC_ADPT_ARG(padapter));
 
-	#ifdef CONFIG_SDIO_HCI
-	/* interface init */
-	if (sdio_init(adapter_to_dvobj(padapter)) != _SUCCESS) {
-		ret = -1;
-		goto exit;
-	}
-	#endif/*CONFIG_SDIO_HCI*/
 
 	rtw_clr_surprise_removed(padapter);
 	rtw_hal_disable_interrupt(padapter);

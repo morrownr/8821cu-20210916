@@ -1791,12 +1791,8 @@ Current IOREG MAP
 #define GET_INDIRECT_REG_RDY(_cmd)			LE_BITS_TO_1BYTE(((u8 *)(_cmd)) + 2, 4, 1)
 #endif/*CONFIG_SDIO_INDIRECT_ACCESS*/
 
-#ifdef CONFIG_SDIO_HCI
-	#define MAX_TX_AGG_PACKET_NUMBER	0x8
-#else
 	#define MAX_TX_AGG_PACKET_NUMBER	0xFF
 	#define MAX_TX_AGG_PACKET_NUMBER_8812	64
-#endif
 
 /* -----------------------------------------------------
  *
@@ -1857,11 +1853,7 @@ Current IOREG MAP
  * General definitions
  * ******************************************************** */
 
-#ifdef CONFIG_USB_HCI
 	#define LAST_ENTRY_OF_TX_PKT_BUFFER_8188E(__Adapter)	(175)
-#else
-	#define LAST_ENTRY_OF_TX_PKT_BUFFER_8188E(__Adapter)	(IS_VENDOR_8188E_I_CUT_SERIES(__Adapter) ? 255 : 175)
-#endif
 #define LAST_ENTRY_OF_TX_PKT_BUFFER_8812			255
 #define LAST_ENTRY_OF_TX_PKT_BUFFER_8723B		255
 #define LAST_ENTRY_OF_TX_PKT_BUFFER_8192C		255
@@ -1874,11 +1866,7 @@ Current IOREG MAP
 #define LAST_ENTRY_OF_TX_PKT_BUFFER_8192F		255
 #define LAST_ENTRY_OF_TX_PKT_BUFFER_8723F		255
 #define POLLING_LLT_THRESHOLD				20
-#if defined(CONFIG_RTL8723B) && defined(CONFIG_PCI_HCI)
-	#define POLLING_READY_TIMEOUT_COUNT		6000
-#else
 	#define POLLING_READY_TIMEOUT_COUNT		1000
-#endif
 
 
 /* GPIO BIT */
