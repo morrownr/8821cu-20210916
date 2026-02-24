@@ -1221,9 +1221,6 @@ int rtw_halmac_init_adapter(struct dvobj_priv *d, struct halmac_platform_api *pf
 	enum halmac_intf_phy_platform pltfm = HALMAC_INTF_PHY_PLATFORM_ALL;
 	enum halmac_ret_status status;
 	int err = 0;
-#ifdef CONFIG_SDIO_HCI
-	struct halmac_sdio_hw_info info;
-#endif /* CONFIG_SDIO_HCI */
 
 
 	halmac = dvobj_to_halmac(d);
@@ -1236,16 +1233,7 @@ int rtw_halmac_init_adapter(struct dvobj_priv *d, struct halmac_platform_api *pf
 	if (err)
 		goto error;
 
-#ifdef CONFIG_SDIO_HCI
-	intf = HALMAC_INTERFACE_SDIO;
-#elif defined(CONFIG_USB_HCI)
 	intf = HALMAC_INTERFACE_USB;
-#elif defined(CONFIG_PCI_HCI)
-	intf = HALMAC_INTERFACE_PCIE;
-#else
-#warning "INTERFACE(CONFIG_XXX_HCI) not be defined!!"
-	intf = HALMAC_INTERFACE_UNDEFINE;
-#endif
 	status = halmac_init_adapter(d, pf_api, intf, &halmac, &api);
 	if (HALMAC_RET_SUCCESS != status) {
 		RTW_ERR("%s: halmac_init_adapter fail!(status=%d)\n", __FUNCTION__, status);
@@ -4669,20 +4657,6 @@ int rtw_halmac_rx_agg_switch(struct dvobj_priv *d, u8 enable)
 
 #ifdef RTW_RX_AGGREGATION
 	if (_TRUE == enable) {
-#ifdef CONFIG_SDIO_HCI
-		rxaggcfg.mode = HALMAC_RX_AGG_MODE_DMA;
-		rxaggcfg.threshold.drv_define = 0;
-		if (hal->rxagg_dma_size || hal->rxagg_dma_timeout) {
-			rxaggcfg.threshold.drv_define = 1;
-			rxaggcfg.threshold.timeout = hal->rxagg_dma_timeout;
-			rxaggcfg.threshold.size = hal->rxagg_dma_size;
-			RTW_INFO("%s: RX aggregation threshold: "
-				 "timeout=%u size=%u\n",
-				 __FUNCTION__,
-				 hal->rxagg_dma_timeout,
-				 hal->rxagg_dma_size);
-		}
-#elif defined(CONFIG_USB_HCI)
 		switch (hal->rxagg_mode) {
 		case RX_AGG_DISABLE:
 			rxaggcfg.mode = HALMAC_RX_AGG_MODE_NONE;
@@ -4707,7 +4681,6 @@ int rtw_halmac_rx_agg_switch(struct dvobj_priv *d, u8 enable)
 			}
 			break;
 		}
-#endif /* CONFIG_USB_HCI */
 	}
 #endif /* RTW_RX_AGGREGATION */
 

@@ -16,72 +16,28 @@
 #define _RTW_XMIT_H_
 
 
-#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
-	#ifdef CONFIG_TX_AGGREGATION
-		#ifdef CONFIG_RTL8822C
-			#ifdef CONFIG_SDIO_TX_FORMAT_DUMMY_AUTO
-				#define MAX_XMITBUF_SZ	(51200)
-			#else
-				#define MAX_XMITBUF_SZ	(32764)
-			#endif
-		#else
-			#define MAX_XMITBUF_SZ	(20480)	/* 20k */
-		#endif
-		/* #define SDIO_TX_AGG_MAX	5 */
+#ifdef CONFIG_USB_TX_AGGREGATION
+	#if defined(CONFIG_PLATFORM_ARM_SUNxI) || defined(CONFIG_PLATFORM_ARM_SUN6I) || defined(CONFIG_PLATFORM_ARM_SUN7I) || defined(CONFIG_PLATFORM_ARM_SUN8I) || defined(CONFIG_PLATFORM_ARM_SUN50IW1P1)
+		#define MAX_XMITBUF_SZ (12288)  /* 12k 1536*8 */
+	#elif defined (CONFIG_PLATFORM_MSTAR)
+		#define MAX_XMITBUF_SZ	7680	/* 7.5k */
 	#else
-		#define MAX_XMITBUF_SZ (1664)
-		#define SDIO_TX_AGG_MAX	1
+		#define MAX_XMITBUF_SZ	(20480)	/* 20k */
 	#endif
-
-	#if defined CONFIG_SDIO_HCI
-		#define NR_XMITBUFF	(16)
-		#define SDIO_TX_DIV_NUM (2)
-	#endif
-	#if defined(CONFIG_GSPI_HCI)
-		#define NR_XMITBUFF	(128)
-	#endif
-
-#elif defined (CONFIG_USB_HCI)
-
-	#ifdef CONFIG_USB_TX_AGGREGATION
-		#if defined(CONFIG_PLATFORM_ARM_SUNxI) || defined(CONFIG_PLATFORM_ARM_SUN6I) || defined(CONFIG_PLATFORM_ARM_SUN7I) || defined(CONFIG_PLATFORM_ARM_SUN8I) || defined(CONFIG_PLATFORM_ARM_SUN50IW1P1)
-			#define MAX_XMITBUF_SZ (12288)  /* 12k 1536*8 */
-		#elif defined (CONFIG_PLATFORM_MSTAR)
-			#define MAX_XMITBUF_SZ	7680	/* 7.5k */
-		#else
-			#define MAX_XMITBUF_SZ	(20480)	/* 20k */
-		#endif
-	#else
-		#define MAX_XMITBUF_SZ	(2048)
-	#endif
-
-	#ifdef CONFIG_SINGLE_XMIT_BUF
-		#define NR_XMITBUFF	(1)
-	#else
-		#define NR_XMITBUFF	(4)
-	#endif /* CONFIG_SINGLE_XMIT_BUF */
-#elif defined (CONFIG_PCI_HCI)
-#ifdef CONFIG_TX_AMSDU
-	#define MAX_XMITBUF_SZ	(3500)
 #else
-	#define MAX_XMITBUF_SZ	(1664)
-#endif
-#ifdef CONFIG_PCI_TX_POLLING
-	#define NR_XMITBUFF	(256)
-#else
-	#define NR_XMITBUFF	(128)
-#endif
+	#define MAX_XMITBUF_SZ	(2048)
 #endif
 
-
-#ifdef CONFIG_PCI_HCI
-	#define XMITBUF_ALIGN_SZ 4
+#ifdef CONFIG_SINGLE_XMIT_BUF
+	#define NR_XMITBUFF	(1)
 #else
-	#ifdef USB_XMITBUF_ALIGN_SZ
-		#define XMITBUF_ALIGN_SZ (USB_XMITBUF_ALIGN_SZ)
-	#else
-		#define XMITBUF_ALIGN_SZ 512
-	#endif
+	#define NR_XMITBUFF	(4)
+#endif /* CONFIG_SINGLE_XMIT_BUF */
+
+#ifdef USB_XMITBUF_ALIGN_SZ
+	#define XMITBUF_ALIGN_SZ (USB_XMITBUF_ALIGN_SZ)
+#else
+	#define XMITBUF_ALIGN_SZ 512
 #endif
 
 
