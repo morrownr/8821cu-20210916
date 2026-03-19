@@ -2445,7 +2445,8 @@ rtk_core :=	core/rtw_cmd.o \
 		core/rtw_mbo.o \
 		core/rtw_rm_util.o \
 		core/efuse/rtw_efuse.o \
-		core/rtw_roch.o
+		core/rtw_roch.o \
+		core/rtw_cooperative_rx.o
 
 ifeq ($(CONFIG_SDIO_HCI), y)
 rtk_core += core/rtw_sdio.o

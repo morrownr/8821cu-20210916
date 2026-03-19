@@ -868,4 +868,8 @@ u8 adapter_allow_bmc_data_rx(_adapter *adapter);
 s32 pre_recv_entry(union recv_frame *precvframe, u8 *pphy_status);
 void count_rx_stats(_adapter *padapter, union recv_frame *prframe, struct sta_info *sta);
 
+/* Exposed for cooperative RX merge path */
+int recv_indicatepkt_reorder(_adapter *padapter, union recv_frame *prframe);
+int recv_process_mpdu(_adapter *padapter, union recv_frame *prframe);
+
 #endif

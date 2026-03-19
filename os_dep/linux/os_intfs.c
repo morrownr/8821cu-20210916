@@ -16,6 +16,7 @@
 
 #include <drv_types.h>
 #include <hal_data.h>
+#include <rtw_cooperative_rx.h>
 
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 8, 0))
 #define strlcpy strscpy
@@ -164,6 +165,11 @@ module_param(rtw_usb_rxagg_mode, int, 0644);
 
 int rtw_dynamic_agg_enable = 1;
 module_param(rtw_dynamic_agg_enable, int, 0644);
+
+/* Cooperative RX diversity: 0=disabled (default), 1=enabled */
+extern int rtw_cooperative_rx;
+module_param(rtw_cooperative_rx, int, 0644);
+MODULE_PARM_DESC(rtw_cooperative_rx, "Enable cooperative RX diversity with helper adapters (0=off, 1=on)");
 
 /* set log level when inserting driver module, default log level is _DRV_INFO_ = 4,
 * please refer to "How_to_set_driver_debug_log_level.doc" to set the available level.
@@ -2185,9 +2191,10 @@ int rtw_os_ndev_register(_adapter *adapter, const char *name)
 	else
 		ret = (register_netdevice(ndev) == 0) ? _SUCCESS : _FAIL;
 
-	if (ret == _SUCCESS)
+	if (ret == _SUCCESS) {
 		adapter->registered = 1;
-	else
+		rtw_coop_rx_sysfs_init(ndev);
+	} else
 		RTW_INFO(FUNC_NDEV_FMT" if%d Failed!\n", FUNC_NDEV_ARG(ndev), (adapter->iface_id + 1));
 
 #if defined(CONFIG_IOCTL_CFG80211)
@@ -2228,6 +2235,8 @@ void rtw_os_ndev_unregister(_adapter *adapter)
 	if ((adapter->DriverState != DRIVER_DISAPPEAR) && netdev) {
 		struct dvobj_priv *dvobj = adapter_to_dvobj(adapter);
 		u8 rtnl_lock_needed = rtw_rtnl_lock_needed(dvobj);
+
+		rtw_coop_rx_sysfs_deinit(netdev);
 
 		if (rtnl_lock_needed)
 			unregister_netdev(netdev);
