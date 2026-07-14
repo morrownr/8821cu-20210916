@@ -272,6 +272,7 @@ static struct usb_device_id rtw_usb_id_tbl[] = {
 	{USB_DEVICE_AND_INTERFACE_INFO(USB_VENDER_ID_EDIMAX, 0xC811, 0xff, 0xff, 0xff), .driver_info = RTL8821C}, /* 8811CU Edimax */
 	{USB_DEVICE_AND_INTERFACE_INFO(USB_VENDER_ID_EDIMAX, 0xD811, 0xff, 0xff, 0xff), .driver_info = RTL8821C}, /* 8811CU Edimax */
 	{USB_DEVICE_AND_INTERFACE_INFO(0x2001, 0x331d, 0xff, 0xff, 0xff), .driver_info = RTL8821C}, /* D-Link - DWA-171C */
+	{USB_DEVICE_AND_INTERFACE_INFO(0x2c4e, 0x0105, 0xff, 0xff, 0xff), .driver_info = RTL8821C}, /* Mercusys MU6H v1.30 */
 #endif
 
 #ifdef CONFIG_RTL8710B
