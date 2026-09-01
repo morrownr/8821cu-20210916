@@ -146,6 +146,8 @@ rm -f /etc/modprobe.d/${OPTIONS_FILE}
 echo "Removing source files from /usr/src/${DRV_NAME}-${DRV_VERSION}"
 rm -rf /usr/src/${DRV_NAME}-${DRV_VERSION}
 make clean >/dev/null 2>&1
+echo "Removing driver from the DKMS tree"
+rm -rf /var/lib/dkms/rtl8821cu
 echo "The driver was removed successfully."
 echo "You may now delete the driver directory if desired."
 echo ": ---------------------------"
