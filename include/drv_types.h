@@ -975,10 +975,10 @@ struct macid_ctl_t {
 #define RATE_BMP_GET_HT_4SS(_bmp_ht)		((_bmp_ht & RATE_BMP_HT_4SS) >> 24)
 
 /* used for rf_ctl_t.rate_bmp_vht_by_bw */
-#define RATE_BMP_VHT_1SS	0x00000003FF
-#define RATE_BMP_VHT_2SS	0x00000FFC00
-#define RATE_BMP_VHT_3SS	0x003FF00000
-#define RATE_BMP_VHT_4SS	0xFFC0000000
+#define RATE_BMP_VHT_1SS	0x00000003FFull
+#define RATE_BMP_VHT_2SS	0x00000FFC00ull
+#define RATE_BMP_VHT_3SS	0x003FF00000ull
+#define RATE_BMP_VHT_4SS	0xFFC0000000ull
 #define RATE_BMP_HAS_VHT_1SS(_bmp_vht)		(_bmp_vht & RATE_BMP_VHT_1SS)
 #define RATE_BMP_HAS_VHT_2SS(_bmp_vht)		(_bmp_vht & RATE_BMP_VHT_2SS)
 #define RATE_BMP_HAS_VHT_3SS(_bmp_vht)		(_bmp_vht & RATE_BMP_VHT_3SS)

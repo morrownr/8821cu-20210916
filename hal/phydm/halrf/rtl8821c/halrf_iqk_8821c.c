@@ -1157,7 +1157,7 @@ _lok_one_shot_8821c(void *dm_void, u8 path, u8 pad_index)
 {
 	struct dm_struct *dm = (struct dm_struct *)dm_void;
 	struct dm_iqk_info *iqk_info = &dm->IQK_info;
-	u8 delay_count = 0;
+	u32 delay_count = 0;
 	boolean LOK_notready = false;
 	u32 LOK_temp2 = 0, LOK_temp3 = 0;
 	u32 IQK_CMD = 0x0;
