@@ -4874,7 +4874,7 @@ bool rtw_wow_war_mdns_parser_pattern(u8 *input, char *target,
 		{
 			u8 hex,idx=0, pos_in_unit_as_4bit = 0;
 
-			strncpy(member, input, len);
+			rtw_strncpy(member, input, len);
 			res = sscanf(member, "%02hhx", &hex);
 			
 			target[pos] = hex;

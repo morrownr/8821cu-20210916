@@ -384,6 +384,21 @@ __inline static void _init_timer(_timer *ptimer, _nic_hdl nic_hdl, void *pfunc, 
 #endif
 }
 
+/* strncpy() was removed from the kernel. Call sites here rely on its exact
+ * semantics (fixed-count copy, NUL padding, no guaranteed termination), so
+ * keep those rather than substituting strscpy(). */
+static inline char *rtw_strncpy(char *dest, const char *src, size_t n)
+{
+	size_t i;
+
+	for (i = 0; i < n && src[i] != '\0'; i++)
+		dest[i] = src[i];
+	for (; i < n; i++)
+		dest[i] = '\0';
+
+	return dest;
+}
+
 __inline static void _set_timer(_timer *ptimer, u32 delay_time)
 {
 	mod_timer(&ptimer->timer , (jiffies + (delay_time * HZ / 1000)));
