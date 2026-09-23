@@ -16,6 +16,7 @@
 #define __OSDEP_LINUX_SERVICE_H_
 
 #include <linux/version.h>
+#include <linux/string.h>
 #include <linux/spinlock.h>
 #include <linux/compiler.h>
 #include <linux/kernel.h>
@@ -91,6 +92,13 @@
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 25) && \
 	 LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 29))
 	#define CONFIG_IEEE80211_HT_ADDT_INFO
+#endif
+
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(7, 2, 0))
+/* strncpy() removed from kernel 7.2 - strscpy() is the replacement */
+#ifndef strncpy
+#define strncpy(dst, src, n) strscpy(dst, src, n)
+#endif
 #endif
 
 #ifdef CONFIG_IOCTL_CFG80211

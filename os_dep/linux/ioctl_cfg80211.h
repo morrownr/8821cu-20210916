@@ -420,6 +420,19 @@ void rtw_cfg80211_deinit_rfkill(struct wiphy *wiphy);
 #define rtw_cfg80211_notify_new_peer_candidate(wdev, addr, ie, ie_len, sig_dbm, gfp) cfg80211_notify_new_peer_candidate(wdev_to_ndev(wdev), addr, ie, ie_len, gfp)
 #endif
 
+/* cfg80211_new_sta/del_sta: first arg changed from net_device* to wireless_dev* in 7.1 */
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(7, 1, 0))
+#define rtw_cfg80211_new_sta(wdev, mac, sinfo, gfp) \
+	cfg80211_new_sta(wdev, mac, sinfo, gfp)
+#define rtw_cfg80211_del_sta(wdev, mac, gfp) \
+	cfg80211_del_sta(wdev, mac, gfp)
+#else
+#define rtw_cfg80211_new_sta(wdev, mac, sinfo, gfp) \
+	cfg80211_new_sta(wdev_to_ndev(wdev), mac, sinfo, gfp)
+#define rtw_cfg80211_del_sta(wdev, mac, gfp) \
+	cfg80211_del_sta(wdev_to_ndev(wdev), mac, gfp)
+#endif
+
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 5, 0))
 u8 rtw_cfg80211_ch_switch_notify(_adapter *adapter, u8 ch, u8 bw, u8 offset, u8 ht, bool started);
 #endif
